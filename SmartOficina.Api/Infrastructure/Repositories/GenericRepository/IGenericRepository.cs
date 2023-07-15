@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Infrastructure.Repositories.GenericRepositorie;
+﻿namespace SmartOficina.Api.Infrastructure.Repositories.GenericRepository;
 
 public interface IGenericRepository<T> where T : class
 {

@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Infrastructure.Repositories.GenericRepositorie;
+﻿namespace SmartOficina.Api.Infrastructure.Repositories.GenericRepository;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
@@ -35,10 +35,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         T item = await _context.Set<T>().FindAsync(id);
 
         if (item is null)
-            throw new Exception("Indice não encontrado");
-       
-        //ToDo: Verficiar com o vinicius para criamos as propriedades de boolean para ativar e desativar registro e data da alteração
-        //item.GetType().GetProperty("Ativo").SetValue(T,true);
+            throw new Exception("Indice não encontrado");       
+        
+        //item.GetType().GetProperty("Ativo").SetValue(Boolean,true);
         //item.GetType().GetProperty("Dt_Desativação").SetValue(DateTime, DateTime.Now);
 
 

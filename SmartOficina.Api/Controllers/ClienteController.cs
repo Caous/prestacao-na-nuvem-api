@@ -13,7 +13,7 @@ public class ClienteController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddAsync(Cliente cliente)
     {
-        return Ok(await _repository.Add(cliente));
+        return Ok(await _repository.Create(cliente));
     }
 
     [HttpGet]
@@ -25,25 +25,32 @@ public class ClienteController : ControllerBase
     [HttpGet("id")]
     public async Task<IActionResult> GetId(Guid id)
     {
-
-        return Ok();
+        return Ok(await _repository.FindById(id));
     }
 
     [HttpPut]
-    public async Task<IActionResult> AtualizarCliente()
+    public async Task<IActionResult> AtualizarCliente(Cliente cliente)
     {
-        return Ok();
+        return Ok(await _repository.Update(cliente));
     }
 
     [HttpPut("Desativar_Cliente")]
-    public async Task<IActionResult> DesativarCliente()
+    public async Task<IActionResult> DesativarCliente(Guid id)
     {
-        return Ok();
+        return Ok(await _repository.Desabled(id));
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeletarCliente()
+    public async Task<IActionResult> DeletarCliente(Guid id)
     {
-        return Ok();
+        try
+        {
+            await _repository.Delete(id);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

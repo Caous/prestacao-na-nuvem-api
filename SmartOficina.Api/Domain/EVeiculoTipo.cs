@@ -1,6 +1,6 @@
 ﻿namespace SmartOficina.Api.Domain
 {
-    public enum VeiculoTipo
+    public enum EVeiculoTipo
     {
         Carro,
         Moto,

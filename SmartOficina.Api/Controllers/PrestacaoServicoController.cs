@@ -1,37 +1,64 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SmartOficina.Api.Domain;
-using SmartOficina.Api.Infrastructure.Repositories;
+﻿namespace SmartOficina.Api.Controllers;
 
-namespace SmartOficina.Api.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class PrestacaoServicoController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PrestacaoServicoController : ControllerBase
+    private readonly IPrestacaoServicoRepository _repository;
+    public PrestacaoServicoController(IPrestacaoServicoRepository repository)
     {
-        private readonly IPrestacaoServicoRepository _repository;
-        public PrestacaoServicoController(IPrestacaoServicoRepository repository)
-        {
-            _repository = repository;
-        }
+        _repository = repository;
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> Add(PrestacaoServico prestacaoServico)
-        {
-            return Ok(await _repository.Add(prestacaoServico));
-        }
+    [HttpPost]
+    public async Task<IActionResult> Add(PrestacaoServico prestacaoServico)
+    {
+        return Ok(await _repository.Create(prestacaoServico));
+    }
 
-        [HttpPut("status/{id}/{status}")]
-        public async Task<IActionResult> ChangeStatus(Guid id, PrestacaoServicoStatus status)
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        return Ok(await _repository.GetAll());
+    }
+
+    [HttpGet("id")]
+    public async Task<IActionResult> GetId(Guid id)
+    {
+        return Ok(await _repository.FindById(id));
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> AtualizarPrestacaoServico(PrestacaoServico prestacaoServico)
+    {
+        return Ok(await _repository.Update(prestacaoServico));
+    }
+
+    [HttpPut("Desativar_Cliente")]
+    public async Task<IActionResult> DesativarPrestadorServico(Guid id)
+    {
+        return Ok(await _repository.Desabled(id));
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeletarPrestador(Guid id)
+    {
+        try
         {
-            await _repository.ChangeStatus(id, status);
+            await _repository.Delete(id);
             return Ok();
         }
-
-        [HttpGet("{prestadorId}")]
-        public async Task<IActionResult> GetByPrestador(Guid prestadorId)
+        catch (Exception ex)
         {
-            return Ok(await _repository.GetByPrestador(prestadorId));
+            return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("status/{id}/{status}")]
+    public async Task<IActionResult> ChangeStatus(Guid id, PrestacaoServicoStatus status)
+    {
+        await _repository.ChangeStatus(id, status);
+        return Ok();
+    }
+
 }
