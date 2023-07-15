@@ -12,6 +12,8 @@ public class OficinaContext : DbContext
     public DbSet<Servico> Servico { get; set; }
     public DbSet<Prestador> Prestador { get; set; }
     public DbSet<Veiculo> Veiculo { get; set; }
+    public DbSet<SubServico> SubServico { get; set; }
+    public DbSet<CategoriaServico> CategoriaServico { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -34,6 +36,9 @@ public class OficinaContext : DbContext
         modelBuilder.ApplyConfiguration(new PrestadorConfiguration());
         modelBuilder.ApplyConfiguration(new ServicoConfiguration());
         modelBuilder.ApplyConfiguration(new VeiculoConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoriaServicoConfiguration());
+        modelBuilder.ApplyConfiguration(new SubServicoConfiguration());
+
 
         modelBuilder.HasSequence<int>("PrestacaoOrdem").StartsAt(1000).IncrementsBy(1);
 
