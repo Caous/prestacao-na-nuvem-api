@@ -9,7 +9,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
     }
     public async Task<PrestacaoServico> Add(PrestacaoServico prestacaoServico)
     {
-        prestacaoServico.Status = PrestacaoServicoStatus.Aberto;
+        prestacaoServico.Status = EPrestacaoServicoStatus.Aberto;
 
         _context.PrestacaoServico.Add(prestacaoServico);
         await _context.SaveChangesAsync();
@@ -18,7 +18,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         return prestacaoServico;
     }
 
-    public async Task ChangeStatus(Guid id, PrestacaoServicoStatus status)
+    public async Task ChangeStatus(Guid id, EPrestacaoServicoStatus status)
     {
         var prestacao = await _context.PrestacaoServico.FindAsync(id);
         if (prestacao is not null)

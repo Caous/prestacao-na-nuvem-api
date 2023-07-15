@@ -1,12 +1,11 @@
-﻿namespace SmartOficina.Api.Domain
-{
-    public class Servico
-    {
-        public Guid Id { get; set; }
-        public required string Nome { get; set; }
-        public float Valor { get; set; }
+﻿namespace SmartOficina.Api.Domain;
 
-        public Guid PrestacaoServicoId { get; set; }
-        public PrestacaoServico? PrestacaoServico { get; set; }
-    }
+public class Servico
+{
+    public Guid Id { get; set; }
+    public required string Nome { get; set; }
+    public float Valor { get; set; }
+
+    public Guid PrestacaoServicoId { get; set; }
+    public PrestacaoServico? PrestacaoServico { get; set; }
 }

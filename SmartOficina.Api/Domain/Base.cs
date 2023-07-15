@@ -1,8 +1,7 @@
-﻿namespace SmartOficina.Api.Domain
+﻿namespace SmartOficina.Api.Domain;
+
+public abstract class Base
 {
-    public abstract class Base
-    {
-        public Guid Id { get; set; }
-        public DateTime DataCadastro { get; set; }
-    }
+    public Guid Id { get; set; }
+    public DateTime DataCadastro { get; set; }
 }

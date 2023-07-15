@@ -1,5 +1,5 @@
 ﻿namespace SmartOficina.Api.Dto;
 
-public class ClienteDto
+public class VeiculoDto
 {
 }

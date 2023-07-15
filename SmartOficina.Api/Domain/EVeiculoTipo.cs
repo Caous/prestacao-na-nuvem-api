@@ -1,11 +1,10 @@
-﻿namespace SmartOficina.Api.Domain
+﻿namespace SmartOficina.Api.Domain;
+
+public enum EVeiculoTipo
 {
-    public enum EVeiculoTipo
-    {
-        Carro,
-        Moto,
-        Caminhao,
-        Onibus,
-        Outros
-    }
+    Carro,
+    Moto,
+    Caminhao,
+    Onibus,
+    Outros
 }

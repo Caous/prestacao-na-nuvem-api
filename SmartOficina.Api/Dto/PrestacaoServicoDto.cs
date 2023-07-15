@@ -1,7 +1,5 @@
-﻿//TODO: Work with Dto class and auto mapper
-namespace SmartOficina.Api.Dto
+﻿namespace SmartOficina.Api.Dto;
+
+public class PrestacaoServicoDto
 {
-    public class PrestacaoServicoDto
-    {
-    }
 }

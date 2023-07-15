@@ -2,5 +2,5 @@
 
 public interface IPrestacaoServicoRepository : IGenericRepository<PrestacaoServico>
 {
-    Task ChangeStatus(Guid id, PrestacaoServicoStatus status);
+    Task ChangeStatus(Guid id, EPrestacaoServicoStatus status);
 }
