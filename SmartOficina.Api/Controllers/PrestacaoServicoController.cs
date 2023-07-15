@@ -34,7 +34,7 @@ public class PrestacaoServicoController : ControllerBase
         return Ok(await _repository.Update(prestacaoServico));
     }
 
-    [HttpPut("Desativar_Cliente")]
+    [HttpPut("DesativarPrestacao")]
     public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
         return Ok(await _repository.Desabled(id));
@@ -55,7 +55,7 @@ public class PrestacaoServicoController : ControllerBase
     }
 
     [HttpPut("status/{id}/{status}")]
-    public async Task<IActionResult> ChangeStatus(Guid id, PrestacaoServicoStatus status)
+    public async Task<IActionResult> ChangeStatus(Guid id, EPrestacaoServicoStatus status)
     {
         await _repository.ChangeStatus(id, status);
         return Ok();

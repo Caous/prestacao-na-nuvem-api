@@ -5,15 +5,18 @@
 public class PrestadorController : ControllerBase
 {
     private readonly IPrestadorRepository _repository;
-    public PrestadorController(IPrestadorRepository repository)
+    private readonly IMapper _mapper;
+
+    public PrestadorController(IPrestadorRepository repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(Prestador prestador)
+    public async Task<IActionResult> Add(PrestadorDto prestador)
     {
-        return Ok(await _repository.Create(prestador));
+        return Ok(await _repository.Create(_mapper.Map<Prestador>(prestador)));
     }
 
     [HttpGet]
@@ -29,12 +32,12 @@ public class PrestadorController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> AtualizarPrestador(Prestador prestador)
+    public async Task<IActionResult> AtualizarPrestador(PrestadorDto prestador)
     {
-        return Ok(await _repository.Update(prestador));
+        return Ok(await _repository.Update(_mapper.Map<Prestador>(prestador)));
     }
 
-    [HttpPut("Desativar_Cliente")]
+    [HttpPut("DesativarPrestador")]
     public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
         return Ok(await _repository.Desabled(id));

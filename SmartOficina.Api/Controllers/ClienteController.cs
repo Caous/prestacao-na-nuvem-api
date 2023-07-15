@@ -5,15 +5,18 @@
 public class ClienteController : ControllerBase
 {
     private readonly IClienteRepository _repository;
-    public ClienteController(IClienteRepository repository)
+    private readonly IMapper _mapper;
+
+    public ClienteController(IClienteRepository repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync(Cliente cliente)
+    public async Task<IActionResult> AddAsync(ClienteDto cliente)
     {
-        return Ok(await _repository.Create(cliente));
+        return Ok(await _repository.Create(_mapper.Map<Cliente>(cliente)));
     }
 
     [HttpGet]
@@ -29,12 +32,12 @@ public class ClienteController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> AtualizarCliente(Cliente cliente)
+    public async Task<IActionResult> AtualizarCliente(ClienteDto cliente)
     {
-        return Ok(await _repository.Update(cliente));
+        return Ok(await _repository.Update(_mapper.Map<Cliente>(cliente)));
     }
 
-    [HttpPut("Desativar_Cliente")]
+    [HttpPut("DesativarCliente")]
     public async Task<IActionResult> DesativarCliente(Guid id)
     {
         return Ok(await _repository.Desabled(id));

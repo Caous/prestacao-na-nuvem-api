@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using SmartOficina.Api.Filters;
-using SmartOficina.Api.Infrastructure.Context;
-using SmartOficina.Api.Infrastructure.Repositories;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +48,8 @@ builder.Services.AddDbContext<OficinaContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //Repositories
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();

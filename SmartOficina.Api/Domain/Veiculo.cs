@@ -2,7 +2,7 @@
 
 public class Veiculo : Base 
 {
-    public string? Placa { get; set; }
+    public required string Placa { get; set; }
 
     public required string Marca { get; set; }
 

@@ -5,15 +5,18 @@
 public class VeiculoController : ControllerBase
 {
     private readonly IVeiculoRepository _repository;
-    public VeiculoController(IVeiculoRepository repository)
+    private readonly IMapper _mapper;
+
+    public VeiculoController(IVeiculoRepository repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(Veiculo veiculo)
+    public async Task<IActionResult> Add(VeiculoDto veiculo)
     {
-        return Ok(await _repository.Create(veiculo));
+        return Ok(await _repository.Create(_mapper.Map<Veiculo>(veiculo)));
     }
 
     [HttpGet]
@@ -29,12 +32,12 @@ public class VeiculoController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> AtualizarVeiculo(Veiculo veiculo)
+    public async Task<IActionResult> AtualizarVeiculo(VeiculoDto veiculo)
     {
-        return Ok(await _repository.Update(veiculo));
+        return Ok(await _repository.Update(_mapper.Map<Veiculo>(veiculo)));
     }
 
-    [HttpPut("Desativar_Cliente")]
+    [HttpPut("DesativarVeiculo")]
     public async Task<IActionResult> DesativarVeiculo(Guid id)
     {
         return Ok(await _repository.Desabled(id));
