@@ -19,9 +19,18 @@ namespace SmartOficina.Api.Infrastructure.Repositories
             {
                 _context.Prestador.Add(prestador);
                 await _context.SaveChangesAsync();
+                await _context.DisposeAsync();
                 return prestador;
             }
             else throw new Exception("Prestador já existe!");
+        }
+
+        public async Task<ICollection<Prestador>> GetAll()
+        {
+            var result = await _context.Prestador.ToArrayAsync();
+            await _context.DisposeAsync();
+
+            return result;
         }
     }
 }

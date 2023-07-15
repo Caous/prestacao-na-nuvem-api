@@ -12,8 +12,8 @@ using SmartOficina.Api.Infrastructure.Context;
 namespace SmartOficina.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(OficinaContext))]
-    [Migration("20230715000248_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230715020712_InitialData")]
+    partial class InitialData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,9 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.HasSequence<int>("PrestacaoOrdem")
+                .StartsAt(1000L);
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Cliente", b =>
                 {
@@ -50,6 +53,15 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cliente", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("2cdea58a-e3ab-4f86-bd9c-8689b671005d"),
+                            DataCadastro = new DateTime(2023, 7, 15, 2, 7, 11, 882, DateTimeKind.Utc).AddTicks(9655),
+                            Email = "testecliente@gmail.com",
+                            Nome = "Teste Cliente"
+                        });
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.PrestacaoServico", b =>
@@ -67,14 +79,25 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Property<Guid>("PrestadorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Referencia")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValueSql("FORMAT((NEXT VALUE FOR PrestacaoOrdem), 'OS#')");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("VeiculoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
 
                     b.HasIndex("PrestadorId");
+
+                    b.HasIndex("VeiculoId");
 
                     b.ToTable("PrestacaoServico", (string)null);
                 });
@@ -96,6 +119,14 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Prestador", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("34fe7575-16ce-4bcd-8574-7e5ed368beeb"),
+                            DataCadastro = new DateTime(2023, 7, 15, 2, 7, 11, 882, DateTimeKind.Utc).AddTicks(9867),
+                            Nome = "Teste Prestador"
+                        });
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Servico", b =>
@@ -122,6 +153,37 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.ToTable("Servico", (string)null);
                 });
 
+            modelBuilder.Entity("SmartOficina.Api.Domain.Veiculo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Marca")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("Modelo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Placa")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Veiculo", (string)null);
+                });
+
             modelBuilder.Entity("SmartOficina.Api.Domain.PrestacaoServico", b =>
                 {
                     b.HasOne("SmartOficina.Api.Domain.Cliente", "Cliente")
@@ -136,9 +198,17 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SmartOficina.Api.Domain.Veiculo", "Veiculo")
+                        .WithMany("Servicos")
+                        .HasForeignKey("VeiculoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Cliente");
 
                     b.Navigation("Prestador");
+
+                    b.Navigation("Veiculo");
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Servico", b =>
@@ -163,6 +233,11 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Prestador", b =>
+                {
+                    b.Navigation("Servicos");
+                });
+
+            modelBuilder.Entity("SmartOficina.Api.Domain.Veiculo", b =>
                 {
                     b.Navigation("Servicos");
                 });

@@ -19,5 +19,11 @@ namespace SmartOficina.Api.Controllers
         {
             return Ok(await _repository.Add(cliente));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _repository.GetAll());
+        }
     }
 }

@@ -29,9 +29,9 @@ namespace SmartOficina.Api.Controllers
         }
 
         [HttpGet("{prestadorId}")]
-        public async Task<IActionResult> GetByPrestador(Guid id)
+        public async Task<IActionResult> GetByPrestador(Guid prestadorId)
         {
-            return Ok(await _repository.GetByPrestador(id));
+            return Ok(await _repository.GetByPrestador(prestadorId));
         }
     }
 }

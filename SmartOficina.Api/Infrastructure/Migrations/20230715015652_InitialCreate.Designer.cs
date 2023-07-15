@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartOficina.Api.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using SmartOficina.Api.Infrastructure.Context;
 namespace SmartOficina.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(OficinaContext))]
-    partial class OficinaContextModelSnapshot : ModelSnapshot
+    [Migration("20230715015652_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,15 +53,6 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cliente", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("2cdea58a-e3ab-4f86-bd9c-8689b671005d"),
-                            DataCadastro = new DateTime(2023, 7, 15, 2, 7, 11, 882, DateTimeKind.Utc).AddTicks(9655),
-                            Email = "testecliente@gmail.com",
-                            Nome = "Teste Cliente"
-                        });
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.PrestacaoServico", b =>
@@ -116,14 +110,6 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Prestador", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("34fe7575-16ce-4bcd-8574-7e5ed368beeb"),
-                            DataCadastro = new DateTime(2023, 7, 15, 2, 7, 11, 882, DateTimeKind.Utc).AddTicks(9867),
-                            Nome = "Teste Prestador"
-                        });
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Servico", b =>

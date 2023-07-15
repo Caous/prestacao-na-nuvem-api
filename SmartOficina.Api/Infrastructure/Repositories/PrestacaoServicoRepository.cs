@@ -17,6 +17,7 @@ namespace SmartOficina.Api.Infrastructure.Repositories
 
             _context.PrestacaoServico.Add(prestacaoServico);
             await _context.SaveChangesAsync();
+            await _context.DisposeAsync();
 
             return prestacaoServico;
         }
@@ -28,13 +29,22 @@ namespace SmartOficina.Api.Infrastructure.Repositories
             {
                 prestacao.Status = status;
                 await _context.SaveChangesAsync();
+                await _context.DisposeAsync();
             }
             else throw new Exception("Prestacao não encontrada");
         }
 
         public async Task<ICollection<PrestacaoServico>> GetByPrestador(Guid prestadorId)
         {
-            return await _context.PrestacaoServico.Where(f => f.PrestadorId == prestadorId).ToArrayAsync();
+            var result =  await _context.PrestacaoServico
+                .Where(f => f.PrestadorId == prestadorId)
+                .Include(i => i.Prestador)
+                .Include(i => i.Cliente)
+                .Include(i => i.Servicos)
+                .ToArrayAsync();
+            await _context.DisposeAsync();
+
+            return result;
         }
     }
 }

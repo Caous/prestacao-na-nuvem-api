@@ -7,6 +7,6 @@
         public float Valor { get; set; }
 
         public Guid PrestacaoServicoId { get; set; }
-        public required PrestacaoServico PrestacaoServico { get; set; }
+        public PrestacaoServico? PrestacaoServico { get; set; }
     }
 }

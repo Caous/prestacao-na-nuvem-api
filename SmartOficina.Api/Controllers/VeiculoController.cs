@@ -6,18 +6,18 @@ namespace SmartOficina.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PrestadorController : ControllerBase
+    public class VeiculoController : ControllerBase
     {
-        private readonly IPrestadorRepository _repository;
-        public PrestadorController(IPrestadorRepository repository)
+        private readonly IVeiculoRepository _repository;
+        public VeiculoController(IVeiculoRepository repository)
         {
             _repository = repository;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync(Prestador prestador)
+        public async Task<IActionResult> AddAsync(Veiculo veiculo)
         {
-            return Ok(await _repository.Add(prestador));
+            return Ok(await _repository.Add(veiculo));
         }
 
         [HttpGet]

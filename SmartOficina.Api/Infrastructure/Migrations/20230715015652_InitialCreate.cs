@@ -11,6 +11,10 @@ namespace SmartOficina.Api.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateSequence<int>(
+                name: "PrestacaoOrdem",
+                startValue: 1000L);
+
             migrationBuilder.CreateTable(
                 name: "Cliente",
                 columns: table => new
@@ -40,13 +44,31 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Veiculo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Placa = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    Marca = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Tipo = table.Column<int>(type: "int", nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Veiculo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PrestacaoServico",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Referencia = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValueSql: "FORMAT((NEXT VALUE FOR PrestacaoOrdem), 'OS#')"),
                     Status = table.Column<int>(type: "int", nullable: false),
                     PrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VeiculoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -62,6 +84,12 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         name: "FK_PrestacaoServico_Prestador_PrestadorId",
                         column: x => x.PrestadorId,
                         principalTable: "Prestador",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PrestacaoServico_Veiculo_VeiculoId",
+                        column: x => x.VeiculoId,
+                        principalTable: "Veiculo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -97,6 +125,11 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                 column: "PrestadorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PrestacaoServico_VeiculoId",
+                table: "PrestacaoServico",
+                column: "VeiculoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Servico_PrestacaoServicoId",
                 table: "Servico",
                 column: "PrestacaoServicoId");
@@ -116,6 +149,12 @@ namespace SmartOficina.Api.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Prestador");
+
+            migrationBuilder.DropTable(
+                name: "Veiculo");
+
+            migrationBuilder.DropSequence(
+                name: "PrestacaoOrdem");
         }
     }
 }
