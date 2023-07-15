@@ -1,29 +1,49 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SmartOficina.Api.Domain;
-using SmartOficina.Api.Infrastructure.Repositories;
+﻿namespace SmartOficina.Api.Controllers;
 
-namespace SmartOficina.Api.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class ClienteController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClienteController : ControllerBase
+    private readonly IClienteRepository _repository;
+    public ClienteController(IClienteRepository repository)
     {
-        private readonly IClienteRepository _repository;
-        public ClienteController(IClienteRepository repository)
-        {
-            _repository = repository;
-        }
+        _repository = repository;
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> AddAsync(Cliente cliente)
-        {
-            return Ok(await _repository.Add(cliente));
-        }
+    [HttpPost]
+    public async Task<IActionResult> AddAsync(Cliente cliente)
+    {
+        return Ok(await _repository.Add(cliente));
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            return Ok(await _repository.GetAll());
-        }
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        return Ok(await _repository.GetAll());
+    }
+
+    [HttpGet("id")]
+    public async Task<IActionResult> GetId(Guid id)
+    {
+
+        return Ok();
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> AtualizarCliente()
+    {
+        return Ok();
+    }
+
+    [HttpPut("Desativar_Cliente")]
+    public async Task<IActionResult> DesativarCliente()
+    {
+        return Ok();
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeletarCliente()
+    {
+        return Ok();
     }
 }
