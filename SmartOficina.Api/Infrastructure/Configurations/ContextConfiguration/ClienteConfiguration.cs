@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Infrastructure.Mapping;
+﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
 
 public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
 {

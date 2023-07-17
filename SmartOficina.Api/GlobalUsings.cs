@@ -7,17 +7,23 @@ global using Microsoft.AspNetCore.Mvc.Filters;
 global using System.Runtime.InteropServices;
 global using AutoMapper;
 global using System.Security.Cryptography;
+global using Microsoft.OpenApi.Models;
+global using System.Text.Json.Serialization;
 
 //API
 global using SmartOficina.Api.Dto;
-
+global using SmartOficina.Api.Filters;
 
 //Domain
-global using SmartOficina.Api.Domain;
+global using SmartOficina.Api.Domain.Model;
 
 //Infrastructure
-global using SmartOficina.Api.Infrastructure.Configuration;
 global using SmartOficina.Api.Infrastructure.Context;
 global using SmartOficina.Api.Infrastructure.Repositories.GenericRepository;
-global using SmartOficina.Api.Infrastructure.Mapping;
 global using SmartOficina.Api.Infrastructure.Repositories.Interfaces;
+global using SmartOficina.Api.Infrastructure.Repositories.Services;
+global using SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
+global using SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
+global using SmartOficina.Api.Infrastructure.Configurations.SwaggerConfig;
+
+

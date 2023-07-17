@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Infrastructure.Configuration;
+﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
 
 public class PrestacaoServicoConfiguration : IEntityTypeConfiguration<PrestacaoServico>
 {

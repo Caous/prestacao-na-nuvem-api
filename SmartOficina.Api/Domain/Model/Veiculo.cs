@@ -1,6 +1,6 @@
-﻿namespace SmartOficina.Api.Domain;
+﻿namespace SmartOficina.Api.Domain.Model;
 
-public class Veiculo : Base 
+public class Veiculo : Base
 {
     public required string Placa { get; set; }
 

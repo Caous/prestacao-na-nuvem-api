@@ -1,4 +1,5 @@
-﻿using SmartOficina.Api.Infrastructure.Repositories.Interfaces;
+﻿using SmartOficina.Api.Domain.Model;
+using SmartOficina.Api.Infrastructure.Repositories.Interfaces;
 
 namespace SmartOficina.Api.Infrastructure.Repositories.Services;
 

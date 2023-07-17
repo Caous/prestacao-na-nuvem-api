@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Domain;
+﻿namespace SmartOficina.Api.Domain.Model;
 
 public class Prestador : Base
 {

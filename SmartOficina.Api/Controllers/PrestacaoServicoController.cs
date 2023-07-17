@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Infrastructure.Repositories.Interfaces;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
