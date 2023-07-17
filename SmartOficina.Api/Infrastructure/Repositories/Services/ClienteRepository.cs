@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Infrastructure.Repositories;
+﻿using SmartOficina.Api.Infrastructure.Repositories.Interfaces;
+
+namespace SmartOficina.Api.Infrastructure.Repositories.Services;
 
 public class ClienteRepository : GenericRepository<Cliente>, IClienteRepository
 {

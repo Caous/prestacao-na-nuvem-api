@@ -1,5 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using SmartOficina.Api.Filters;
+using SmartOficina.Api.Infrastructure.Repositories.Interfaces;
+using SmartOficina.Api.Infrastructure.Repositories.Services;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);

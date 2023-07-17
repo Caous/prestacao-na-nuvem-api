@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Infrastructure.Repositories;
+﻿using SmartOficina.Api.Infrastructure.Repositories.Interfaces;
+
+namespace SmartOficina.Api.Infrastructure.Repositories.Services;
 
 public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, IPrestacaoServicoRepository
 {
@@ -32,7 +34,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
 
     public async Task<ICollection<PrestacaoServico>> GetByPrestador(Guid prestadorId)
     {
-        var result =  await _context.PrestacaoServico
+        var result = await _context.PrestacaoServico
             .Where(f => f.PrestadorId == prestadorId)
             .Include(i => i.Prestador)
             .Include(i => i.Cliente)

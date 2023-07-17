@@ -16,8 +16,8 @@ global using SmartOficina.Api.Dto;
 global using SmartOficina.Api.Domain;
 
 //Infrastructure
-global using SmartOficina.Api.Infrastructure.Repositories;
 global using SmartOficina.Api.Infrastructure.Configuration;
 global using SmartOficina.Api.Infrastructure.Context;
 global using SmartOficina.Api.Infrastructure.Repositories.GenericRepository;
 global using SmartOficina.Api.Infrastructure.Mapping;
+global using SmartOficina.Api.Infrastructure.Repositories.Interfaces;
