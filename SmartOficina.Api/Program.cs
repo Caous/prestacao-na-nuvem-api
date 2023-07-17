@@ -58,6 +58,9 @@ builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IPrestadorRepository, PrestadorRepository>();
 builder.Services.AddScoped<IVeiculoRepository, VeiculoRepository>();
 builder.Services.AddScoped<IPrestacaoServicoRepository, PrestacaoServicoRepository>();
+builder.Services.AddScoped<ICategoriaServicoRepository, CategoriaServicoRepository>();
+builder.Services.AddScoped<ISubServicoRepository, SubServicoRepository>();
+
 
 var app = builder.Build();
 
