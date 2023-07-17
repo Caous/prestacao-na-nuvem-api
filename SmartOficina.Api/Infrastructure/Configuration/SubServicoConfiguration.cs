@@ -14,7 +14,8 @@
 
             builder.Property(x => x.Titulo).HasMaxLength(100).IsRequired();
 
-            builder.HasMany(s => s.Servicos).WithOne(p => p.SubServico).HasForeignKey(f => f.SubServicoId);
+            builder.HasOne(p => p.Categoria).WithMany(s => s.SubServicos).HasForeignKey(f => f.CategoriaId);
+
         }
     }
 }

@@ -13,5 +13,8 @@ public class ServicoConfiguration : IEntityTypeConfiguration<Servico>
         builder.Property(p => p.Nome).IsRequired().HasMaxLength(250);
 
         builder.Property(p => p.Valor).IsRequired();
+
+        builder.HasOne(p => p.SubServico).WithMany(s => s.Servicos).HasForeignKey(f => f.SubServicoId);
+
     }
 }

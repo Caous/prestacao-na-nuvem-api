@@ -4,7 +4,7 @@ public class CategoriaServicoConfiguration : IEntityTypeConfiguration<CategoriaS
 {
     public void Configure(EntityTypeBuilder<CategoriaServico> builder)
     {
-        builder.ToTable(nameof(Servico));
+        builder.ToTable(nameof(CategoriaServico));
 
         builder.HasKey(k => k.Id);
 
@@ -14,6 +14,5 @@ public class CategoriaServicoConfiguration : IEntityTypeConfiguration<CategoriaS
 
         builder.Property(p => p.Desc).HasMaxLength(200).IsRequired();
 
-        builder.HasMany(s => s.SubServicos).WithOne(p => p.Categoria).HasForeignKey(f => f.CategoriaId);
     }
 }
