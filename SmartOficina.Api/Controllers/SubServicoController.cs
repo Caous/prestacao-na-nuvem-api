@@ -4,35 +4,55 @@
 [ApiController]
 public class SubServicoController : ControllerBase
 {
-    // GET: api/<ValuesController>
-    [HttpGet]
-    public IEnumerable<string> Get()
-    {
-        return new string[] { "value1", "value2" };
-    }
+    private readonly ISubServicoRepository _repository;
+    private readonly IMapper _mapper;
 
-    // GET api/<ValuesController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
+    public SubServicoController(ISubServicoRepository subServicoRepository, IMapper mapper)
     {
-        return "value";
+        _repository = subServicoRepository;
+        _mapper = mapper;
     }
-
-    // POST api/<ValuesController>
     [HttpPost]
-    public void Post([FromBody] string value)
+    public async Task<IActionResult> AddAsync(SubServicoDto subServico)
     {
+        return Ok(await _repository.Create(_mapper.Map<SubServico>(subServico)));
     }
 
-    // PUT api/<ValuesController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
     {
+        return Ok(await _repository.GetAll());
     }
 
-    // DELETE api/<ValuesController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpGet("id")]
+    public async Task<IActionResult> GetId(Guid id)
     {
+        return Ok(await _repository.FindById(id));
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> AtualizarSubServico(SubServicoDto subServico)
+    {
+        return Ok(await _repository.Update(_mapper.Map<SubServico>(subServico)));
+    }
+
+    [HttpPut("DesativarSubServico")]
+    public async Task<IActionResult> DesativarSubServico(Guid id)
+    {
+        return Ok(await _repository.Desabled(id));
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeletarSubServico(Guid id)
+    {
+        try
+        {
+            await _repository.Delete(id);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

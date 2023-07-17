@@ -4,35 +4,56 @@
 [ApiController]
 public class CategoriaServicoController : ControllerBase
 {
-    // GET: api/<CategoriaServicoController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    private readonly ICategoriaServicoRepository _repository;
+    private readonly IMapper _mapper;
+
+    public CategoriaServicoController(ICategoriaServicoRepository categoriaServicoRepository, IMapper mapper)
     {
-        return new string[] { "value1", "value2" };
+        _repository = categoriaServicoRepository;
+        _mapper = mapper;
     }
 
-    // GET api/<CategoriaServicoController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
-    {
-        return "value";
-    }
-
-    // POST api/<CategoriaServicoController>
     [HttpPost]
-    public void Post([FromBody] string value)
+    public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
     {
+        return Ok(await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico)));
     }
 
-    // PUT api/<CategoriaServicoController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
     {
+        return Ok(await _repository.GetAll());
     }
 
-    // DELETE api/<CategoriaServicoController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpGet("id")]
+    public async Task<IActionResult> GetId(Guid id)
     {
+        return Ok(await _repository.FindById(id));
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> AtualizarCategoria(CategoriaServicoDto categoriaServico)
+    {
+        return Ok(await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico)));
+    }
+
+    [HttpPut("DesativarCategoria")]
+    public async Task<IActionResult> DesativarCategoria(Guid id)
+    {
+        return Ok(await _repository.Desabled(id));
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeletarCategoria(Guid id)
+    {
+        try
+        {
+            await _repository.Delete(id);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }
