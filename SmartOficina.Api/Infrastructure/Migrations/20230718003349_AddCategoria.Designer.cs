@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartOficina.Api.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using SmartOficina.Api.Infrastructure.Context;
 namespace SmartOficina.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(OficinaContext))]
-    partial class OficinaContextModelSnapshot : ModelSnapshot
+    [Migration("20230718003349_AddCategoria")]
+    partial class AddCategoria
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,14 +54,14 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("27a7b1a7-86d3-4e28-8737-9193d449e1b2"),
+                            Id = new Guid("9007d333-ff0c-41df-9518-f5f893652f03"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Serviços na parte de suspensão/geometria",
                             Titulo = "Suspensão"
                         },
                         new
                         {
-                            Id = new Guid("b03e8c8c-2abe-425b-bf0d-e517f4595cba"),
+                            Id = new Guid("21b1de84-b459-41d8-909c-e347af37257e"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Serviço gerais na parte de motor do veículo",
                             Titulo = "Motor"
@@ -94,8 +97,8 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("899f9291-308d-4a94-b19d-299ee534c0ab"),
-                            DataCadastro = new DateTime(2023, 7, 18, 1, 0, 44, 451, DateTimeKind.Utc).AddTicks(7059),
+                            Id = new Guid("cf5adba5-9753-439f-a584-9defdd1381cc"),
+                            DataCadastro = new DateTime(2023, 7, 18, 0, 33, 48, 944, DateTimeKind.Utc).AddTicks(8013),
                             Email = "testecliente@gmail.com",
                             Nome = "Teste Cliente"
                         });
@@ -160,8 +163,8 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("957392ea-2a13-4684-a8af-b69e423d87a8"),
-                            DataCadastro = new DateTime(2023, 7, 18, 1, 0, 44, 451, DateTimeKind.Utc).AddTicks(7215),
+                            Id = new Guid("b4a4cc90-6196-4d71-8a53-b9256546b417"),
+                            DataCadastro = new DateTime(2023, 7, 18, 0, 33, 48, 944, DateTimeKind.Utc).AddTicks(8195),
                             Nome = "Teste Prestador"
                         });
                 });
@@ -226,32 +229,32 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f8ffcf58-3ccf-43c0-a2b4-afaf399d809b"),
-                            CategoriaId = new Guid("27a7b1a7-86d3-4e28-8737-9193d449e1b2"),
+                            Id = new Guid("e61932bf-d005-4737-8f73-76c3ed972f8a"),
+                            CategoriaId = new Guid("9007d333-ff0c-41df-9518-f5f893652f03"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Troca da peça",
                             Titulo = "Troca bandeja"
                         },
                         new
                         {
-                            Id = new Guid("7b39de98-16c9-4cf1-8be2-ca78b39ccc37"),
-                            CategoriaId = new Guid("27a7b1a7-86d3-4e28-8737-9193d449e1b2"),
+                            Id = new Guid("fe519082-ce88-4478-b59f-89f907065e5f"),
+                            CategoriaId = new Guid("9007d333-ff0c-41df-9518-f5f893652f03"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Troca da peça",
                             Titulo = "Troca Amortecedor"
                         },
                         new
                         {
-                            Id = new Guid("033e7e22-73f8-4573-a35b-ffc222236295"),
-                            CategoriaId = new Guid("b03e8c8c-2abe-425b-bf0d-e517f4595cba"),
+                            Id = new Guid("61b38a3e-c2c8-49f0-9fb8-17c5b8c61abc"),
+                            CategoriaId = new Guid("21b1de84-b459-41d8-909c-e347af37257e"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Troca de todos os pistões",
                             Titulo = "Troca pistão"
                         },
                         new
                         {
-                            Id = new Guid("019e301b-03d5-46fd-9d78-a9c5ac19f213"),
-                            CategoriaId = new Guid("b03e8c8c-2abe-425b-bf0d-e517f4595cba"),
+                            Id = new Guid("86a1333b-f744-450c-8600-b888dc151cc5"),
+                            CategoriaId = new Guid("21b1de84-b459-41d8-909c-e347af37257e"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Bloco condenado/Sem retífica, troca por um novo",
                             Titulo = "Troca bloco"
@@ -288,35 +291,6 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Veiculo", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("977c9490-2f3d-429d-a102-09f8317843c2"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Marca = "Chevrolet",
-                            Modelo = "Agile",
-                            Placa = "AAA-1234",
-                            Tipo = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("5c4289cf-2578-4bc8-baa1-e1be20943274"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Marca = "Hyundai",
-                            Modelo = "I30",
-                            Placa = "BBB-1234",
-                            Tipo = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("cec1b671-de00-482c-8a89-14aeefab8092"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Marca = "Chevrolet",
-                            Modelo = "Celta",
-                            Placa = "CCC-1234",
-                            Tipo = 0
-                        });
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.PrestacaoServico", b =>

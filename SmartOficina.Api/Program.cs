@@ -1,5 +1,14 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:5173");
+        policy.AllowAnyHeader();
+    });
+});
+
 builder.Services.AddControllers(opt =>
 {
     opt.Filters.Add<ApiKeyAttribute>();
@@ -28,6 +37,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 

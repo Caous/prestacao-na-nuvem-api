@@ -21,7 +21,7 @@ public class SubServicoController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _repository.GetAll());
+        return Ok(await _repository.GetAllWithIncludes());
     }
 
     [HttpGet("id")]

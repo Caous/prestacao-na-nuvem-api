@@ -2,4 +2,5 @@
 
 public interface ISubServicoRepository : IGenericRepository<SubServico>
 {
+    Task<ICollection<SubServico>> GetAllWithIncludes();
 }
