@@ -62,7 +62,8 @@ public class OficinaContext : DbContext
             },
         });
 
-        modelBuilder.Entity<SubServico>().HasData(new SubServico() {
+        modelBuilder.Entity<SubServico>().HasData(new SubServico()
+        {
             Id = Guid.NewGuid(),
             Titulo = "Troca bandeja",
             Desc = "Troca da peça",
@@ -91,6 +92,12 @@ public class OficinaContext : DbContext
             Titulo = "Troca bloco",
             Desc = "Bloco condenado/Sem retífica, troca por um novo",
             CategoriaId = guidMotor
+        });
+
+        modelBuilder.Entity<Veiculo>().HasData(new Veiculo[] {
+            new Veiculo() { Id = Guid.NewGuid(), Marca = "Chevrolet", Modelo = "Agile", Placa = "AAA-1234" },
+            new Veiculo() { Id = Guid.NewGuid(), Marca = "Hyundai", Modelo = "I30", Placa = "BBB-1234" },
+            new Veiculo() { Id = Guid.NewGuid(), Marca = "Chevrolet", Modelo = "Celta", Placa = "CCC-1234" },
         });
 
         base.OnModelCreating(modelBuilder);
