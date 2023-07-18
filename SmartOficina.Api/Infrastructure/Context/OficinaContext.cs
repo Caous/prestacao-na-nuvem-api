@@ -44,6 +44,54 @@ public class OficinaContext : DbContext
 
         modelBuilder.Entity<Cliente>().HasData(new Cliente() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, Nome = "Teste Cliente", Email = "testecliente@gmail.com" });
         modelBuilder.Entity<Prestador>().HasData(new Prestador() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, Nome = "Teste Prestador" });
+        var guidSusp = Guid.NewGuid();
+        var guidMotor = Guid.NewGuid();
+        modelBuilder.Entity<CategoriaServico>().HasData(new CategoriaServico[]
+        {
+            new CategoriaServico()
+            {
+                Id = guidSusp,
+                Titulo = "Suspensão",
+                Desc = "Serviços na parte de suspensão/geometria"
+            },
+            new CategoriaServico
+            {
+                Id = guidMotor,
+                Titulo = "Motor",
+                Desc = "Serviço gerais na parte de motor do veículo"
+            },
+        });
+
+        modelBuilder.Entity<SubServico>().HasData(new SubServico() {
+            Id = Guid.NewGuid(),
+            Titulo = "Troca bandeja",
+            Desc = "Troca da peça",
+            CategoriaId = guidSusp
+        });
+
+        modelBuilder.Entity<SubServico>().HasData(new SubServico()
+        {
+            Id = Guid.NewGuid(),
+            Titulo = "Troca Amortecedor",
+            Desc = "Troca da peça",
+            CategoriaId = guidSusp
+        });
+
+        modelBuilder.Entity<SubServico>().HasData(new SubServico()
+        {
+            Id = Guid.NewGuid(),
+            Titulo = "Troca pistão",
+            Desc = "Troca de todos os pistões",
+            CategoriaId = guidMotor
+        });
+
+        modelBuilder.Entity<SubServico>().HasData(new SubServico()
+        {
+            Id = Guid.NewGuid(),
+            Titulo = "Troca bloco",
+            Desc = "Bloco condenado/Sem retífica, troca por um novo",
+            CategoriaId = guidMotor
+        });
 
         base.OnModelCreating(modelBuilder);
     }
