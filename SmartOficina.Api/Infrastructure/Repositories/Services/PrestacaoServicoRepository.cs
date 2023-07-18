@@ -36,7 +36,10 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
             .Where(f => f.PrestadorId == prestadorId)
             .Include(i => i.Prestador)
             .Include(i => i.Cliente)
-            .Include(i => i.Servicos)
+            .Include(i => i.Veiculo)
+            .Include(i => i.Servicos)   
+                .ThenInclude(i=> i.SubServico)
+                .ThenInclude(i => i.Categoria)
             .ToArrayAsync();
         await _context.DisposeAsync();
 

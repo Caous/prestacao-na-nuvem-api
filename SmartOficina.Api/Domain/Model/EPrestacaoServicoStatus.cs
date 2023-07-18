@@ -7,5 +7,6 @@ public enum EPrestacaoServicoStatus
     Aprovado,
     Rejeitado,
     Andamento,
+    Teste,
     Concluido
 }

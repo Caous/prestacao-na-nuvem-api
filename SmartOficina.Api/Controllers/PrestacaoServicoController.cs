@@ -28,6 +28,12 @@ public class PrestacaoServicoController : ControllerBase
         return Ok(await _repository.FindById(id));
     }
 
+    [HttpGet("PrestacaoServicoEnriquecidoPrestador/{id}")]
+    public async Task<IActionResult> GetByPrestacaoServicoEnriquecidoPrestador(Guid id)
+    {
+        return Ok(await _repository.GetByPrestador(id));
+    }
+
     [HttpPut]
     public async Task<IActionResult> AtualizarPrestacaoServico(PrestacaoServico prestacaoServico)
     {

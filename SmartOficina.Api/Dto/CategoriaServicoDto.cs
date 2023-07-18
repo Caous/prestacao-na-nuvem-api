@@ -2,6 +2,7 @@
 
 public class CategoriaServicoDto
 {
-    public string Titulo { get; set; }
-    public string Desc { get; set; }
+    public string Titulo { get; set; } = string.Empty;
+    public string Desc { get; set; } = string.Empty;
+    public Guid? Id { get; set; }
 }
