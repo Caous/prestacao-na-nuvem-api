@@ -21,6 +21,7 @@ public static class DependecyInjectionConfig
             {
                 policy.WithOrigins("http://localhost:5173");
                 policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
             });
         });
         #endregion
