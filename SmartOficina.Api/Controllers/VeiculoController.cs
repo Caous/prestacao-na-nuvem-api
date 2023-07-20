@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Model;
+
+namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,6 +18,10 @@ public class VeiculoController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add(VeiculoDto veiculo)
     {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Create(_mapper.Map<Veiculo>(veiculo)));
     }
 
@@ -28,18 +34,39 @@ public class VeiculoController : ControllerBase
     [HttpGet("id")]
     public async Task<IActionResult> GetId(Guid id)
     {
+        if (!ModelState.IsValid || id == null)
+        {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.FindById(id));
     }
 
     [HttpPut]
     public async Task<IActionResult> AtualizarVeiculo(VeiculoDto veiculo)
     {
+        if (!ModelState.IsValid || !veiculo.Id.HasValue)
+        {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Update(_mapper.Map<Veiculo>(veiculo)));
     }
 
     [HttpPut("DesativarVeiculo")]
     public async Task<IActionResult> DesativarVeiculo(Guid id)
     {
+        if (!ModelState.IsValid || id == null)
+        {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Desabled(id));
     }
 
@@ -48,6 +75,13 @@ public class VeiculoController : ControllerBase
     {
         try
         {
+            if (!ModelState.IsValid || id == null)
+            {
+                if (ModelState.ErrorCount < 1)
+                    ModelState.AddModelError("error", "Id invalid");
+
+                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            }
             await _repository.Delete(id);
             return Ok();
         }

@@ -2,7 +2,7 @@
 {
     public class ServicoDto
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public required string Nome { get; set; }
         public float Valor { get; set; }
         public Guid SubServicoId { get; set; }

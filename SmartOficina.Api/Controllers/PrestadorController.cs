@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Model;
+
+namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,6 +18,10 @@ public class PrestadorController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add(PrestadorDto prestador)
     {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Create(_mapper.Map<Prestador>(prestador)));
     }
 
@@ -28,18 +34,39 @@ public class PrestadorController : ControllerBase
     [HttpGet("id")]
     public async Task<IActionResult> GetId(Guid id)
     {
+        if (!ModelState.IsValid || id == null)
+        {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.FindById(id));
     }
 
     [HttpPut]
     public async Task<IActionResult> AtualizarPrestador(PrestadorDto prestador)
     {
+        if (!ModelState.IsValid || !prestador.Id.HasValue)
+        {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Update(_mapper.Map<Prestador>(prestador)));
     }
 
     [HttpPut("DesativarPrestador")]
     public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
+        if (!ModelState.IsValid || id == null)
+        {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Desabled(id));
     }
 
@@ -48,6 +75,13 @@ public class PrestadorController : ControllerBase
     {
         try
         {
+            if (!ModelState.IsValid || id == null)
+            {
+                if (ModelState.ErrorCount < 1)
+                    ModelState.AddModelError("error", "Id invalid");
+
+                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            }
             await _repository.Delete(id);
             return Ok();
         }

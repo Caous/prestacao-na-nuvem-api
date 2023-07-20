@@ -9,4 +9,5 @@ public class VeiculoDto
     public required string Modelo { get; set; }
 
     public EVeiculoTipo Tipo { get; set; }
+    public Guid? Id { get; set; }
 }

@@ -37,8 +37,11 @@ public class CategoriaServicoController : ControllerBase
     [HttpGet("id")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || id ==  null)
         {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
         return Ok(await _repository.FindById(id));
@@ -47,8 +50,12 @@ public class CategoriaServicoController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> AtualizarCategoria(CategoriaServicoDto categoriaServico)
     {
-        if (!ModelState.IsValid)
+
+        if (!ModelState.IsValid || !categoriaServico.Id.HasValue)
         {
+            if(ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
         return Ok(await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico)));
@@ -57,8 +64,11 @@ public class CategoriaServicoController : ControllerBase
     [HttpPut("DesativarCategoria")]
     public async Task<IActionResult> DesativarCategoria(Guid id)
     {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || id == null)
         {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
         return Ok(await _repository.Desabled(id));
@@ -69,8 +79,11 @@ public class CategoriaServicoController : ControllerBase
     {
         try
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || id == null)
             {
+                if (ModelState.ErrorCount < 1)
+                    ModelState.AddModelError("error", "Id invalid");
+
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
             await _repository.Delete(id);
