@@ -16,6 +16,10 @@ public class PrestacaoServicoController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add(PrestacaoServico prestacaoServico)
     {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico)));
     }
 
