@@ -16,30 +16,51 @@ public class CategoriaServicoController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
     {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
+
         return Ok(await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico)));
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.GetAll());
     }
 
     [HttpGet("id")]
     public async Task<IActionResult> GetId(Guid id)
     {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.FindById(id));
     }
 
     [HttpPut]
     public async Task<IActionResult> AtualizarCategoria(CategoriaServicoDto categoriaServico)
     {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico)));
     }
 
     [HttpPut("DesativarCategoria")]
     public async Task<IActionResult> DesativarCategoria(Guid id)
     {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
         return Ok(await _repository.Desabled(id));
     }
 
@@ -48,6 +69,10 @@ public class CategoriaServicoController : ControllerBase
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            }
             await _repository.Delete(id);
             return Ok();
         }
