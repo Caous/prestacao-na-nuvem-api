@@ -7,7 +7,7 @@ public class PrestacaoServico : Base
     public Prestador? Prestador { get; set; }
     public required Guid PrestadorId { get; set; }
     public Cliente? Cliente { get; set; }
-    public required Guid ClienteId { get; set; }
+    public Guid? ClienteId { get; set; }
     public Veiculo? Veiculo { get; set; }
     public Guid? VeiculoId { get; set; }
     public ICollection<Servico>? Servicos { get; set; }
