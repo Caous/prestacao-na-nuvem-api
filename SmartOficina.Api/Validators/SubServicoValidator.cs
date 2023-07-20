@@ -6,14 +6,14 @@ public class SubServicoValidator : AbstractValidator<SubServicoDto>
     {
         RuleFor(x => x.Desc)
             .NotEmpty()
-            .WithMessage("Por favor adiconar uma descrição para o serviço")
+            .WithMessage(SubServicoConst.DescricaoValidation)
             .NotNull()
-            .WithMessage("Por favor adicionar uma descrição para o serviço");
+            .WithMessage(SubServicoConst.DescricaoValidation);
 
         RuleFor(x => x.Titulo)
             .NotEmpty()
-            .WithMessage("Por favor adiconar um titulo para o serviço")
+            .WithMessage(SubServicoConst.TituloValidation)
             .NotNull()
-            .WithMessage("Por favor adicionar uma descrição para o serviço");
+            .WithMessage(SubServicoConst.TituloValidation);
     }
 }

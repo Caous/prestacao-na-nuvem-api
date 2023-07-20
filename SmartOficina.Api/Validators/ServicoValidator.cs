@@ -6,14 +6,14 @@ public class ServicoValidator : AbstractValidator<ServicoDto>
     {
         RuleFor(x => x.Nome)
             .NotEmpty()
-            .WithMessage(SubServicoConst.NomeValidation)
+            .WithMessage(ServicoConst.NomeValidation)
             .NotNull()
-            .WithMessage(SubServicoConst.NomeValidation);
+            .WithMessage(ServicoConst.NomeValidation);
 
         RuleFor(x => x.Valor)
             .NotEmpty()
-            .WithMessage(SubServicoConst.ValorValidation)
+            .WithMessage(ServicoConst.ValorValidation)
             .NotNull()
-            .WithMessage(SubServicoConst.ValorValidation);
+            .WithMessage(ServicoConst.ValorValidation);
     }
 }
