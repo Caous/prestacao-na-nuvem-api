@@ -15,5 +15,11 @@ public class SubServicoValidator : AbstractValidator<SubServicoDto>
             .WithMessage(SubServicoConst.TituloValidation)
             .NotNull()
             .WithMessage(SubServicoConst.TituloValidation);
+
+        RuleFor(x => x.CategoriaId)
+            .NotEmpty()
+            .WithMessage(SubServicoConst.IdCategoriaValidation)
+            .NotNull()
+            .WithMessage(SubServicoConst.IdCategoriaValidation);
     }
 }
