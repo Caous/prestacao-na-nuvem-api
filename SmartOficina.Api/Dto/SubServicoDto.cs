@@ -6,4 +6,5 @@ public class SubServicoDto
     public string Desc { get; set; }
     public Guid? CategoriaId { get; set; }
     public Guid? Id { get; set; }
+    public CategoriaServicoDto? Categoria { get; set; }
 }

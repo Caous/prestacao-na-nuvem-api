@@ -52,7 +52,7 @@ public class PrestacaoServicoController : ControllerBase
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.GetByPrestador(id));
+        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestador(id)));
     }
 
     [HttpPut]
