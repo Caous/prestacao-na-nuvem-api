@@ -12,6 +12,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IPrestacaoServicoRepository, PrestacaoServicoRepository>();
         services.AddScoped<ICategoriaServicoRepository, CategoriaServicoRepository>();
         services.AddScoped<ISubServicoRepository, SubServicoRepository>();
+        services.AddScoped<IServicoRepository, ServicoRepository>();
         #endregion
 
         #region Cors

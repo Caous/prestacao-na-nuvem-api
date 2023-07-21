@@ -4,4 +4,5 @@ public interface IPrestacaoServicoRepository : IGenericRepository<PrestacaoServi
 {
     Task ChangeStatus(Guid id, EPrestacaoServicoStatus status);
     Task<ICollection<PrestacaoServico>> GetByPrestador(Guid prestadorId);
+    Task<PrestacaoServico> Update(PrestacaoServico item);
 }

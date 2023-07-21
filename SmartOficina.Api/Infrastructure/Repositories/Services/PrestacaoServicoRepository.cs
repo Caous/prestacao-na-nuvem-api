@@ -1,21 +1,60 @@
-﻿namespace SmartOficina.Api.Infrastructure.Repositories.Services;
+﻿using SmartOficina.Api.Domain.Model;
+
+namespace SmartOficina.Api.Infrastructure.Repositories.Services;
 
 public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, IPrestacaoServicoRepository
 {
     private readonly OficinaContext _context;
-    public PrestacaoServicoRepository(OficinaContext context) : base(context)
+    private readonly IServicoRepository _servicoRepository;
+
+    public PrestacaoServicoRepository(OficinaContext context, IServicoRepository servicoRepository) : base(context)
     {
         _context = context;
+        _servicoRepository = servicoRepository;
     }
-    public async Task<PrestacaoServico> Add(PrestacaoServico prestacaoServico)
-    {
-        prestacaoServico.Status = EPrestacaoServicoStatus.Aberto;
 
-        _context.PrestacaoServico.Add(prestacaoServico);
-        await _context.SaveChangesAsync();
+    public async Task<PrestacaoServico> FindById(Guid id)
+    {
+        var result = _context.PrestacaoServico
+            .Where(f => f.Id == id)
+            .Include(i => i.Prestador)
+            .Include(i => i.Cliente)
+            .Include(i => i.Veiculo)
+            .Include(i => i.Servicos)
+                .ThenInclude(i => i.SubServico)
+                .ThenInclude(i => i.Categoria)
+            .ToList();
         await _context.DisposeAsync();
 
-        return prestacaoServico;
+        return result.FirstOrDefault();
+    }
+
+    public async Task<PrestacaoServico> Update(PrestacaoServico item)
+    {
+        if (item.Servicos.Any())
+        {
+            foreach (var servico in item.Servicos)
+            {
+                var servicoConsulta = _context.Set<Servico>().AsNoTracking().FirstOrDefault(x => x.Id == servico.Id);
+
+                if (servicoConsulta == null)
+                {
+                    servico.PrestacaoServicoId = item.Id;
+                    await _context.Set<Servico>().AddAsync(servico);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    _context.Set<Servico>().Update(servico);
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
+        _context.Set<PrestacaoServico>().Update(item);
+        await _context.SaveChangesAsync();
+        await _context.DisposeAsync();
+        
+        return item;
     }
 
     public async Task ChangeStatus(Guid id, EPrestacaoServicoStatus status)
@@ -37,8 +76,8 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
             .Include(i => i.Prestador)
             .Include(i => i.Cliente)
             .Include(i => i.Veiculo)
-            .Include(i => i.Servicos)   
-                .ThenInclude(i=> i.SubServico)
+            .Include(i => i.Servicos)
+                .ThenInclude(i => i.SubServico)
                 .ThenInclude(i => i.Categoria)
             .ToArrayAsync();
         await _context.DisposeAsync();

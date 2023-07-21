@@ -35,8 +35,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         T item = await _context.Set<T>().FindAsync(id);
 
         if (item is null)
-            throw new Exception("Indice não encontrado");       
-        
+            throw new Exception("Indice não encontrado");
+
         //item.GetType().GetProperty("Ativo").SetValue(Boolean,true);
         //item.GetType().GetProperty("Dt_Desativação").SetValue(DateTime, DateTime.Now);
 
@@ -49,7 +49,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     }
 
-    public async Task<T> FindById(Guid Id) => await _context.Set<T>().FindAsync(Id);
+    public async Task<T> FindById(Guid Id) =>  await _context.Set<T>().FindAsync(Id);   
 
 
     public async Task<ICollection<T>> GetAll()
