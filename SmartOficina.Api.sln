@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOficina.Api", "SmartOficina.Api\SmartOficina.Api.csproj", "{9AABA6EB-761C-4DAB-8E02-1FB332E6175B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartOficina.Api", "SmartOficina.Api\SmartOficina.Api.csproj", "{9AABA6EB-761C-4DAB-8E02-1FB332E6175B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
