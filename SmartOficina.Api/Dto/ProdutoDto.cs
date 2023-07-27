@@ -3,6 +3,7 @@
 //ToDo: Colocar validação no fluentValidation na pasta Validators e depois disso colocar a injeção de dependência dentro de infrastructure vai achar aonde referencia
 public class ProdutoDto
 {
+    public Guid? Id { get; set; }
     public string Nome { get; set; }
     public string Marca { get; set; }
     public string Modelo { get; set; }
