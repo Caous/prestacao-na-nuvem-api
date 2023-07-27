@@ -1,5 +1,5 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
-
+//ToDo: Colocar campos de usuario desativação, data desativação e usuario inclusão
 public class VeiculoConfiguration : IEntityTypeConfiguration<Veiculo>
 {
     public void Configure(EntityTypeBuilder<Veiculo> builder)
