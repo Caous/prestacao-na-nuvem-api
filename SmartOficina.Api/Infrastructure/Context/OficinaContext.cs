@@ -42,7 +42,7 @@ public class OficinaContext : DbContext
 
         modelBuilder.HasSequence<int>("PrestacaoOrdem").StartsAt(1000).IncrementsBy(1);
 
-        modelBuilder.Entity<Cliente>().HasData(new Cliente() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, Nome = "Teste Cliente", Email = "testecliente@gmail.com", RG = "12345677890", CPF ="000987565", Endereco = "Rua Cel Barroso" });
+        modelBuilder.Entity<Cliente>().HasData(new Cliente() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, Nome = "Teste Cliente", Email = "testecliente@gmail.com", Telefone = "56874877", Rg = "12345677890", CPF ="000987565", Endereco = "Rua Cel Barroso" });
         modelBuilder.Entity<Prestador>().HasData(new Prestador() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, Nome = "Teste Prestador", CPF = "000987565", CNPJ = "000987565987", Razao_Social= "Teste Novo", Nome_Fantasia= "Teste Regis", Representante = "Regis", Endereco = "Portal Morumbi" });
         var guidSusp = Guid.NewGuid();
         var guidMotor = Guid.NewGuid();
