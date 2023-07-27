@@ -23,10 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Domain\" />
-    <Folder Include="Infrastructure\" />
-    <Folder Include="Validators\" />
   </ItemGroup>
 
 </Project>
