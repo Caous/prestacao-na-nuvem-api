@@ -21,5 +21,23 @@ public class ClienteValidator : AbstractValidator<ClienteDto>
             .WithMessage(ClienteConst.TelefoneValidation)
             .NotNull()
             .WithMessage(ClienteConst.TelefoneValidation);
+
+        RuleFor(x => x.RG)
+           .NotEmpty()
+           .WithMessage(ClienteConst.RGValidation)
+           .NotNull()
+           .WithMessage(ClienteConst.RGValidation);
+
+        RuleFor(x => x.CPF)
+           .NotEmpty()
+           .WithMessage(ClienteConst.CPFValidation)
+           .NotNull()
+           .WithMessage(ClienteConst.CPFValidation);
+
+        RuleFor(x => x.Endereco)
+           .NotEmpty()
+           .WithMessage(ClienteConst.EnderecoValidation)
+           .NotNull()
+           .WithMessage(ClienteConst.EnderecoValidation);
     }
 }

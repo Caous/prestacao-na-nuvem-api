@@ -51,14 +51,14 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("27a7b1a7-86d3-4e28-8737-9193d449e1b2"),
+                            Id = new Guid("f2c53a84-591c-4ff6-84e2-ca15102f4c3c"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Serviços na parte de suspensão/geometria",
                             Titulo = "Suspensão"
                         },
                         new
                         {
-                            Id = new Guid("b03e8c8c-2abe-425b-bf0d-e517f4595cba"),
+                            Id = new Guid("5dfb6bc2-e519-47b8-aac3-8840358d4509"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Serviço gerais na parte de motor do veículo",
                             Titulo = "Motor"
@@ -71,6 +71,10 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
 
@@ -78,10 +82,18 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .HasMaxLength(125)
                         .HasColumnType("nvarchar(125)");
 
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RG")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefone")
                         .HasMaxLength(25)
@@ -94,10 +106,13 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("899f9291-308d-4a94-b19d-299ee534c0ab"),
-                            DataCadastro = new DateTime(2023, 7, 18, 1, 0, 44, 451, DateTimeKind.Utc).AddTicks(7059),
+                            Id = new Guid("ddf70c56-46b3-4803-9618-0c18b72347f3"),
+                            CPF = "000987565",
+                            DataCadastro = new DateTime(2023, 7, 27, 1, 10, 19, 270, DateTimeKind.Utc).AddTicks(8440),
                             Email = "testecliente@gmail.com",
-                            Nome = "Teste Cliente"
+                            Endereco = "Rua Cel Barroso",
+                            Nome = "Teste Cliente",
+                            RG = "12345677890"
                         });
                 });
 
@@ -107,7 +122,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClienteId")
+                    b.Property<Guid?>("ClienteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DataCadastro")
@@ -125,7 +140,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("VeiculoId")
+                    b.Property<Guid?>("VeiculoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -145,13 +160,41 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CNPJ")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Nome_Fantasia")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Razao_Social")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Representante")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -160,9 +203,15 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("957392ea-2a13-4684-a8af-b69e423d87a8"),
-                            DataCadastro = new DateTime(2023, 7, 18, 1, 0, 44, 451, DateTimeKind.Utc).AddTicks(7215),
-                            Nome = "Teste Prestador"
+                            Id = new Guid("612517ba-1511-443a-b7e8-48688ee0d056"),
+                            CNPJ = "000987565987",
+                            CPF = "000987565",
+                            DataCadastro = new DateTime(2023, 7, 27, 1, 10, 19, 270, DateTimeKind.Utc).AddTicks(8684),
+                            Endereco = "Portal Morumbi",
+                            Nome = "Teste Prestador",
+                            Nome_Fantasia = "Teste Regis",
+                            Razao_Social = "Teste Novo",
+                            Representante = "Regis"
                         });
                 });
 
@@ -226,32 +275,32 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f8ffcf58-3ccf-43c0-a2b4-afaf399d809b"),
-                            CategoriaId = new Guid("27a7b1a7-86d3-4e28-8737-9193d449e1b2"),
+                            Id = new Guid("661d0750-179a-4d51-8f1d-9d45bc010a9e"),
+                            CategoriaId = new Guid("f2c53a84-591c-4ff6-84e2-ca15102f4c3c"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Troca da peça",
                             Titulo = "Troca bandeja"
                         },
                         new
                         {
-                            Id = new Guid("7b39de98-16c9-4cf1-8be2-ca78b39ccc37"),
-                            CategoriaId = new Guid("27a7b1a7-86d3-4e28-8737-9193d449e1b2"),
+                            Id = new Guid("45f602b4-6984-4844-840e-1e981812411e"),
+                            CategoriaId = new Guid("f2c53a84-591c-4ff6-84e2-ca15102f4c3c"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Troca da peça",
                             Titulo = "Troca Amortecedor"
                         },
                         new
                         {
-                            Id = new Guid("033e7e22-73f8-4573-a35b-ffc222236295"),
-                            CategoriaId = new Guid("b03e8c8c-2abe-425b-bf0d-e517f4595cba"),
+                            Id = new Guid("6fd9108f-cb00-4d56-963b-98393654d6e4"),
+                            CategoriaId = new Guid("5dfb6bc2-e519-47b8-aac3-8840358d4509"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Troca de todos os pistões",
                             Titulo = "Troca pistão"
                         },
                         new
                         {
-                            Id = new Guid("019e301b-03d5-46fd-9d78-a9c5ac19f213"),
-                            CategoriaId = new Guid("b03e8c8c-2abe-425b-bf0d-e517f4595cba"),
+                            Id = new Guid("4a4df18a-be7b-4ef1-823a-3efead301206"),
+                            CategoriaId = new Guid("5dfb6bc2-e519-47b8-aac3-8840358d4509"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Desc = "Bloco condenado/Sem retífica, troca por um novo",
                             Titulo = "Troca bloco"
@@ -292,7 +341,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("977c9490-2f3d-429d-a102-09f8317843c2"),
+                            Id = new Guid("19422c16-6edd-47b1-bd67-042735f17aa0"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Marca = "Chevrolet",
                             Modelo = "Agile",
@@ -301,7 +350,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5c4289cf-2578-4bc8-baa1-e1be20943274"),
+                            Id = new Guid("d3b04b36-ca04-4d93-854a-dcb7178808f6"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Marca = "Hyundai",
                             Modelo = "I30",
@@ -310,7 +359,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("cec1b671-de00-482c-8a89-14aeefab8092"),
+                            Id = new Guid("8ab6d92b-1a4f-407c-af69-e9160979b89a"),
                             DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Marca = "Chevrolet",
                             Modelo = "Celta",
@@ -323,9 +372,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                 {
                     b.HasOne("SmartOficina.Api.Domain.Model.Cliente", "Cliente")
                         .WithMany("Servicos")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClienteId");
 
                     b.HasOne("SmartOficina.Api.Domain.Model.Prestador", "Prestador")
                         .WithMany("Servicos")
@@ -335,9 +382,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
 
                     b.HasOne("SmartOficina.Api.Domain.Model.Veiculo", "Veiculo")
                         .WithMany("Servicos")
-                        .HasForeignKey("VeiculoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("VeiculoId");
 
                     b.Navigation("Cliente");
 

@@ -11,6 +11,8 @@ public class MapperProfile : Profile
         CreateMap<CategoriaServicoDto, CategoriaServico>().ReverseMap();
         CreateMap<SubServicoDto, SubServico>().ReverseMap();
         CreateMap<ServicoDto, Servico>().ReverseMap();
+        CreateMap<ProdutoDto, Produto>().ReverseMap();
+        CreateMap<FuncionarioPrestadorDto, FuncionarioPrestador>().ReverseMap();
 
     }
 }
