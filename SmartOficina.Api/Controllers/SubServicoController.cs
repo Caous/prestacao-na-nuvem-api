@@ -28,7 +28,7 @@ public class SubServicoController : ControllerBase
         return Ok(await _repository.GetAllWithIncludes());
     }
 
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
         if (!ModelState.IsValid || id == null)

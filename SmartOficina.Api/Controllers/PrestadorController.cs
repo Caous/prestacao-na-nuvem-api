@@ -31,7 +31,7 @@ public class PrestadorController : ControllerBase
         return Ok(await _repository.GetAll());
     }
 
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
         if (!ModelState.IsValid || id == null)
