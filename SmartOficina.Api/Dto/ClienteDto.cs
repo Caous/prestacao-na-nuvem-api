@@ -1,5 +1,7 @@
 ﻿namespace SmartOficina.Api.Dto;
 
+//ToDo: Colocar os campos com os mesmos required e opcional em relação ao model
+//ToDo: Colocar validação no fluentValidation na pasta Validators e depois disso colocar a injeção de dependência dentro de infrastructure vai achar aonde referencia
 public class ClienteDto
 {
     public required string Nome { get; set; }

@@ -1,13 +1,18 @@
-﻿namespace SmartOficina.Api.Domain.Model
+﻿namespace SmartOficina.Api.Domain.Model;
+public class Produto : Base
 {
-    public class Produto : Base
-    {
-        public string Nome { get; set; }
-        public string Marca { get; set; }
-        public string Modelo { get; set; }
-        public DateTime Data_validade { get; set; }
-        public string Garantia { get; set; }
-        public float Valor_Compra { get; set; }
-        public float Valor_Venda { get; set; }
-    }
+    //ToDo: Colocar required
+    public string Nome { get; set; }
+    //ToDo: Colocar required
+    public string Marca { get; set; }
+    //ToDo: Colocar required
+    public string Modelo { get; set; }
+    //ToDo: Colocar Opcional
+    public DateTime Data_validade { get; set; }
+    //ToDo: Colocar Opcional
+    public string Garantia { get; set; }
+    //ToDo: Colocar required acima de 0.01 centavos
+    public float Valor_Compra { get; set; }
+    //ToDo: Colocar required acima de 0.01 centavos
+    public float Valor_Venda { get; set; }
 }

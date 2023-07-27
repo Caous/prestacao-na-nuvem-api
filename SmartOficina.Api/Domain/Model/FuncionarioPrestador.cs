@@ -1,16 +1,23 @@
-﻿namespace SmartOficina.Api.Domain.Model
+﻿namespace SmartOficina.Api.Domain.Model;
+
+public class FuncionarioPrestador :  Base
 {
-    public class FuncionarioPrestador :  Base
-    {
-        //public int Id_prestador { get; set; }
-        //public required Guid PrestadorId { get; set; }
-        public required string Nome { get; set; }
-        public string? Telefone { get; set; }
-        public string? Email { get; set; }
-        public string RG { get; set; }
-        public string CPF { get; set; }
-        public string Endereco { get; set; }
-        public string Cargo { get; set; }
-        public ICollection<Prestador>? Empresa_Associada { get; set; }
-    }
+    //ToDo: Colocar Id_Prestador
+    //public int Id_prestador { get; set; }
+    //public required Guid PrestadorId { get; set; }
+    public required string Nome { get; set; }
+    //ToDo: Colocar required
+    public string? Telefone { get; set; }
+    //ToDo: Colocar required
+    public string? Email { get; set; }
+    //ToDo: Colocar required
+    public string RG { get; set; }
+    //ToDo: Criar classe CPF
+    public string CPF { get; set; }
+    //ToDo: Criar classe Endereço
+    public string Endereco { get; set; }
+    //ToDo: Criar classe Cargo
+    public string Cargo { get; set; }
+    //ToDo: Colocar required
+    public ICollection<Prestador>? Empresa_Associada { get; set; }
 }
