@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOficina.Api", "SmartOficina.Api\SmartOficina.Api.csproj", "{9AABA6EB-761C-4DAB-8E02-1FB332E6175B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartOficina.Api", "SmartOficina.Api\SmartOficina.Api.csproj", "{9AABA6EB-761C-4DAB-8E02-1FB332E6175B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E2E7198A-033D-4F47-8B65-064CE6D1CA0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOficina.UnitTest", "SmartOficina.UnitTest\SmartOficina.UnitTest.csproj", "{63A03BD4-B142-41AB-AB47-46D077493CCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{9AABA6EB-761C-4DAB-8E02-1FB332E6175B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AABA6EB-761C-4DAB-8E02-1FB332E6175B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AABA6EB-761C-4DAB-8E02-1FB332E6175B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63A03BD4-B142-41AB-AB47-46D077493CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63A03BD4-B142-41AB-AB47-46D077493CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63A03BD4-B142-41AB-AB47-46D077493CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63A03BD4-B142-41AB-AB47-46D077493CCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{63A03BD4-B142-41AB-AB47-46D077493CCC} = {E2E7198A-033D-4F47-8B65-064CE6D1CA0E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {248357B7-5636-4F7A-A581-531F3970595D}
