@@ -14,7 +14,6 @@ public class PrestacaoServicoValidator : AbstractValidator<PrestacaoServicoDto>
 
         RuleFor(x => x.PrestadorId)
             .NotNull()
-            .WithMessage(PrestacaoServicoconst.IdPrestador);
-
+            .WithMessage(PrestacaoServicoconst.PrestadorId);
     }
 }

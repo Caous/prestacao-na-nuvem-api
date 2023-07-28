@@ -39,5 +39,11 @@ public class ClienteValidator : AbstractValidator<ClienteDto>
            .WithMessage(ClienteConst.EnderecoValidation)
            .NotNull()
            .WithMessage(ClienteConst.EnderecoValidation);
+
+        RuleFor(x => x.PrestadorId)
+          .NotEmpty()
+          .WithMessage(ClienteConst.PrestadorValidation)
+          .NotNull()
+          .WithMessage(ClienteConst.PrestadorValidation);
     }
 }

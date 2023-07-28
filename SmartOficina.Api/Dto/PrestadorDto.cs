@@ -2,13 +2,20 @@
 public class PrestadorDto
 {
     public Guid? Id { get; set; }
+    public required int TipoCadastro { get; set; }
     public required string Nome { get; set; }
-    public string CPF { get; set; }
-    public string CNPJ { get; set; }
-    public string Razao_Social { get; set; }
-    public string? Nome_Fantasia { get; set; }
-    public string? Representante { get; set; }
-    public string? Telefone { get; set; }
-    public string? Email { get; set; }
-    public string Endereco { get; set; }
+    public required string CPF { get; set; }
+    public string? CpfRepresentante { get; set; }
+    public required string CNPJ { get; set; }
+    public required string RazaoSocial { get; set; }
+    public required string NomeFantasia { get; set; }
+    public required string NomeRepresentante { get; set; }
+    public required string Telefone { get; set; }
+    public required string EmailEmpresa { get; set; }
+    public required string Endereco { get; set; }
+    public string? EmailRepresentante { get; set; }
+    public required int SituacaoCadastral { get; set; }
+    public required DateTime DataAbertura { get; set; }
+    public required DateTime DataSituacaoCadastral { get; set; }
+
 }

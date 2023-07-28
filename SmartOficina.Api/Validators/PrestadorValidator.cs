@@ -4,37 +4,49 @@ public class PrestadorValidator : AbstractValidator<PrestadorDto>
 {
     public PrestadorValidator()
     {
+        RuleFor(x => x.TipoCadastro)
+          .NotEmpty()
+          .WithMessage(PrestadorConst.TipoCadastroValidation)
+          .NotNull()
+          .WithMessage(PrestadorConst.TipoCadastroValidation);
+
         RuleFor(x=> x.Nome)
             .NotEmpty()
             .WithMessage(PrestadorConst.NomeValidation)
             .NotNull()
             .WithMessage(PrestadorConst.NomeValidation);
 
+        RuleFor(x => x.CPF)
+          .NotEmpty()
+          .WithMessage(PrestadorConst.CPFValidation)
+          .NotNull()
+          .WithMessage(PrestadorConst.CPFValidation);
+
+        RuleFor(x => x.CpfRepresentante)
+         .NotEmpty()
+         .WithMessage(PrestadorConst.CPFValidation)
+         .NotNull()
+         .WithMessage(PrestadorConst.CPFValidation);
+
         RuleFor(x => x.CNPJ)
            .NotEmpty()
-           .WithMessage(PrestadorConst.RGValidation)
+           .WithMessage(PrestadorConst.CNPJValidation)
            .NotNull()
-           .WithMessage(PrestadorConst.RGValidation);
+           .WithMessage(PrestadorConst.CNPJValidation);
 
-        RuleFor(x => x.CPF)
+        RuleFor(x => x.RazaoSocial)
            .NotEmpty()
-           .WithMessage(PrestadorConst.CPFValidation)
+           .WithMessage(PrestadorConst.RazaoSocialValidation)
            .NotNull()
-           .WithMessage(PrestadorConst.CPFValidation);
+           .WithMessage(PrestadorConst.RazaoSocialValidation);
 
-        RuleFor(x => x.Razao_Social)
+        RuleFor(x => x.NomeFantasia)
            .NotEmpty()
-           .WithMessage(PrestadorConst.NomeValidation)
+           .WithMessage(PrestadorConst.NomeFantasiaValidation)
            .NotNull()
-           .WithMessage(PrestadorConst.NomeValidation);
+           .WithMessage(PrestadorConst.NomeFantasiaValidation);
 
-        RuleFor(x => x.Nome_Fantasia)
-           .NotEmpty()
-           .WithMessage(PrestadorConst.NomeValidation)
-           .NotNull()
-           .WithMessage(PrestadorConst.NomeValidation);
-
-        RuleFor(x => x.Representante)
+        RuleFor(x => x.NomeRepresentante)
            .NotEmpty()
            .WithMessage(PrestadorConst.NomeValidation)
            .NotNull()
@@ -42,21 +54,45 @@ public class PrestadorValidator : AbstractValidator<PrestadorDto>
 
         RuleFor(x => x.Telefone)
            .NotEmpty()
-           .WithMessage(PrestadorConst.NomeValidation)
+           .WithMessage(PrestadorConst.TelefoneValidation)
            .NotNull()
-           .WithMessage(PrestadorConst.NomeValidation);
+           .WithMessage(PrestadorConst.TelefoneValidation);
 
-        RuleFor(x => x.Email)
+        RuleFor(x => x.EmailEmpresa)
            .NotEmpty()
-           .WithMessage(PrestadorConst.NomeValidation)
+           .WithMessage(PrestadorConst.EmailValidation)
            .NotNull()
-           .WithMessage(PrestadorConst.NomeValidation);
+           .WithMessage(PrestadorConst.EmailValidation);
 
         RuleFor(x => x.Endereco)
            .NotEmpty()
-           .WithMessage(PrestadorConst.NomeValidation)
+           .WithMessage(PrestadorConst.EnderecoValidation)
            .NotNull()
-           .WithMessage(PrestadorConst.NomeValidation);
+           .WithMessage(PrestadorConst.EnderecoValidation);
+
+        RuleFor(x => x.EmailRepresentante)
+          .NotEmpty()
+          .WithMessage(PrestadorConst.EmailValidation)
+          .NotNull()
+          .WithMessage(PrestadorConst.EmailValidation);
+
+        RuleFor(x => x.SituacaoCadastral)
+          .NotEmpty()
+          .WithMessage(PrestadorConst.SituacaoCadastralValidation)
+          .NotNull()
+          .WithMessage(PrestadorConst.SituacaoCadastralValidation);
+
+        RuleFor(x => x.DataAbertura)
+        .NotEmpty()
+        .WithMessage(PrestadorConst.DataValidation)
+        .NotNull()
+        .WithMessage(PrestadorConst.DataValidation);
+
+        RuleFor(x => x.DataSituacaoCadastral)
+        .NotEmpty()
+        .WithMessage(PrestadorConst.DataValidation)
+        .NotNull()
+        .WithMessage(PrestadorConst.DataValidation);
 
     }
 }

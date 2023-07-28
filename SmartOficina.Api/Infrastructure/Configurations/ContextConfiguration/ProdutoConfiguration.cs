@@ -14,11 +14,14 @@ public class ProdutoConfiguration : IEntityTypeConfiguration<Produto>
 
         builder.Property(p => p.Modelo).HasMaxLength(50).IsRequired();
 
-        //builder.Property(p => p.Data_validade)
+        builder.Property(p => p.Data_validade).HasDefaultValueSql("getDate()").IsRequired();
 
         builder.Property(p => p.Garantia).HasMaxLength(10).IsRequired();
 
-        //builder.Property(p => p.Valor_Compra).HasMaxLength(100);
-        //builder.Property(p => p.Valor_Venda).HasMaxLength(100);
+        builder.Property(p => p.Valor_Compra).IsRequired();
+
+        builder.Property(p => p.Valor_Venda).IsRequired();
+
+        builder.Property(p => p.PrestadorId).IsRequired();
     }
 }
