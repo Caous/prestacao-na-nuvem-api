@@ -43,7 +43,7 @@ public class OficinaContext : DbContext
         modelBuilder.HasSequence<int>("PrestacaoOrdem").StartsAt(1000).IncrementsBy(1);
 
         modelBuilder.Entity<Cliente>().HasData(new Cliente() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, Nome = "Teste Cliente", Email = "testecliente@gmail.com", Telefone = "56874877", Rg = "12345677890", CPF ="000987565", Endereco = "Rua Cel Barroso" });
-        modelBuilder.Entity<Prestador>().HasData(new Prestador() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, Nome = "Teste Prestador", CPF = "000987565", CNPJ = "000987565987", Razao_Social= "Teste Novo", Nome_Fantasia= "Teste Regis", Representante = "Regis", Endereco = "Portal Morumbi" });
+        modelBuilder.Entity<Prestador>().HasData(new Prestador() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, TipoCadastro = 1, IdPrestador = 22, PrestadorId = Guid.NewGuid() ,Nome = "Teste Prestador", CPF = "000987565", CpfRepresentante = "59491929903", CNPJ = "000987565987", RazaoSocial= "Teste Novo", NomeFantasia= "Teste Regis", NomeRepresentante = "Regis", Telefone = "1194323-9876", EmailEmpresa = "regis@oficina.com", Endereco = "Portal Morumbi", EmailRepresentante = "regis@oficinaoficial.com.br", SituacaoCadastral=1 });
         var guidSusp = Guid.NewGuid();
         var guidMotor = Guid.NewGuid();
         modelBuilder.Entity<CategoriaServico>().HasData(new CategoriaServico[]

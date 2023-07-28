@@ -1,5 +1,5 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
-//ToDo: Colocar campos de usuario desativação, data desativação e usuario inclusão
+
 public class FuncionarioPrestadorConfiguration : IEntityTypeConfiguration<FuncionarioPrestador>
 {
     public void Configure(EntityTypeBuilder<FuncionarioPrestador> builder)
@@ -8,7 +8,7 @@ public class FuncionarioPrestadorConfiguration : IEntityTypeConfiguration<Funcio
 
         builder.HasKey(k => k.Id);
 
-        //builder.Property(p => p.Id_Prestador).HasValueGenerator<SequentialGuidValueGenerator>();
+        builder.Property(p => p.Id_prestador).IsRequired();
 
         builder.Property(p => p.Nome).HasMaxLength(100).IsRequired();
 
@@ -22,7 +22,9 @@ public class FuncionarioPrestadorConfiguration : IEntityTypeConfiguration<Funcio
 
         builder.Property(p => p.Endereco).HasMaxLength(100);
 
-        //Todo: Validar se tem empresa associada
-        //builder.Property(p => p.Empresa_Associada);
+        builder.Property(p => p.UsrCadastro).IsRequired();
+        
+        builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
+
     }
 }
