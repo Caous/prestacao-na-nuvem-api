@@ -42,7 +42,7 @@ public class CategoriaServicoController : ControllerBase
             if (ModelState.ErrorCount < 1)
                 ModelState.AddModelError("error", "Id invalid");
 
-            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            return BadRequest(ModelState.First().Value);
         }
         return Ok(await _repository.FindById(id));
     }
@@ -56,7 +56,7 @@ public class CategoriaServicoController : ControllerBase
             if(ModelState.ErrorCount < 1)
                 ModelState.AddModelError("error", "Id invalid");
 
-            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            return BadRequest(ModelState.First().Value);
         }
         return Ok(await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico)));
     }
