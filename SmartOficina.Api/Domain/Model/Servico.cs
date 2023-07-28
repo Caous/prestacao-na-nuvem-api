@@ -1,8 +1,12 @@
 ﻿namespace SmartOficina.Api.Domain.Model;
 
-public class Servico
+public class Servico : Base
 {
-    public Guid Id { get; set; }
+    public Servico()
+    {
+            
+    }
+    public Guid? PrestadorId { get; set; }
     public required string Nome { get; set; }
     public float Valor { get; set; }
     public Guid SubServicoId { get; set; }

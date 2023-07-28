@@ -14,91 +14,29 @@ public class OficinaContext : DbContext
     public DbSet<Veiculo> Veiculo { get; set; }
     public DbSet<SubServico> SubServico { get; set; }
     public DbSet<CategoriaServico> CategoriaServico { get; set; }
+    public DbSet<Produto> ProdutoServico { get; set; }
+    public DbSet<FuncionarioPrestador> FuncionarioPrestador { get; set; }
+
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = ChangeTracker
            .Entries()
-           .Where(e => e.Entity is Base && (
+           .Where(e => e.Entity is Domain.Model.Base && (
                    e.State == EntityState.Added));
 
         foreach (var entityEntry in entries)
         {
-            ((Base)entityEntry.Entity).DataCadastro = DateTime.UtcNow;
+            ((Domain.Model.Base)entityEntry.Entity).DataCadastro = DateTime.UtcNow;
         }
         return base.SaveChangesAsync(cancellationToken);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new ClienteConfiguration());
-        modelBuilder.ApplyConfiguration(new PrestacaoServicoConfiguration());
-        modelBuilder.ApplyConfiguration(new PrestadorConfiguration());
-        modelBuilder.ApplyConfiguration(new ServicoConfiguration());
-        modelBuilder.ApplyConfiguration(new VeiculoConfiguration());
-        modelBuilder.ApplyConfiguration(new CategoriaServicoConfiguration());
-        modelBuilder.ApplyConfiguration(new SubServicoConfiguration());
-
-
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficinaContext).Assembly);
+        
         modelBuilder.HasSequence<int>("PrestacaoOrdem").StartsAt(1000).IncrementsBy(1);
-
-        modelBuilder.Entity<Cliente>().HasData(new Cliente() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, Nome = "Teste Cliente", Email = "testecliente@gmail.com", Telefone = "56874877", Rg = "12345677890", CPF ="000987565", Endereco = "Rua Cel Barroso", PrestadorId = Guid.NewGuid() });
-        modelBuilder.Entity<Prestador>().HasData(new Prestador() { Id = Guid.NewGuid(), DataCadastro = DateTime.UtcNow, TipoCadastro = 1, Nome = "Teste Prestador", CPF = "000987565", CpfRepresentante = "59491929903", CNPJ = "000987565987", RazaoSocial= "Teste Novo", NomeFantasia= "Teste Regis", NomeRepresentante = "Regis", Telefone = "1194323-9876", EmailEmpresa = "regis@oficina.com", Endereco = "Portal Morumbi", EmailRepresentante = "regis@oficinaoficial.com.br", SituacaoCadastral=1 });
-        var guidSusp = Guid.NewGuid();
-        var guidMotor = Guid.NewGuid();
-        modelBuilder.Entity<CategoriaServico>().HasData(new CategoriaServico[]
-        {
-            new CategoriaServico()
-            {
-                Id = guidSusp,
-                Titulo = "Suspensão",
-                Desc = "Serviços na parte de suspensão/geometria"
-            },
-            new CategoriaServico
-            {
-                Id = guidMotor,
-                Titulo = "Motor",
-                Desc = "Serviço gerais na parte de motor do veículo"
-            },
-        });
-
-        modelBuilder.Entity<SubServico>().HasData(new SubServico()
-        {
-            Id = Guid.NewGuid(),
-            Titulo = "Troca bandeja",
-            Desc = "Troca da peça",
-            CategoriaId = guidSusp
-        });
-
-        modelBuilder.Entity<SubServico>().HasData(new SubServico()
-        {
-            Id = Guid.NewGuid(),
-            Titulo = "Troca Amortecedor",
-            Desc = "Troca da peça",
-            CategoriaId = guidSusp
-        });
-
-        modelBuilder.Entity<SubServico>().HasData(new SubServico()
-        {
-            Id = Guid.NewGuid(),
-            Titulo = "Troca pistão",
-            Desc = "Troca de todos os pistões",
-            CategoriaId = guidMotor
-        });
-
-        modelBuilder.Entity<SubServico>().HasData(new SubServico()
-        {
-            Id = Guid.NewGuid(),
-            Titulo = "Troca bloco",
-            Desc = "Bloco condenado/Sem retífica, troca por um novo",
-            CategoriaId = guidMotor
-        });
-
-        modelBuilder.Entity<Veiculo>().HasData(new Veiculo[] {
-            new Veiculo() { Id = Guid.NewGuid(), Marca = "Chevrolet", Modelo = "Agile", Placa = "AAA-1234" },
-            new Veiculo() { Id = Guid.NewGuid(), Marca = "Hyundai", Modelo = "I30", Placa = "BBB-1234" },
-            new Veiculo() { Id = Guid.NewGuid(), Marca = "Chevrolet", Modelo = "Celta", Placa = "CCC-1234" },
-        });
 
         base.OnModelCreating(modelBuilder);
     }

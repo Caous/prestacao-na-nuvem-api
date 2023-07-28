@@ -1,5 +1,5 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
-//ToDo: Colocar campos de usuario desativação, data desativação e usuario inclusão
+
 public class PrestadorConfiguration : IEntityTypeConfiguration<Prestador>
 {
     public void Configure(EntityTypeBuilder<Prestador> builder)
@@ -22,8 +22,7 @@ public class PrestadorConfiguration : IEntityTypeConfiguration<Prestador>
         builder.Property(p => p.Endereco).HasMaxLength(100).IsRequired();
         builder.Property(p => p.EmailRepresentante).HasMaxLength(50).IsRequired();
         builder.Property(p => p.SituacaoCadastral).IsRequired();
-        builder.Property(p => p.DataAbertura);
-        builder.Property(p => p.DataSituacaoCadastral);
-
+        builder.Property(p => p.UsrCadastro).IsRequired();
+        builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
     }
 }

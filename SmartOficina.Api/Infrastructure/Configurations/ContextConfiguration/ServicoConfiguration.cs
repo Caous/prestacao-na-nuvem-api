@@ -1,5 +1,4 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
-//ToDo: Colocar campos de usuario desativação, data desativação e usuario inclusão
 public class ServicoConfiguration : IEntityTypeConfiguration<Servico>
 {
     public void Configure(EntityTypeBuilder<Servico> builder)
@@ -15,6 +14,12 @@ public class ServicoConfiguration : IEntityTypeConfiguration<Servico>
         builder.Property(p => p.Valor).IsRequired();
 
         builder.HasOne(p => p.SubServico).WithMany(s => s.Servicos).HasForeignKey(f => f.SubServicoId);
+
+        builder.Property(p => p.PrestadorId).IsRequired();
+
+        builder.Property(p => p.UsrCadastro).IsRequired();
+
+        builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
 
     }
 }

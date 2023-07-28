@@ -8,7 +8,7 @@ using SmartOficina.Api.Infrastructure.Context;
 
 #nullable disable
 
-namespace SmartOficina.Api.Infrastructure.Migrations
+namespace SmartOficina.Api.Migrations
 {
     [DbContext(typeof(OficinaContext))]
     partial class OficinaContextModelSnapshot : ModelSnapshot
@@ -34,35 +34,31 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Desc")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid>("PrestadorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("CategoriaServico", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("f2c53a84-591c-4ff6-84e2-ca15102f4c3c"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Desc = "Serviços na parte de suspensão/geometria",
-                            Titulo = "Suspensão"
-                        },
-                        new
-                        {
-                            Id = new Guid("5dfb6bc2-e519-47b8-aac3-8840358d4509"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Desc = "Serviço gerais na parte de motor do veículo",
-                            Titulo = "Motor"
-                        });
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.Cliente", b =>
@@ -73,47 +69,114 @@ namespace SmartOficina.Api.Infrastructure.Migrations
 
                     b.Property<string>("CPF")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getDate()");
+
+                    b.Property<DateTime?>("DataDesativacao")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(125)
-                        .HasColumnType("nvarchar(125)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Endereco")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("RG")
+                    b.Property<Guid>("PrestadorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Rg")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cliente", (string)null);
+                });
+
+            modelBuilder.Entity("SmartOficina.Api.Domain.Model.FuncionarioPrestador", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
+
+                    b.Property<string>("Cargo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getDate()");
+
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("PrestadorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RG")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Telefone")
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Cliente", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("ddf70c56-46b3-4803-9618-0c18b72347f3"),
-                            CPF = "000987565",
-                            DataCadastro = new DateTime(2023, 7, 27, 1, 10, 19, 270, DateTimeKind.Utc).AddTicks(8440),
-                            Email = "testecliente@gmail.com",
-                            Endereco = "Rua Cel Barroso",
-                            Nome = "Teste Cliente",
-                            RG = "12345677890"
-                        });
+                    b.ToTable("FuncionarioPrestador", (string)null);
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.PrestacaoServico", b =>
@@ -128,6 +191,9 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("PrestadorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -139,6 +205,12 @@ namespace SmartOficina.Api.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("VeiculoId")
                         .HasColumnType("uniqueidentifier");
@@ -162,57 +234,153 @@ namespace SmartOficina.Api.Infrastructure.Migrations
 
                     b.Property<string>("CNPJ")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<string>("CPF")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
-                    b.Property<DateTime>("DataCadastro")
+                    b.Property<string>("CpfRepresentante")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
+
+                    b.Property<DateTime>("DataAbertura")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getDate()");
+
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataSituacaoCadastral")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmailEmpresa")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("EmailRepresentante")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Endereco")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("FuncionarioPrestadorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Nome_Fantasia")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Razao_Social")
+                    b.Property<string>("NomeFantasia")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Representante")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("NomeRepresentante")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RazaoSocial")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SituacaoCadastral")
+                        .HasColumnType("int");
 
                     b.Property<string>("Telefone")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.Property<int>("TipoCadastro")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Prestador", (string)null);
+                    b.HasIndex("FuncionarioPrestadorId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("612517ba-1511-443a-b7e8-48688ee0d056"),
-                            CNPJ = "000987565987",
-                            CPF = "000987565",
-                            DataCadastro = new DateTime(2023, 7, 27, 1, 10, 19, 270, DateTimeKind.Utc).AddTicks(8684),
-                            Endereco = "Portal Morumbi",
-                            Nome = "Teste Prestador",
-                            Nome_Fantasia = "Teste Regis",
-                            Razao_Social = "Teste Novo",
-                            Representante = "Regis"
-                        });
+                    b.ToTable("Prestador", (string)null);
+                });
+
+            modelBuilder.Entity("SmartOficina.Api.Domain.Model.Produto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getDate()");
+
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Data_validade")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getDate()");
+
+                    b.Property<string>("Garantia")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Marca")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("Modelo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("PrestadorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<float>("Valor_Compra")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Valor_Venda")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Produto", (string)null);
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.Servico", b =>
@@ -220,6 +388,14 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getDate()");
+
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -229,7 +405,17 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Property<Guid>("PrestacaoServicoId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("PrestadorId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("SubServicoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<float>("Valor")
@@ -256,55 +442,33 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Desc")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid>("PrestadorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoriaId");
 
                     b.ToTable("SubServico", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("661d0750-179a-4d51-8f1d-9d45bc010a9e"),
-                            CategoriaId = new Guid("f2c53a84-591c-4ff6-84e2-ca15102f4c3c"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Desc = "Troca da peça",
-                            Titulo = "Troca bandeja"
-                        },
-                        new
-                        {
-                            Id = new Guid("45f602b4-6984-4844-840e-1e981812411e"),
-                            CategoriaId = new Guid("f2c53a84-591c-4ff6-84e2-ca15102f4c3c"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Desc = "Troca da peça",
-                            Titulo = "Troca Amortecedor"
-                        },
-                        new
-                        {
-                            Id = new Guid("6fd9108f-cb00-4d56-963b-98393654d6e4"),
-                            CategoriaId = new Guid("5dfb6bc2-e519-47b8-aac3-8840358d4509"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Desc = "Troca de todos os pistões",
-                            Titulo = "Troca pistão"
-                        },
-                        new
-                        {
-                            Id = new Guid("4a4df18a-be7b-4ef1-823a-3efead301206"),
-                            CategoriaId = new Guid("5dfb6bc2-e519-47b8-aac3-8840358d4509"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Desc = "Bloco condenado/Sem retífica, troca por um novo",
-                            Titulo = "Troca bloco"
-                        });
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.Veiculo", b =>
@@ -313,7 +477,15 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Chassi")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getDate()");
+
+                    b.Property<DateTime?>("DataDesativacao")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Marca")
@@ -331,41 +503,21 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<Guid>("PrestadorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Tipo")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.ToTable("Veiculo", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("19422c16-6edd-47b1-bd67-042735f17aa0"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Marca = "Chevrolet",
-                            Modelo = "Agile",
-                            Placa = "AAA-1234",
-                            Tipo = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("d3b04b36-ca04-4d93-854a-dcb7178808f6"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Marca = "Hyundai",
-                            Modelo = "I30",
-                            Placa = "BBB-1234",
-                            Tipo = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("8ab6d92b-1a4f-407c-af69-e9160979b89a"),
-                            DataCadastro = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Marca = "Chevrolet",
-                            Modelo = "Celta",
-                            Placa = "CCC-1234",
-                            Tipo = 0
-                        });
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.PrestacaoServico", b =>
@@ -389,6 +541,13 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Navigation("Prestador");
 
                     b.Navigation("Veiculo");
+                });
+
+            modelBuilder.Entity("SmartOficina.Api.Domain.Model.Prestador", b =>
+                {
+                    b.HasOne("SmartOficina.Api.Domain.Model.FuncionarioPrestador", null)
+                        .WithMany("Empresa_Associada")
+                        .HasForeignKey("FuncionarioPrestadorId");
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.Servico", b =>
@@ -429,6 +588,11 @@ namespace SmartOficina.Api.Infrastructure.Migrations
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.Cliente", b =>
                 {
                     b.Navigation("Servicos");
+                });
+
+            modelBuilder.Entity("SmartOficina.Api.Domain.Model.FuncionarioPrestador", b =>
+                {
+                    b.Navigation("Empresa_Associada");
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.PrestacaoServico", b =>

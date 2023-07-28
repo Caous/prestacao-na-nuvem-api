@@ -2,6 +2,10 @@
 
 public class PrestacaoServico : Base
 {
+    public PrestacaoServico()
+    {
+        
+    }
     public string? Referencia { get; set; }
     public EPrestacaoServicoStatus Status { get; set; }
     public Prestador? Prestador { get; set; }

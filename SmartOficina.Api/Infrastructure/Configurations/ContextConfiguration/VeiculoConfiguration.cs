@@ -1,5 +1,4 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
-//ToDo: Colocar campos de usuario desativação, data desativação e usuario inclusão
 public class VeiculoConfiguration : IEntityTypeConfiguration<Veiculo>
 {
     public void Configure(EntityTypeBuilder<Veiculo> builder)
@@ -17,5 +16,11 @@ public class VeiculoConfiguration : IEntityTypeConfiguration<Veiculo>
         builder.Property(p => p.Modelo).HasMaxLength(100).IsRequired();
 
         builder.Property(p => p.Tipo).IsRequired();
+
+        builder.Property(p => p.PrestadorId).IsRequired();
+
+        builder.Property(p => p.UsrCadastro).IsRequired();
+
+        builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
     }
 }

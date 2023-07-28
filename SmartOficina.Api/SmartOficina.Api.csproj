@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Migrations\" />
     <Folder Include="Shared\" />
   </ItemGroup>
 

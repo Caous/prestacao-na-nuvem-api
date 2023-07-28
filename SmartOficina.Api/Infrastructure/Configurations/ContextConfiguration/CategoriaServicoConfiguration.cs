@@ -1,6 +1,5 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
 
-//ToDo: Colocar campos de usuario desativação, data desativação e usuario inclusão
 public class CategoriaServicoConfiguration : IEntityTypeConfiguration<CategoriaServico>
 {
     public void Configure(EntityTypeBuilder<CategoriaServico> builder)
@@ -14,6 +13,8 @@ public class CategoriaServicoConfiguration : IEntityTypeConfiguration<CategoriaS
         builder.Property(p => p.Titulo).HasMaxLength(100).IsRequired();
 
         builder.Property(p => p.Desc).HasMaxLength(200).IsRequired();
+
+        builder.Property(p => p.UsrCadastro).IsRequired();
 
     }
 }

@@ -8,5 +8,6 @@ public class CategoriaServico : Base
     }
     public required string Titulo { get; set; }
     public required string Desc { get; set; }
+    public required Guid PrestadorId { get; set; }
     public ICollection<SubServico>? SubServicos { get; set; }
 }
