@@ -21,5 +21,7 @@ public class ProdutoConfiguration : IEntityTypeConfiguration<Produto>
         builder.Property(p => p.Valor_Compra).IsRequired();
 
         builder.Property(p => p.Valor_Venda).IsRequired();
+
+        builder.Property(p => p.PrestadorId).IsRequired();
     }
 }

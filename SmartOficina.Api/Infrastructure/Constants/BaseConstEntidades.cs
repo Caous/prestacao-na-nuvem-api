@@ -12,5 +12,6 @@ public class BaseConstEntidades
     public const string CNPJValidation = "Por favor informar o CNPJ valido.";
     public const string EnderecoValidation = "Por favor informar o endereço.";
     public const string DataValidation = "Por favor informe uma data valida.";
+    public const string PrestadorValidation = "Nenhum prestador associado.";
 
 }

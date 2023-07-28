@@ -2,8 +2,7 @@
 
 public class FuncionarioPrestadorDto
 {
-    //public int Id_prestador { get; set; }
-    //public required Guid PrestadorId { get; set; }
+    public required Guid PrestadorId { get; set; }
     public Guid? Id { get; set; }
     public required string Nome { get; set; }
     public string? Telefone { get; set; }

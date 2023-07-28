@@ -4,6 +4,7 @@
 public class ProdutoDto
 {
     public Guid? Id { get; set; }
+    public required Guid PrestadorId { get; set; }
     public string Nome { get; set; }
     public string Marca { get; set; }
     public string Modelo { get; set; }
@@ -11,4 +12,5 @@ public class ProdutoDto
     public string Garantia { get; set; }
     public float Valor_Compra { get; set; }
     public float Valor_Venda { get; set; }
+
 }

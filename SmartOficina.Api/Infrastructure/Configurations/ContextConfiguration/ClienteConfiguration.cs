@@ -22,5 +22,7 @@ public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
 
         builder.Property(p => p.Endereco).HasMaxLength(100);
 
+        builder.Property(p => p.PrestadorId).IsRequired();
+
     }
 }

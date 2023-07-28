@@ -8,7 +8,7 @@ public class FuncionarioPrestadorConfiguration : IEntityTypeConfiguration<Funcio
 
         builder.HasKey(k => k.Id);
 
-        builder.Property(p => p.Id_prestador).IsRequired();
+        builder.Property(p => p.PrestadorId).IsRequired();
 
         builder.Property(p => p.Nome).HasMaxLength(100).IsRequired();
 
@@ -25,6 +25,8 @@ public class FuncionarioPrestadorConfiguration : IEntityTypeConfiguration<Funcio
         builder.Property(p => p.UsrCadastro).IsRequired();
         
         builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
+
+        builder.Property(p => p.PrestadorId).IsRequired();
 
     }
 }

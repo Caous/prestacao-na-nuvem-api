@@ -1,8 +1,7 @@
 ﻿namespace SmartOficina.Api.Dto;
 public class PrestadorDto
 {
-    public int IdPrestador { get; set; }
-    public required Guid PrestadorId { get; set; }
+    public Guid? Id { get; set; }
     public required int TipoCadastro { get; set; }
     public required string Nome { get; set; }
     public required string CPF { get; set; }

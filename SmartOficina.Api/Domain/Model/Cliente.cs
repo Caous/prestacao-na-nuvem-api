@@ -10,6 +10,7 @@ public class Cliente : Base
     public required string CPF { get; set; }
     //ToDo: Criar classe de Endereço
     public string? Endereco { get; set; }
+    public required Guid PrestadorId { get; set; }
     public ICollection<PrestacaoServico>? Servicos { get; set; }
 
 }
