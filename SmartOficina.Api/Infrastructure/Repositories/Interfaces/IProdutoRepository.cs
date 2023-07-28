@@ -1,6 +1,5 @@
-﻿namespace SmartOficina.Api.Infrastructure.Repositories.Interfaces
+﻿namespace SmartOficina.Api.Infrastructure.Repositories.Interfaces;
+
+public interface IProdutoRepository : IGenericRepository<Produto>
 {
-    public interface IProdutoRepository : IGenericRepository<Produto>
-    {
-    }
 }
