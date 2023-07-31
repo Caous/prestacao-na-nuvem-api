@@ -8,6 +8,8 @@ public class FuncionarioPrestadorConfiguration : IEntityTypeConfiguration<Funcio
 
         builder.HasKey(k => k.Id);
 
+        builder.Property(p => p.Id).HasValueGenerator<SequentialGuidValueGenerator>();
+
         builder.Property(p => p.PrestadorId).IsRequired();
 
         builder.Property(p => p.Nome).HasMaxLength(100).IsRequired();

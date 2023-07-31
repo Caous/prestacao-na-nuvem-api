@@ -2,7 +2,8 @@
 
 public class ProdutoValidator : AbstractValidator<ProdutoDto>
 {
-    public ProdutoValidator() {
+    public ProdutoValidator()
+    {
 
         RuleFor(x => x.Nome)
        .NotEmpty()

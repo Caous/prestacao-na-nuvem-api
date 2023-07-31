@@ -8,13 +8,13 @@ public class ProdutoConfiguration : IEntityTypeConfiguration<Produto>
 
         builder.HasKey(k => k.Id);
 
+        builder.Property(p => p.Id).HasValueGenerator<SequentialGuidValueGenerator>();
+
         builder.Property(p => p.Nome).HasMaxLength(100).IsRequired();
 
         builder.Property(p => p.Marca).HasMaxLength(25).IsRequired();
 
         builder.Property(p => p.Modelo).HasMaxLength(50).IsRequired();
-
-        builder.Property(p => p.Data_validade).HasDefaultValueSql("getDate()").IsRequired();
 
         builder.Property(p => p.Garantia).HasMaxLength(10).IsRequired();
 

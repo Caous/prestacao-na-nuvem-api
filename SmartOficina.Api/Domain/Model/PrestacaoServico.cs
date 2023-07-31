@@ -15,5 +15,7 @@ public class PrestacaoServico : Base
     public Veiculo? Veiculo { get; set; }
     public Guid? VeiculoId { get; set; }
     public ICollection<Servico>? Servicos { get; set; }
+    public ICollection<ProdutoPrestacaoServico>? Produtos { get; set; }
+
 
 }
