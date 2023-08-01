@@ -15,12 +15,12 @@ public class PrestacaoServicoConfiguration : IEntityTypeConfiguration<PrestacaoS
         builder.Property(p => p.Referencia).IsRequired()
             .HasDefaultValueSql("FORMAT((NEXT VALUE FOR PrestacaoOrdem), 'OS#')");
 
-        builder.HasOne(p => p.Prestador).WithMany(s => s.OrdemServicos).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(p => p.Prestador).WithMany(s => s.OrdemServicos).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(c => c.Cliente).WithMany(s => s.Servicos).HasForeignKey(f => f.ClienteId).OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(v => v.Veiculo).WithMany(s => s.Servicos).HasForeignKey(f => f.VeiculoId).OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasMany(s => s.Servicos).WithOne(p => p.PrestacaoServico).HasForeignKey(f => f.PrestacaoServicoId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(s => s.Servicos).WithOne(p => p.PrestacaoServico).HasForeignKey(f => f.PrestacaoServicoId).OnDelete(DeleteBehavior.NoAction);
     }
 }
