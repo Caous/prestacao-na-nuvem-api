@@ -12,11 +12,11 @@ public class OficinaContext : DbContext
     public DbSet<Servico> Servico { get; set; }
     public DbSet<Prestador> Prestador { get; set; }
     public DbSet<Veiculo> Veiculo { get; set; }
-    public DbSet<SubServico> SubServico { get; set; }
+    public DbSet<SubCategoriaServico> SubCategoriaServico { get; set; }
     public DbSet<CategoriaServico> CategoriaServico { get; set; }
     public DbSet<Produto> ProdutoEstoque { get; set; }
     public DbSet<FuncionarioPrestador> FuncionarioPrestador { get; set; }
-    public DbSet<ProdutoPrestacaoServico> ProdutoPrestacaoServico{ get; set; }
+    public DbSet<Produto> Produto { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

@@ -12,7 +12,8 @@ public class Veiculo : Base
     public string? Chassi { get; set; }
     public EVeiculoTipo Tipo { get; set; }
     public Guid PrestadorId { get; set; }
-    public DateTime Ano { get; set; }
+    public Prestador Prestador { get; set; }
+    public int Ano { get; set; }
     public string? TipoCombustivel { get; set; }
     public ICollection<PrestacaoServico>? Servicos { get; set; }
 }

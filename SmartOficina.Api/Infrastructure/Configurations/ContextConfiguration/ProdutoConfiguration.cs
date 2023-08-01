@@ -27,5 +27,10 @@ public class ProdutoConfiguration : IEntityTypeConfiguration<Produto>
         builder.Property(p => p.UsrCadastro).IsRequired();
 
         builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
+
+        builder.HasOne(p => p.PrestacaoServico).WithMany(s => s.Produtos).HasForeignKey(f => f.PrestacaoServicoId).OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(p => p.Prestador).WithMany(s => s.Produtos).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
+
     }
 }

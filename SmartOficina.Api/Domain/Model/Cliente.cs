@@ -15,6 +15,7 @@ public class Cliente : Base
     //ToDo: Criar classe de Endereço
     public string? Endereco { get; set; }
     public required Guid PrestadorId { get; set; }
+    public Prestador Prestador{ get; set; }
     public ICollection<PrestacaoServico>? Servicos { get; set; }
 
 }
