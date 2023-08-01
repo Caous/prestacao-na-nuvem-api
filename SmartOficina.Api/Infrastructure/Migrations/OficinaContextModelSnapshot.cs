@@ -240,21 +240,18 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CNPJ")
-                        .IsRequired()
                         .HasMaxLength(14)
                         .HasColumnType("nvarchar(14)");
 
                     b.Property<string>("CPF")
-                        .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
                     b.Property<string>("CpfRepresentante")
-                        .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
-                    b.Property<DateTime>("DataAbertura")
+                    b.Property<DateTime?>("DataAbertura")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DataCadastro")
@@ -265,41 +262,34 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.Property<DateTime?>("DataDesativacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DataSituacaoCadastral")
+                    b.Property<DateTime?>("DataSituacaoCadastral")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmailEmpresa")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("EmailRepresentante")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Endereco")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NomeFantasia")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NomeRepresentante")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("RazaoSocial")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -307,7 +297,6 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Telefone")
-                        .IsRequired()
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
@@ -537,7 +526,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasOne("SmartOficina.Api.Domain.Model.Prestador", "Prestador")
                         .WithMany("CategoriaServicos")
                         .HasForeignKey("PrestadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Prestador");
@@ -548,7 +537,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasOne("SmartOficina.Api.Domain.Model.Prestador", "Prestador")
                         .WithMany("Clientes")
                         .HasForeignKey("PrestadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Prestador");
@@ -559,7 +548,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasOne("SmartOficina.Api.Domain.Model.Prestador", "Prestador")
                         .WithMany("Funcionarios")
                         .HasForeignKey("PrestadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Prestador");
@@ -575,7 +564,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasOne("SmartOficina.Api.Domain.Model.Prestador", "Prestador")
                         .WithMany("OrdemServicos")
                         .HasForeignKey("PrestadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SmartOficina.Api.Domain.Model.Veiculo", "Veiculo")
@@ -613,7 +602,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasOne("SmartOficina.Api.Domain.Model.PrestacaoServico", "PrestacaoServico")
                         .WithMany("Servicos")
                         .HasForeignKey("PrestacaoServicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SmartOficina.Api.Domain.Model.Prestador", "Prestador")
