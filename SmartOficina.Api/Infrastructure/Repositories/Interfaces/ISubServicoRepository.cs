@@ -1,6 +1,6 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Repositories.Interfaces;
 
-public interface ISubServicoRepository : IGenericRepository<SubServico>
+public interface ISubServicoRepository : IGenericRepository<SubCategoriaServico>
 {
-    Task<ICollection<SubServico>> GetAllWithIncludes();
+    Task<ICollection<SubCategoriaServico>> GetAllWithIncludes();
 }

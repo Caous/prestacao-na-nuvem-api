@@ -22,5 +22,8 @@ public class VeiculoConfiguration : IEntityTypeConfiguration<Veiculo>
         builder.Property(p => p.UsrCadastro).IsRequired();
 
         builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
+
+        builder.HasOne(p => p.Prestador).WithMany(s => s.Veiculos).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.Restrict);
+
     }
 }

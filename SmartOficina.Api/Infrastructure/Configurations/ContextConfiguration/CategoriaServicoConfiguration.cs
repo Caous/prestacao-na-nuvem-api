@@ -16,5 +16,7 @@ public class CategoriaServicoConfiguration : IEntityTypeConfiguration<CategoriaS
 
         builder.Property(p => p.UsrCadastro).IsRequired();
 
+        builder.HasOne(p => p.Prestador).WithMany(s => s.CategoriaServicos).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.Cascade);
+
     }
 }

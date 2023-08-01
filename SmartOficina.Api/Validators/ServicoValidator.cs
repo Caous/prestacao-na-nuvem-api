@@ -4,7 +4,7 @@ public class ServicoValidator : AbstractValidator<ServicoDto>
 {
     public ServicoValidator()
     {
-        RuleFor(x => x.Nome)
+        RuleFor(x => x.Descricao)
             .NotEmpty()
             .WithMessage(ServicoConst.NomeValidation)
             .NotNull()

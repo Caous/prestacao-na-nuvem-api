@@ -1,6 +1,6 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Repositories.Services;
 
-public class SubServicoRepository : GenericRepository<SubServico>, ISubServicoRepository
+public class SubServicoRepository : GenericRepository<SubCategoriaServico>, ISubServicoRepository
 {
     private readonly OficinaContext _context;
     public SubServicoRepository(OficinaContext context) : base(context)
@@ -8,9 +8,9 @@ public class SubServicoRepository : GenericRepository<SubServico>, ISubServicoRe
         _context = context;
     }
 
-    public async Task<ICollection<SubServico>> GetAllWithIncludes()
+    public async Task<ICollection<SubCategoriaServico>> GetAllWithIncludes()
     {
-        var result = await _context.SubServico.Include(i => i.Categoria).ToArrayAsync();
+        var result = await _context.SubCategoriaServico.Include(i => i.Categoria).ToArrayAsync();
         await _context.DisposeAsync();
         return result;
     }

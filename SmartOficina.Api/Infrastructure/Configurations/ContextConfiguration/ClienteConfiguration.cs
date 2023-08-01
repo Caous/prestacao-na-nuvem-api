@@ -28,5 +28,6 @@ public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
 
         builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
 
+        builder.HasOne(p => p.Prestador).WithMany(s => s.Clientes).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -8,8 +8,8 @@ public class FuncionarioPrestador :  Base
     }
     public Guid PrestadorId { get; set; }
     public required string Nome { get; set; }
-    public required string? Telefone { get; set; }
-    public required string? Email { get; set; } 
+    public required string Telefone { get; set; }
+    public required string Email { get; set; } 
     public required string RG { get; set; }
     //ToDo: Criar classe CPF
     public required string CPF { get; set; }
@@ -17,5 +17,5 @@ public class FuncionarioPrestador :  Base
     public string Endereco { get; set; }
     //ToDo: Criar classe Cargo
     public required string Cargo { get; set; }
-    public ICollection<Prestador>? Empresa_Associada { get; set; }
+    public Prestador Prestador { get; set; }
 }

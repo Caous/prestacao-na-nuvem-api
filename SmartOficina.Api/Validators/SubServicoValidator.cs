@@ -1,6 +1,6 @@
 ﻿namespace SmartOficina.Api.Validators;
 
-public class SubServicoValidator : AbstractValidator<SubServicoDto>
+public class SubServicoValidator : AbstractValidator<SubCategoriaServicoDto>
 {
     public SubServicoValidator()
     {

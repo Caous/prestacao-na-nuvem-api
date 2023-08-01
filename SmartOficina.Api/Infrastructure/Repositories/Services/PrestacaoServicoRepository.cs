@@ -1,16 +1,12 @@
-﻿using SmartOficina.Api.Domain.Model;
-
-namespace SmartOficina.Api.Infrastructure.Repositories.Services;
+﻿namespace SmartOficina.Api.Infrastructure.Repositories.Services;
 
 public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, IPrestacaoServicoRepository
 {
     private readonly OficinaContext _context;
-    private readonly IServicoRepository _servicoRepository;
 
-    public PrestacaoServicoRepository(OficinaContext context, IServicoRepository servicoRepository) : base(context)
+    public PrestacaoServicoRepository(OficinaContext context) : base(context)
     {
         _context = context;
-        _servicoRepository = servicoRepository;
     }
 
     public async Task<PrestacaoServico> FindById(Guid id)
@@ -21,7 +17,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
             .Include(i => i.Cliente)
             .Include(i => i.Veiculo)
             .Include(i => i.Servicos)
-                .ThenInclude(i => i.SubServico)
+                .ThenInclude(i => i.SubCategoriaServico)
                 .ThenInclude(i => i.Categoria)
             .ToList();
         await _context.DisposeAsync();
@@ -77,7 +73,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
             .Include(i => i.Cliente)
             .Include(i => i.Veiculo)
             .Include(i => i.Servicos)
-                .ThenInclude(i => i.SubServico)
+                .ThenInclude(i => i.SubCategoriaServico)
                 .ThenInclude(i => i.Categoria)
             .ToArrayAsync();
         await _context.DisposeAsync();

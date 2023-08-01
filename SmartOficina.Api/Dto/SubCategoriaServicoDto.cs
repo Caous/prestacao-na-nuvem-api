@@ -1,6 +1,6 @@
 ﻿namespace SmartOficina.Api.Dto;
 
-public class SubServicoDto : Base
+public class SubCategoriaServicoDto : Base
 {
     public string Titulo { get; set; }
     public string Desc { get; set; }

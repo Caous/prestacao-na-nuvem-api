@@ -13,13 +13,13 @@ public class SubServicoController : ControllerBase
         _mapper = mapper;
     }
     [HttpPost]
-    public async Task<IActionResult> AddAsync(SubServicoDto subServico)
+    public async Task<IActionResult> AddAsync(SubCategoriaServicoDto subServico)
     {
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Create(_mapper.Map<SubServico>(subServico)));
+        return Ok(await _repository.Create(_mapper.Map<SubCategoriaServico>(subServico)));
     }
 
     [HttpGet]
@@ -42,7 +42,7 @@ public class SubServicoController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> AtualizarSubServico(SubServicoDto subServico)
+    public async Task<IActionResult> AtualizarSubServico(SubCategoriaServicoDto subServico)
     {
         if (!ModelState.IsValid || !subServico.Id.HasValue)
         {
@@ -51,7 +51,7 @@ public class SubServicoController : ControllerBase
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Update(_mapper.Map<SubServico>(subServico)));
+        return Ok(await _repository.Update(_mapper.Map<SubCategoriaServico>(subServico)));
     }
 
     [HttpPut("DesativarSubServico")]

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SmartOficina.Api.Migrations
+namespace SmartOficina.Api.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrations : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,6 +14,36 @@ namespace SmartOficina.Api.Migrations
             migrationBuilder.CreateSequence<int>(
                 name: "PrestacaoOrdem",
                 startValue: 1000L);
+
+            migrationBuilder.CreateTable(
+                name: "Prestador",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TipoCadastro = table.Column<int>(type: "int", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CPF = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    CpfRepresentante = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    CNPJ = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
+                    RazaoSocial = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NomeFantasia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NomeRepresentante = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
+                    EmailEmpresa = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Endereco = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    EmailRepresentante = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SituacaoCadastral = table.Column<int>(type: "int", nullable: false),
+                    DataAbertura = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataSituacaoCadastral = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getDate()"),
+                    DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsrDesativacao = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Prestador", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "CategoriaServico",
@@ -31,6 +61,12 @@ namespace SmartOficina.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CategoriaServico", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CategoriaServico_Prestador_PrestadorId",
+                        column: x => x.PrestadorId,
+                        principalTable: "Prestador",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,6 +89,12 @@ namespace SmartOficina.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cliente", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cliente_Prestador_PrestadorId",
+                        column: x => x.PrestadorId,
+                        principalTable: "Prestador",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,7 +104,7 @@ namespace SmartOficina.Api.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
+                    Telefone = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     RG = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     CPF = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
@@ -76,29 +118,12 @@ namespace SmartOficina.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FuncionarioPrestador", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Produto",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Marca = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Modelo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Data_validade = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getDate()"),
-                    Garantia = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Valor_Compra = table.Column<float>(type: "real", nullable: false),
-                    Valor_Venda = table.Column<float>(type: "real", nullable: false),
-                    PrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getDate()"),
-                    DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsrDesativacao = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Produto", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FuncionarioPrestador_Prestador_PrestadorId",
+                        column: x => x.PrestadorId,
+                        principalTable: "Prestador",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,6 +137,8 @@ namespace SmartOficina.Api.Migrations
                     Chassi = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Tipo = table.Column<int>(type: "int", nullable: false),
                     PrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Ano = table.Column<int>(type: "int", nullable: false),
+                    TipoCombustivel = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getDate()"),
                     DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -120,17 +147,22 @@ namespace SmartOficina.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Veiculo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Veiculo_Prestador_PrestadorId",
+                        column: x => x.PrestadorId,
+                        principalTable: "Prestador",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubServico",
+                name: "SubCategoriaServico",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Desc = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CategoriaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -138,48 +170,11 @@ namespace SmartOficina.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubServico", x => x.Id);
+                    table.PrimaryKey("PK_SubCategoriaServico", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SubServico_CategoriaServico_CategoriaId",
+                        name: "FK_SubCategoriaServico_CategoriaServico_CategoriaId",
                         column: x => x.CategoriaId,
                         principalTable: "CategoriaServico",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Prestador",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TipoCadastro = table.Column<int>(type: "int", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CPF = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    CpfRepresentante = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    CNPJ = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
-                    RazaoSocial = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    NomeFantasia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    NomeRepresentante = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
-                    EmailEmpresa = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Endereco = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    EmailRepresentante = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    SituacaoCadastral = table.Column<int>(type: "int", nullable: false),
-                    DataAbertura = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataSituacaoCadastral = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FuncionarioPrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getDate()"),
-                    DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsrDesativacao = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prestador", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Prestador_FuncionarioPrestador_FuncionarioPrestadorId",
-                        column: x => x.FuncionarioPrestadorId,
-                        principalTable: "FuncionarioPrestador",
                         principalColumn: "Id");
                 });
 
@@ -205,7 +200,8 @@ namespace SmartOficina.Api.Migrations
                         name: "FK_PrestacaoServico_Cliente_ClienteId",
                         column: x => x.ClienteId,
                         principalTable: "Cliente",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PrestacaoServico_Prestador_PrestadorId",
                         column: x => x.PrestadorId,
@@ -216,6 +212,42 @@ namespace SmartOficina.Api.Migrations
                         name: "FK_PrestacaoServico_Veiculo_VeiculoId",
                         column: x => x.VeiculoId,
                         principalTable: "Veiculo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Produto",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Marca = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Data_validade = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Garantia = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Valor_Compra = table.Column<float>(type: "real", nullable: false),
+                    Valor_Venda = table.Column<float>(type: "real", nullable: false),
+                    PrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PrestacaoServicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getDate()"),
+                    DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsrDesativacao = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Produto", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Produto_PrestacaoServico_PrestacaoServicoId",
+                        column: x => x.PrestacaoServicoId,
+                        principalTable: "PrestacaoServico",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Produto_Prestador_PrestadorId",
+                        column: x => x.PrestadorId,
+                        principalTable: "Prestador",
                         principalColumn: "Id");
                 });
 
@@ -225,7 +257,7 @@ namespace SmartOficina.Api.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     Valor = table.Column<float>(type: "real", nullable: false),
                     SubServicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PrestacaoServicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -244,12 +276,32 @@ namespace SmartOficina.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Servico_SubServico_SubServicoId",
+                        name: "FK_Servico_Prestador_PrestadorId",
+                        column: x => x.PrestadorId,
+                        principalTable: "Prestador",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Servico_SubCategoriaServico_SubServicoId",
                         column: x => x.SubServicoId,
-                        principalTable: "SubServico",
+                        principalTable: "SubCategoriaServico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoriaServico_PrestadorId",
+                table: "CategoriaServico",
+                column: "PrestadorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cliente_PrestadorId",
+                table: "Cliente",
+                column: "PrestadorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FuncionarioPrestador_PrestadorId",
+                table: "FuncionarioPrestador",
+                column: "PrestadorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PrestacaoServico_ClienteId",
@@ -267,9 +319,14 @@ namespace SmartOficina.Api.Migrations
                 column: "VeiculoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prestador_FuncionarioPrestadorId",
-                table: "Prestador",
-                column: "FuncionarioPrestadorId");
+                name: "IX_Produto_PrestacaoServicoId",
+                table: "Produto",
+                column: "PrestacaoServicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Produto_PrestadorId",
+                table: "Produto",
+                column: "PrestadorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Servico_PrestacaoServicoId",
@@ -277,19 +334,32 @@ namespace SmartOficina.Api.Migrations
                 column: "PrestacaoServicoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Servico_PrestadorId",
+                table: "Servico",
+                column: "PrestadorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Servico_SubServicoId",
                 table: "Servico",
                 column: "SubServicoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubServico_CategoriaId",
-                table: "SubServico",
+                name: "IX_SubCategoriaServico_CategoriaId",
+                table: "SubCategoriaServico",
                 column: "CategoriaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Veiculo_PrestadorId",
+                table: "Veiculo",
+                column: "PrestadorId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "FuncionarioPrestador");
+
             migrationBuilder.DropTable(
                 name: "Produto");
 
@@ -300,13 +370,10 @@ namespace SmartOficina.Api.Migrations
                 name: "PrestacaoServico");
 
             migrationBuilder.DropTable(
-                name: "SubServico");
+                name: "SubCategoriaServico");
 
             migrationBuilder.DropTable(
                 name: "Cliente");
-
-            migrationBuilder.DropTable(
-                name: "Prestador");
 
             migrationBuilder.DropTable(
                 name: "Veiculo");
@@ -315,7 +382,7 @@ namespace SmartOficina.Api.Migrations
                 name: "CategoriaServico");
 
             migrationBuilder.DropTable(
-                name: "FuncionarioPrestador");
+                name: "Prestador");
 
             migrationBuilder.DropSequence(
                 name: "PrestacaoOrdem");
