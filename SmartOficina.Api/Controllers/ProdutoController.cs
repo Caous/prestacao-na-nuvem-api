@@ -3,10 +3,12 @@
 public class ProdutoController : Controller
 {
     private readonly IMapper _mapper;
+    private readonly IProdutoRepository _repository;
 
-    public ProdutoController(IMapper mapper)
+    public ProdutoController(IMapper mapper, IProdutoRepository repository)
     {
         _mapper = mapper;
+        _repository = repository;
     }
 
     [HttpPost]
@@ -16,13 +18,13 @@ public class ProdutoController : Controller
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok();
+        return Ok(_repository.Create(_mapper.Map<Produto>(produto)));
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok();
+        return Ok(_repository.GetAll());
     }
 
     [HttpGet("{id}")]
@@ -35,7 +37,7 @@ public class ProdutoController : Controller
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok();
+        return Ok(_repository.FindById(id));
     }
 
     [HttpPut]
@@ -48,7 +50,7 @@ public class ProdutoController : Controller
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok();
+        return Ok(_repository.Update(_mapper.Map<Produto>(produto)));
     }
 
     [HttpPut("DesativarPrestador")]
@@ -61,7 +63,7 @@ public class ProdutoController : Controller
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok();
+        return Ok(_repository.Desabled(id));
     }
 
     [HttpDelete]
@@ -77,7 +79,7 @@ public class ProdutoController : Controller
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
             
-            return Ok();
+            return Ok(_repository.Delete(id));
         }
         catch (Exception ex)
         {
