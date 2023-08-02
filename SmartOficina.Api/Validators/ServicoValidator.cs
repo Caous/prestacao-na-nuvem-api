@@ -15,5 +15,11 @@ public class ServicoValidator : AbstractValidator<ServicoDto>
             .WithMessage(ServicoConst.ValorValidation)
             .NotNull()
             .WithMessage(ServicoConst.ValorValidation);
+
+        RuleFor(x => x.SubServicoId)
+        .NotEmpty()
+        .WithMessage(ServicoConst.IdSubServicoValidation)
+        .NotNull()
+        .WithMessage(ServicoConst.IdSubServicoValidation);
     }
 }

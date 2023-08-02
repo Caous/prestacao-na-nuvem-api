@@ -22,12 +22,6 @@ public class ClienteValidator : AbstractValidator<ClienteDto>
             .NotNull()
             .WithMessage(ClienteConst.TelefoneValidation);
 
-        RuleFor(x => x.Rg)
-           .NotEmpty()
-           .WithMessage(ClienteConst.RGValidation)
-           .NotNull()
-           .WithMessage(ClienteConst.RGValidation);
-
         RuleFor(x => x.CPF)
            .NotEmpty()
            .WithMessage(ClienteConst.CPFValidation)

@@ -8,4 +8,6 @@ public class ProdutoConst : BaseConstEntidades
     public const string GarantiaValidation = "Por favor informar uma garantia valida";
     public const string ValorCompraValidation = "Por favor informar um valor de compra valido";
     public const string ValorVendaValidation = "Por favor informar um valor de venda valido";
+    public const string TipoMedidaValidation = "Por favor informar um tipo de medidaW";
+
 }

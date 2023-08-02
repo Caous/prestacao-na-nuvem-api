@@ -17,23 +17,11 @@ public class ProdutoValidator : AbstractValidator<ProdutoDto>
        .NotNull()
        .WithMessage(ProdutoConst.MarcaValidation);
 
-        RuleFor(x => x.Modelo)
-       .NotEmpty()
-       .WithMessage(ProdutoConst.ModeloValidation)
-       .NotNull()
-       .WithMessage(ProdutoConst.ModeloValidation);
-
-        RuleFor(x => x.Data_validade)
-       .NotEmpty()
-       .WithMessage(ProdutoConst.DataValidadeValidation)
-       .NotNull()
-       .WithMessage(ProdutoConst.DataValidadeValidation);
-
-        RuleFor(x => x.Garantia)
-       .NotEmpty()
-       .WithMessage(ProdutoConst.GarantiaValidation)
-       .NotNull()
-       .WithMessage(ProdutoConst.GarantiaValidation);
+        RuleFor(x => x.TipoMedidaItem)
+        .NotEmpty()
+        .WithMessage(ProdutoConst.TipoMedidaValidation)
+        .NotNull()
+        .WithMessage(ProdutoConst.TipoMedidaValidation);
 
         RuleFor(x => x.Valor_Compra)
        .NotEmpty()
@@ -46,5 +34,11 @@ public class ProdutoValidator : AbstractValidator<ProdutoDto>
        .WithMessage(ProdutoConst.ValorVendaValidation)
        .NotNull()
        .WithMessage(ProdutoConst.ValorVendaValidation);
+
+        RuleFor(x => x.PrestadorId)
+        .NotEmpty()
+        .WithMessage(ClienteConst.PrestadorValidation)
+        .NotNull()
+        .WithMessage(ClienteConst.PrestadorValidation);
     }
 }

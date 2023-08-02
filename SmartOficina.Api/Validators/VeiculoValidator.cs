@@ -29,5 +29,17 @@ public class VeiculoValidator : AbstractValidator<VeiculoDto>
             .WithMessage(VeiculoConst.MarcaValidation)
             .NotNull()
             .WithMessage(VeiculoConst.MarcaValidation);
+
+        RuleFor(x => x.Ano)
+        .NotEmpty()
+        .WithMessage(VeiculoConst.AnoValidation)
+        .NotNull()
+        .WithMessage(VeiculoConst.AnoValidation);
+
+        RuleFor(x => x.TipoCombustivel)
+        .NotEmpty()
+        .WithMessage(VeiculoConst.TipoCombustivelValidation)
+        .NotNull()
+        .WithMessage(VeiculoConst.TipoCombustivelValidation);
     }
 }
