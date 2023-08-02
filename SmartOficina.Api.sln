@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartOficina.Api", "SmartOf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartOficina.UnitTest", "SmartOficina.UnitTest\SmartOficina.UnitTest.csproj", "{F01BDBAA-9782-4D77-B787-1F05E7BCBD66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOficina.Seguranca", "SmartOficina.Seguranca\SmartOficina.Seguranca.csproj", "{6BEB5D65-6D43-47BC-81E0-AEF255FBB7FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F01BDBAA-9782-4D77-B787-1F05E7BCBD66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F01BDBAA-9782-4D77-B787-1F05E7BCBD66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F01BDBAA-9782-4D77-B787-1F05E7BCBD66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BEB5D65-6D43-47BC-81E0-AEF255FBB7FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BEB5D65-6D43-47BC-81E0-AEF255FBB7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BEB5D65-6D43-47BC-81E0-AEF255FBB7FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BEB5D65-6D43-47BC-81E0-AEF255FBB7FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
