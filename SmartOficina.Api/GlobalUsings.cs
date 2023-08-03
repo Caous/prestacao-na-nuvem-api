@@ -12,6 +12,8 @@ global using System.Text.Json.Serialization;
 global using FluentValidation;
 global using FluentValidation.AspNetCore;
 global using System.Reflection;
+global using Microsoft.AspNetCore.Identity;
+
 
 //API
 global using SmartOficina.Api.Dto;
