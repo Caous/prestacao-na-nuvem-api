@@ -13,7 +13,9 @@ global using FluentValidation;
 global using FluentValidation.AspNetCore;
 global using System.Reflection;
 global using Microsoft.AspNetCore.Identity;
-
+global using Microsoft.IdentityModel.Tokens;
+global using System.Text;
+global using Microsoft.Extensions.Options;
 
 //API
 global using SmartOficina.Api.Dto;
@@ -31,4 +33,6 @@ global using SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration
 global using SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
 global using SmartOficina.Api.Infrastructure.Configurations.SwaggerConfig;
 global using SmartOficina.Api.Infrastructure.Constants;
+global using SmartOficina.Api.Infrastructure.Configurations.Tokens;
+global using SmartOficina.Api.Infrastructure.Configurations.Security;
 

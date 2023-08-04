@@ -1,6 +1,6 @@
 ﻿namespace SmartOficina.Api.Dto;
 
-public class UserOficinaDto : Base
+public class UserAutenticationDto : Base
 {
     public string Email { get; set; }
     public string Password { get; set; }
