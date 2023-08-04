@@ -1,5 +1,7 @@
 ﻿namespace SmartOficina.Api.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 public class ProdutoController : Controller
 {
     private readonly IMapper _mapper;
