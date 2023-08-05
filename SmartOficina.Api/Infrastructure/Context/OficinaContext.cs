@@ -17,6 +17,7 @@ public class OficinaContext : DbContext
     public DbSet<Produto> ProdutoEstoque { get; set; }
     public DbSet<FuncionarioPrestador> FuncionarioPrestador { get; set; }
     public DbSet<Produto> Produto { get; set; }
+    public DbSet<UserAutentication> UserAutentications { get; set; }    
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

@@ -6,6 +6,7 @@ public abstract class Base
     public DateTime? DataCadastro { get; set; }
     public DateTime? DataDesativacao { get; set; }
     public Guid? UsrCadastro { get; set; }
+    public string? UsrCadastroDesc { get; set; }
     public Guid? PrestadorId { get; set; }
     public Guid? UsrDesativacao { get; set; }
 }
