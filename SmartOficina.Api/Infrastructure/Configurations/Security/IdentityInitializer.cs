@@ -41,15 +41,38 @@ public class IdentityInitializer
                 }
             }
 
+            if (!_roleManager.RoleExistsAsync(Roles.Fornecedor).Result)
+            {
+                var resultado = _roleManager.CreateAsync(
+                    new IdentityRole(Roles.Fornecedor)).Result;
+                if (!resultado.Succeeded)
+                {
+                    throw new Exception(
+                        $"Erro durante a criação da role {Roles.Funcionario}.");
+                }
+            }
+
+            if (!_roleManager.RoleExistsAsync(Roles.Administrador).Result)
+            {
+                var resultado = _roleManager.CreateAsync(
+                    new IdentityRole(Roles.Administrador)).Result;
+                if (!resultado.Succeeded)
+                {
+                    throw new Exception(
+                        $"Erro durante a criação da role {Roles.Funcionario}.");
+                }
+            }
+
             CreateUser(
                 new UserAutentication()
                 {
-                    UserName = "agendServer",
-                    Email = "agendaAdministracao@i4us.com.br",
-                    NormalizedEmail = "agendaAdministracao@i4us.com.br",
+                    UserName = "OficinaNaNuvemAdm",
+                    Email = "OficinaNaNuvemAdm@i4us.com.br",
+                    NormalizedEmail = "OficinaNaNuvemAdm@i4us.com.br",
                     UsrCadastro = Guid.NewGuid(),
+                    UsrDescricaoCadastro = "Usuário adm",
                     EmailConfirmed = true
-                }, "@g3nd4P@s", Roles.Funcionario);
+                }, "@fic4N4N@v3m", Roles.Administrador);
 
         }
     }
