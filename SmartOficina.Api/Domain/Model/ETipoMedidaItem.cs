@@ -1,6 +1,6 @@
 ﻿namespace SmartOficina.Api.Domain.Model;
 
-public enum ETipoMedidaItemDto
+public enum ETipoMedidaItem
 {
     Litro,
     Peca
