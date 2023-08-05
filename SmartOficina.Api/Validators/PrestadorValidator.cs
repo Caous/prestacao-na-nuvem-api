@@ -10,11 +10,11 @@ public class PrestadorValidator : AbstractValidator<PrestadorDto>
           .NotNull()
           .WithMessage(PrestadorConst.TipoCadastroValidation);
 
-        RuleFor(x => x.SituacaoCadastral)
-          .NotEmpty()
-          .WithMessage(PrestadorConst.SituacaoCadastralValidation)
-          .NotNull()
-          .WithMessage(PrestadorConst.SituacaoCadastralValidation);
+        //RuleFor(x => x.SituacaoCadastral)
+        //  .NotEmpty()
+        //  .WithMessage(PrestadorConst.SituacaoCadastralValidation)
+        //  .NotNull()
+        //  .WithMessage(PrestadorConst.SituacaoCadastralValidation);
 
 
     }
