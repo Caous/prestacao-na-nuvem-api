@@ -99,7 +99,6 @@ public class PrestacaoServicoController : ControllerBase
                 item.PrestadorId = prestacaoServico.PrestadorId.Value;
             }
         }
-        prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
 
         if (prestacaoServico.Servicos != null)
         {
@@ -110,9 +109,11 @@ public class PrestacaoServicoController : ControllerBase
             }
         }
 
+        if (prestacaoServico.Veiculo != null)
+            prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
 
-        prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
-
+        if (prestacaoServico.Cliente != null)
+            prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
 
 
         return Ok(await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico)));
