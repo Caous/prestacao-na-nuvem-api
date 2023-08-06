@@ -53,6 +53,8 @@ public static class DependecyInjectionConfig
         #endregion
 
         #region Autentication
+        services.AddScoped<IdentityInitializer>();
+
         services.AddIdentity<UserAutentication, IdentityRole>(options =>
         {
             options.Password.RequireDigit = true;

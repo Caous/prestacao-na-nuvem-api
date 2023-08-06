@@ -12,7 +12,7 @@ using SmartOficina.Api.Infrastructure.Context;
 namespace SmartOficina.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(OficinaContext))]
-    [Migration("20230801234356_Initial")]
+    [Migration("20230806232613_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -465,6 +465,78 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                     b.HasIndex("CategoriaId");
 
                     b.ToTable("SubCategoriaServico", (string)null);
+                });
+
+            modelBuilder.Entity("SmartOficina.Api.Domain.Model.UserAutentication", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UsrDescricaoCadastro")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsrDescricaoDesativacao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserAutentications");
                 });
 
             modelBuilder.Entity("SmartOficina.Api.Domain.Model.Veiculo", b =>
