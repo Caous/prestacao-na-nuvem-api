@@ -1,38 +1,44 @@
 ﻿namespace SmartOficina.Seguranca.Controllers;
 
-[Route("api/[controller]")]
+[ApiVersion("1.0")]
+[Route("/v{version:apiVersion}/api/[controller]")]
 [ApiController]
 public class AutenticacaoController : ControllerBase
 {
-    // GET: api/<AutenticacaoController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    private readonly IAcessoManager _acessoManager;
+
+    public AutenticacaoController(IAcessoManager acessoManager)
     {
-        return new string[] { "value1", "value2" };
+        _acessoManager = acessoManager;
     }
 
-    // GET api/<AutenticacaoController>/5
+    [HttpGet("PrestadorUser")]
+    public async Task<IActionResult> GetPrestadorUser(string email, Guid? id, string? CpfCnpj)
+    {
+        return Ok();
+    }
+
     [HttpGet("{id}")]
-    public string Get(int id)
+    public async Task<IActionResult> Get(Guid id)
     {
-        return "value";
+        return Ok();
     }
 
-    // POST api/<AutenticacaoController>
-    [HttpPost]
-    public void Post([FromBody] string value)
+    [HttpPost("RegistrarFornecedor")]
+    public async Task<IActionResult> Post(UserModelDto userDto)
     {
+        return Ok(userDto);
     }
 
-    // PUT api/<AutenticacaoController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpPost("LoginPrestador")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login(UserModelDto user)
     {
-    }
+        var token = await _acessoManager.ValidarCredenciais(user);
+        if (token.Authenticated)
+            return Ok(token);
 
-    // DELETE api/<AutenticacaoController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
+        return Forbid("Não autenticado");
+
     }
 }

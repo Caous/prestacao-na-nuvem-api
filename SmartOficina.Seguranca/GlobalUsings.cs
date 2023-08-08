@@ -14,6 +14,7 @@ global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Security.Principal;
 global using Microsoft.OpenApi.Models;
+global using Microsoft.AspNetCore.Mvc;
 
 //SmartOficina
 global using SmartOficina.Seguranca.Infrastructure.Configurations.Security;
