@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Seguranca.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

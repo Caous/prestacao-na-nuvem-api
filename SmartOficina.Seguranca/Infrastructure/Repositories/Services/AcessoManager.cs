@@ -1,19 +1,15 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Principal;
-
-namespace SmartOficina.Api.Infrastructure.Repositories.Services;
+﻿namespace SmartOficina.Seguranca.Infrastructure.Repositories.Services;
 
 public class AcessoManager : IAcessoManager
 {
-    private readonly UserManager<UserAutentication> _userManager;
-    private readonly SignInManager<UserAutentication> _signInManager;
+    private readonly UserManager<UserModel> _userManager;
+    private readonly SignInManager<UserModel> _signInManager;
     private readonly TokenConfigurations _tokenConfigurations;
     private readonly SigningConfigurations _signingConfigurations;
     private readonly IMapper _mapper;
 
-    public AcessoManager(UserManager<UserAutentication> userManager,
-            SignInManager<UserAutentication> signInManager,
+    public AcessoManager(UserManager<UserModel> userManager,
+            SignInManager<UserModel> signInManager,
             TokenConfigurations tokenConfigurations,
             SigningConfigurations signingConfigurations,
             IMapper mapper)
@@ -24,12 +20,12 @@ public class AcessoManager : IAcessoManager
         _signingConfigurations = signingConfigurations;
         _mapper = mapper;
     }
-    public async Task<bool> CriarFornecedor(UserAutenticationDto user)
+    public async Task<bool> CriarFornecedor(UserModelDto user)
     {
         if (string.IsNullOrEmpty(user.UsrCadastroDesc))
             user.UsrCadastroDesc = "system";
 
-        var userModel = _mapper.Map<UserAutentication>(user);
+        var userModel = _mapper.Map<UserModel>(user);
         var result = await _userManager.CreateAsync(userModel, user.Password);
 
         if (result.Succeeded)
@@ -40,12 +36,12 @@ public class AcessoManager : IAcessoManager
         else return false;
     }
 
-    public async Task<bool> CriarFuncionario(UserAutenticationDto user)
+    public async Task<bool> CriarFuncionario(UserModelDto user)
     {
         if (string.IsNullOrEmpty(user.UsrCadastroDesc))
             user.UsrCadastroDesc = "system";
 
-        var userModel = _mapper.Map<UserAutentication>(user);
+        var userModel = _mapper.Map<UserModel>(user);
         var result = await _userManager.CreateAsync(
            userModel, user.Password);
 
@@ -57,14 +53,14 @@ public class AcessoManager : IAcessoManager
         else return false;
     }
 
-    public async Task<UserAutentication> GetUserPorEmail(string email)
+    public async Task<UserModel> GetUserPorEmail(string email)
     {
         return await _userManager.FindByEmailAsync(email);
     }
 
-    public async Task<Token> ValidarCredenciais(UserAutenticationDto user)
+    public async Task<Token> ValidarCredenciais(UserModelDto user)
     {
-        UserAutentication usuario;
+        UserModel usuario;
 
         if (!string.IsNullOrEmpty(user.UserName))
             usuario = await _userManager.FindByNameAsync(user.UserName);
@@ -86,7 +82,7 @@ public class AcessoManager : IAcessoManager
         return new() { Authenticated = false, Message = "Invalid" };
     }
 
-    private Token GenerateToken(UserAutentication user, string role)
+    private Token GenerateToken(UserModel user, string role)
     {
         ClaimsIdentity identity = new(
             new GenericIdentity(user.Id!, "Login"),

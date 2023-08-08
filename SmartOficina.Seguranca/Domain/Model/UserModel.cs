@@ -1,6 +1,6 @@
-﻿namespace SmartOficina.Api.Domain.Model;
+﻿namespace SmartOficina.Seguranca.Domain.Model;
 
-public class UserAutentication : IdentityUser
+public class UserModel : IdentityUser
 {
     public DateTime DataCadastro { get; set; }
     public DateTime? DataDesativacao { get; set; }

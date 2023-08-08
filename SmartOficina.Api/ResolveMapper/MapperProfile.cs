@@ -13,10 +13,6 @@ public class MapperProfile : Profile
         CreateMap<ServicoDto, Servico>().ReverseMap();
         CreateMap<ProdutoDto, Produto>().ReverseMap();
         CreateMap<FuncionarioPrestadorDto, FuncionarioPrestador>().ReverseMap();
-        CreateMap<UserAutenticationDto, UserAutentication>()
-                .ForMember(p => p.NormalizedEmail, opt => opt.MapFrom(src => src.Email))
-                .ForMember(p => p.Email, opt => opt.MapFrom(src => src.Email))
-                .ReverseMap();
 
     }
 }

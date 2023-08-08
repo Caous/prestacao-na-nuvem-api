@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Domain.Model;
+﻿namespace SmartOficina.Seguranca.Domain.Model;
 
 public class Token
 {
@@ -8,3 +8,4 @@ public class Token
     public string? AccessToken { get; set; }
     public string? Message { get; set; }
 }
+

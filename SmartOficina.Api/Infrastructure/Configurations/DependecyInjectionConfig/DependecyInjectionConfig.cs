@@ -4,6 +4,29 @@ public static class DependecyInjectionConfig
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
+        //#region Autentication
+        //services.AddScoped<IdentityInitializer>();
+
+        //services.AddIdentity<UserAutentication, IdentityRole>(options =>
+        //{
+        //    options.Password.RequireDigit = true;
+        //    options.Password.RequireNonAlphanumeric = false;
+        //    options.Password.RequireUppercase = true;
+        //    options.Password.RequireLowercase = true;
+        //    options.Password.RequiredLength = 6;
+        //})
+        //        .AddEntityFrameworkStores<OficinaContext>()
+        //        .AddDefaultTokenProviders();
+        //#endregion
+
+        //#region JWT
+        //var tokenConfigurations = new TokenConfigurations();
+        //new ConfigureFromConfigurationOptions<TokenConfigurations>(
+        //    configuration.GetSection("TokenConfigurations"))
+        //        .Configure(tokenConfigurations);
+
+        //services.AddJwtSecurity(tokenConfigurations);
+        //#endregion
 
         #region Injection Repository
         services.AddScoped<IClienteRepository, ClienteRepository>();
@@ -16,6 +39,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IProdutoRepository, ProdutoRepository>();
         services.AddScoped<IFuncionarioPrestadorRepository, FuncionarioPrestadorServiceRepository>();
         #endregion
+
 
         #region Cors
         services.AddCors(options =>
@@ -52,29 +76,8 @@ public static class DependecyInjectionConfig
         });
         #endregion
 
-        #region Autentication
-        services.AddScoped<IdentityInitializer>();
 
-        services.AddIdentity<UserAutentication, IdentityRole>(options =>
-        {
-            options.Password.RequireDigit = true;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequiredLength = 6;
-        })
-                .AddEntityFrameworkStores<DbContext>()
-                .AddDefaultTokenProviders();
-        #endregion
 
-        #region JWT
-        var tokenConfigurations = new TokenConfigurations();
-        new ConfigureFromConfigurationOptions<TokenConfigurations>(
-            configuration.GetSection("TokenConfigurations"))
-                .Configure(tokenConfigurations);
 
-        services.AddJwtSecurity(tokenConfigurations);
-
-        #endregion
     }
 }

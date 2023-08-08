@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Infrastructure.Configurations.Tokens;
+﻿namespace SmartOficina.Seguranca.Infrastructure.Configurations.Security;
 
 public static class Roles
 {

@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-
-namespace SmartOficina.Api.Infrastructure.Configurations.Security;
+﻿namespace SmartOficina.Seguranca.Infrastructure.Configurations.Security;
 
 public static class JwtSecurityExtension
 {

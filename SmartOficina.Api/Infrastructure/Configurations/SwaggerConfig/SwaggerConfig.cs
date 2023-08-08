@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-
-namespace SmartOficina.Api.Infrastructure.Configurations.SwaggerConfig;
+﻿namespace SmartOficina.Api.Infrastructure.Configurations.SwaggerConfig;
 
 public static class SwaggerConfig
 {

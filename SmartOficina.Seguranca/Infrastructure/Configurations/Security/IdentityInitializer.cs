@@ -1,13 +1,13 @@
-﻿namespace SmartOficina.Api.Infrastructure.Configurations.Security;
+﻿namespace SmartOficina.Seguranca.Infrastructure.Configurations.Security;
 
 public class IdentityInitializer
 {
-    private readonly OficinaContext _context;
-    private readonly UserManager<UserAutentication> _userManager;
+    private readonly SegurancaContext _context;
+    private readonly UserManager<UserModel> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public IdentityInitializer(OficinaContext context,
-            UserManager<UserAutentication> userManager,
+    public IdentityInitializer(SegurancaContext context,
+            UserManager<UserModel> userManager,
             RoleManager<IdentityRole> roleManager)
     {
         _context = context;
@@ -64,7 +64,7 @@ public class IdentityInitializer
             }
 
             CreateUser(
-                new UserAutentication()
+                new UserModel()
                 {
                     UserName = "OficinaNaNuvemAdm",
                     Email = "OficinaNaNuvemAdm@i4us.com.br",
@@ -78,7 +78,7 @@ public class IdentityInitializer
     }
 
     private void CreateUser(
-    UserAutentication user,
+    UserModel user,
     string password,
         string role)
     {

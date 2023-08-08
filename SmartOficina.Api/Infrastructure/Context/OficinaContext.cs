@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Design;
-
-namespace SmartOficina.Api.Infrastructure.Context;
+﻿namespace SmartOficina.Api.Infrastructure.Context;
 
 public class OficinaContext : DbContext
 {
@@ -19,7 +17,6 @@ public class OficinaContext : DbContext
     public DbSet<Produto> ProdutoEstoque { get; set; }
     public DbSet<FuncionarioPrestador> FuncionarioPrestador { get; set; }
     public DbSet<Produto> Produto { get; set; }
-    public DbSet<UserAutentication> UserAutentications { get; set; }    
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -44,14 +41,4 @@ public class OficinaContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public class OficinaDbContextFactory : IDesignTimeDbContextFactory<OficinaContext>
-    {
-        public OficinaContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<OficinaContext>();
-            optionsBuilder.UseSqlServer("Data Source=localhost,1433;Initial Catalog=Oficina;Integrated Security=False;User ID=sa;Password=yourStrong(!)Password;MultipleActiveResultSets=True;TrustServerCertificate=true");
-
-            return new OficinaContext(optionsBuilder.Options);
-        }
-    }
 }

@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Infrastructure.Configurations.Security;
+﻿namespace SmartOficina.Seguranca.Infrastructure.Configurations.Security;
 
 public class SigningConfigurations
 {
