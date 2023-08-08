@@ -6,7 +6,8 @@ public class Produto : Base
     {
 
     }
-    //ToDo: Campo unidade de medida litros, qtd, 
+
+    public ETipoMedidaItem TipoMedidaItem { get; set; }
     public required string Nome { get; set; }
     public required string Marca { get; set; }
     public string? Modelo { get; set; }

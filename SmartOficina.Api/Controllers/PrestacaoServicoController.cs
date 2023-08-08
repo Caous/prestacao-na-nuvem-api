@@ -14,12 +14,38 @@ public class PrestacaoServicoController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(PrestacaoServico prestacaoServico)
+    public async Task<IActionResult> Add(PrestacaoServicoDto prestacaoServico)
     {
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
+        if (prestacaoServico.Produtos != null)
+        {
+            foreach (var item in prestacaoServico.Produtos)
+            {
+                item.PrestadorId = prestacaoServico.PrestadorId.Value;
+            }
+        }
+        if (prestacaoServico.Veiculo != null)
+            prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
+
+        if (prestacaoServico.Cliente != null)
+            prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
+
+        if (prestacaoServico.Servicos != null)
+        {
+
+            foreach (var item in prestacaoServico.Servicos)
+            {
+                item.PrestadorId = prestacaoServico.PrestadorId.Value;
+            }
+        }
+
+
+
+
         return Ok(await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico)));
     }
 
@@ -65,6 +91,31 @@ public class PrestacaoServicoController : ControllerBase
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
+        if (prestacaoServico.Produtos != null)
+        {
+            foreach (var item in prestacaoServico.Produtos)
+            {
+                item.PrestadorId = prestacaoServico.PrestadorId.Value;
+            }
+        }
+
+        if (prestacaoServico.Servicos != null)
+        {
+
+            foreach (var item in prestacaoServico.Servicos)
+            {
+                item.PrestadorId = prestacaoServico.PrestadorId.Value;
+            }
+        }
+
+        if (prestacaoServico.Veiculo != null)
+            prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
+
+        if (prestacaoServico.Cliente != null)
+            prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
+
+
         return Ok(await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico)));
     }
 

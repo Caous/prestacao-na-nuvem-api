@@ -1,5 +1,7 @@
 ﻿namespace SmartOficina.Api.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 public class ProdutoController : Controller
 {
     private readonly IMapper _mapper;
@@ -18,13 +20,13 @@ public class ProdutoController : Controller
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(_repository.Create(_mapper.Map<Produto>(produto)));
+        return Ok(await _repository.Create(_mapper.Map<Produto>(produto)));
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(_repository.GetAll());
+        return Ok(await _repository.GetAll());
     }
 
     [HttpGet("{id}")]
@@ -37,7 +39,7 @@ public class ProdutoController : Controller
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(_repository.FindById(id));
+        return Ok(await _repository.FindById(id));
     }
 
     [HttpPut]
@@ -50,7 +52,7 @@ public class ProdutoController : Controller
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(_repository.Update(_mapper.Map<Produto>(produto)));
+        return Ok(await _repository.Update(_mapper.Map<Produto>(produto)));
     }
 
     [HttpPut("DesativarPrestador")]
@@ -63,7 +65,7 @@ public class ProdutoController : Controller
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(_repository.Desabled(id));
+        return Ok(await _repository.Desabled(id));
     }
 
     [HttpDelete]
@@ -78,8 +80,8 @@ public class ProdutoController : Controller
 
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
-            
-            return Ok(_repository.Delete(id));
+            await _repository.Delete(id);
+            return Ok("Deleted with success");
         }
         catch (Exception ex)
         {

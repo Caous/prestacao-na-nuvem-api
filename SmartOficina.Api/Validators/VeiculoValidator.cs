@@ -11,11 +11,11 @@ public class VeiculoValidator : AbstractValidator<VeiculoDto>
             .WithMessage(VeiculoConst.PlacaValidation);
 
 
-        RuleFor(x => x.Tipo)
-            .NotEmpty()
-            .WithMessage(VeiculoConst.TipoValidation)
-            .NotNull()
-            .WithMessage(VeiculoConst.TipoValidation);
+        //RuleFor(x => x.Tipo)
+        //    .NotEmpty()
+        //    .WithMessage(VeiculoConst.TipoValidation)
+        //    .NotNull()
+        //    .WithMessage(VeiculoConst.TipoValidation);
 
 
         RuleFor(x => x.Modelo)
