@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.UnitTest.Controllers;
+﻿namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
 public class CategoriaServicoControllerTest
 {
@@ -44,11 +44,11 @@ public class CategoriaServicoControllerTest
         _repositoryMock.Verify(x => x.Create(It.IsAny<CategoriaServico>()), Times.Once);
         _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Once);
         Assert.NotNull(result);
-        Asset.Equals(result.Id, categoriaFake.Id);
-        Asset.Equals(result.DataCadastro, categoriaFake.DataCadastro);
-        Asset.Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
-        Asset.Equals(result.Desc, categoriaFake.Desc);
-        Asset.Equals(result.Titulo, categoriaFake.Titulo);
+        Equals(result.Id, categoriaFake.Id);
+        Equals(result.DataCadastro, categoriaFake.DataCadastro);
+        Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
+        Equals(result.Desc, categoriaFake.Desc);
+        Equals(result.Titulo, categoriaFake.Titulo);
     }
 
     [Fact]
@@ -68,11 +68,11 @@ public class CategoriaServicoControllerTest
         _repositoryMock.Verify(x => x.Update(It.IsAny<CategoriaServico>()), Times.Once);
         _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Once);
         Assert.NotNull(result);
-        Asset.Equals(result.Id, categoriaFake.Id);
-        Asset.Equals(result.DataCadastro, categoriaFake.DataCadastro);
-        Asset.Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
-        Asset.Equals(result.Desc, categoriaFake.Desc);
-        Asset.Equals(result.Titulo, categoriaFake.Titulo);
+        Equals(result.Id, categoriaFake.Id);
+        Equals(result.DataCadastro, categoriaFake.DataCadastro);
+        Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
+        Equals(result.Desc, categoriaFake.Desc);
+        Equals(result.Titulo, categoriaFake.Titulo);
     }
 
     [Fact]
@@ -112,11 +112,11 @@ public class CategoriaServicoControllerTest
         _repositoryMock.Verify(x => x.FindById(It.IsAny<Guid>()), Times.Once);
         _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Never);
         Assert.NotNull(result);
-        Asset.Equals(result.Id, categoriaFake.Id);
-        Asset.Equals(result.DataCadastro, categoriaFake.DataCadastro);
-        Asset.Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
-        Asset.Equals(result.Desc, categoriaFake.Desc);
-        Asset.Equals(result.Titulo, categoriaFake.Titulo);
+        Equals(result.Id, categoriaFake.Id);
+        Equals(result.DataCadastro, categoriaFake.DataCadastro);
+        Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
+        Equals(result.Desc, categoriaFake.Desc);
+        Equals(result.Titulo, categoriaFake.Titulo);
 
     }
 
@@ -137,11 +137,11 @@ public class CategoriaServicoControllerTest
         _repositoryMock.Verify(x => x.Desabled(It.IsAny<Guid>()), Times.Once);
         _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Never);
         Assert.NotNull(result);
-        Asset.Equals(result.Id, categoriaFake.Id);
-        Asset.Equals(result.DataCadastro, categoriaFake.DataCadastro);
-        Asset.Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
-        Asset.Equals(result.Desc, categoriaFake.Desc);
-        Asset.Equals(result.Titulo, categoriaFake.Titulo);
+        Equals(result.Id, categoriaFake.Id);
+        Equals(result.DataCadastro, categoriaFake.DataCadastro);
+        Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
+        Equals(result.Desc, categoriaFake.Desc);
+        Equals(result.Titulo, categoriaFake.Titulo);
 
     }
 

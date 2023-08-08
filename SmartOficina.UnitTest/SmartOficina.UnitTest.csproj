@@ -24,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
+    <Folder Include="SmartOficina.API\Domain\" />
+    <Folder Include="SmartOficina.Seguranca\" />
   </ItemGroup>
 
   <ItemGroup>

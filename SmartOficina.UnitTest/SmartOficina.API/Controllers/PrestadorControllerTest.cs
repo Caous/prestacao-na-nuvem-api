@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.UnitTest.Controllers;
+﻿namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
 public class PrestadorControllerTest
 {
