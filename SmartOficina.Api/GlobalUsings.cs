@@ -25,7 +25,6 @@ global using SmartOficina.Api.Converters;
 
 //API
 global using SmartOficina.Api.Dto;
-global using SmartOficina.Api.Filters;
 
 //Domain
 global using SmartOficina.Api.Domain.Model;

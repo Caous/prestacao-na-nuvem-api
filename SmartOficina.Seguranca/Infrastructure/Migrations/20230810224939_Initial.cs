@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SmartOficina.Seguranca.Infrastrucure.Migrations
+namespace SmartOficina.Seguranca.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -30,10 +30,11 @@ namespace SmartOficina.Seguranca.Infrastrucure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrestadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DataCadastro = table.Column<DateTime>(type: "DateTime", nullable: false, defaultValueSql: "GETDATE()"),
-                    DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UsrDescricaoCadastro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UsrDesativacao = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UsrDescricaoDesativacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),

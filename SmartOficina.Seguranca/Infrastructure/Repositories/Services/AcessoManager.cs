@@ -20,7 +20,7 @@ public class AcessoManager : IAcessoManager
         _signingConfigurations = signingConfigurations;
         _mapper = mapper;
     }
-    public async Task<bool> CriarFornecedor(UserModelDto user)
+    public async Task<bool> CriarPrestador(UserModelDto user)
     {
         if (string.IsNullOrEmpty(user.UsrDescricaoCadastro))
             user.UsrDescricaoCadastro = "system";
@@ -90,12 +90,14 @@ public class AcessoManager : IAcessoManager
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                         new Claim(JwtRegisteredClaimNames.UniqueName, user.Id!),
                         new Claim(ClaimTypes.Role, role),
+                        new Claim("PrestadorId", user.PrestadorId?.ToString() ?? "")
+
             }
         );
 
         DateTime dataCriacao = DateTime.Now;
         DateTime dataExpiracao = dataCriacao +
-            TimeSpan.FromMinutes(_tokenConfigurations.Minutes);
+            TimeSpan.FromDays(_tokenConfigurations.Days);
 
 
         var handler = new JwtSecurityTokenHandler();
@@ -107,7 +109,7 @@ public class AcessoManager : IAcessoManager
             Subject = identity,
             NotBefore = dataCriacao,
             Expires = dataExpiracao,
-            
+
         });
         var token = handler.WriteToken(securityToken);
 

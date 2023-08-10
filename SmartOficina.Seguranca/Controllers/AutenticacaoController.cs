@@ -34,7 +34,7 @@ public class AutenticacaoController : ControllerBase
     [HttpPost("RegistrarFornecedor")]
     public async Task<IActionResult> Post(UserModelDto userDto)
     {
-        if (await _acessoManager.CriarFornecedor(userDto))
+        if (await _acessoManager.CriarPrestador(userDto))
             return Ok();
 
         return BadRequest();
