@@ -20,11 +20,13 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.EntityFrameworkCore.Design;
 global using System.Text.Json;
-global using SmartOficina.Api.Converters;
+global using Swashbuckle.AspNetCore.Filters;
+
 
 
 //API
 global using SmartOficina.Api.Dto;
+global using SmartOficina.Api.Converters;
 
 //Domain
 global using SmartOficina.Api.Domain.Model;

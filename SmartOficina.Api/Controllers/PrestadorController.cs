@@ -1,7 +1,7 @@
 ﻿namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
+[ApiController, Authorize]
 public class PrestadorController : ControllerBase
 {
     private readonly IPrestadorRepository _repository;

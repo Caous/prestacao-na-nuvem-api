@@ -1,7 +1,7 @@
 ﻿namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
+[ApiController, Authorize]
 public class SubServicoController : ControllerBase
 {
     private readonly ISubServicoRepository _repository;
