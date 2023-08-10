@@ -24,14 +24,12 @@ public static class SwaggerConfig
                  }
              };
 
-             setup.OperationFilter<SecurityRequirementsOperationFilter>();
+             setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
 
-             setup.AddSecurityDefinition("Bearer", jwtSecurityScheme);
-
-             //setup.AddSecurityRequirement(new OpenApiSecurityRequirement
-             //{
-             //    { jwtSecurityScheme, Array.Empty<string>() }
-             //});
+             setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+                                                                        {
+                                                                            { jwtSecurityScheme, Array.Empty<string>() }
+                                                                        });
          });
     }
 }

@@ -15,7 +15,7 @@ public class CategoriaServicoController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
-    {
+    {        
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
@@ -27,6 +27,7 @@ public class CategoriaServicoController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        //var xpto = User.Claims.FirstOrDefault(x=> x.Type == "PrestadorId").Value;
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
