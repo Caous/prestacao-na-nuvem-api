@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SmartOficina.Seguranca.Infrastructure.Migrations
+namespace SmartOficina.Seguranca.Infrastrucure.Migrations
 {
     /// <inheritdoc />
-    public partial class Intial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,7 +35,7 @@ namespace SmartOficina.Seguranca.Infrastructure.Migrations
                     UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UsrDescricaoCadastro = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UsrDesativacao = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UsrDescricaoDesativacao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsrDescricaoDesativacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),

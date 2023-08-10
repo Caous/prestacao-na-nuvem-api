@@ -22,15 +22,15 @@ public class AcessoManager : IAcessoManager
     }
     public async Task<bool> CriarFornecedor(UserModelDto user)
     {
-        if (string.IsNullOrEmpty(user.UsrCadastroDesc))
-            user.UsrCadastroDesc = "system";
+        if (string.IsNullOrEmpty(user.UsrDescricaoCadastro))
+            user.UsrDescricaoCadastro = "system";
 
         var userModel = _mapper.Map<UserModel>(user);
         var result = await _userManager.CreateAsync(userModel, user.Password);
 
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(userModel, Roles.Cliente);
+            await _userManager.AddToRoleAsync(userModel, Roles.Fornecedor);
             return true;
         }
         else return false;
@@ -38,8 +38,8 @@ public class AcessoManager : IAcessoManager
 
     public async Task<bool> CriarFuncionario(UserModelDto user)
     {
-        if (string.IsNullOrEmpty(user.UsrCadastroDesc))
-            user.UsrCadastroDesc = "system";
+        if (string.IsNullOrEmpty(user.UsrDescricaoCadastro))
+            user.UsrDescricaoCadastro = "system";
 
         var userModel = _mapper.Map<UserModel>(user);
         var result = await _userManager.CreateAsync(

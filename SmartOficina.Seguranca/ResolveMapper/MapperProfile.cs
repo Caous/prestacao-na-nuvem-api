@@ -7,5 +7,8 @@ public class MapperProfile : Profile
                     .ForMember(p => p.NormalizedEmail, opt => opt.MapFrom(src => src.Email))
                     .ForMember(p => p.Email, opt => opt.MapFrom(src => src.Email))
                     .ReverseMap();
+
+        CreateMap<PrestadorLoginDto, UserModelDto>()
+                    .ReverseMap();
     }
 }

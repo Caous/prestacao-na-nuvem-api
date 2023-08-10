@@ -1,40 +1,50 @@
 ﻿namespace SmartOficina.Seguranca.Controllers;
 
-[ApiVersion("1.0")]
-[Route("/v{version:apiVersion}/api/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class AutenticacaoController : ControllerBase
 {
     private readonly IAcessoManager _acessoManager;
+    private readonly IMapper _mapper;
 
-    public AutenticacaoController(IAcessoManager acessoManager)
+    public AutenticacaoController(IAcessoManager acessoManager, IMapper mapper)
     {
         _acessoManager = acessoManager;
+        _mapper = mapper;
     }
 
     [HttpGet("PrestadorUser")]
     public async Task<IActionResult> GetPrestadorUser(string email, Guid? id, string? CpfCnpj)
     {
-        return Ok();
+
+        UserModel user = await _acessoManager.GetUserPorEmail(email);
+
+        if (user != null)
+            return Ok(user);
+        else
+            return BadRequest("User not found!");
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> Get(UserModelDto user)
     {
-        return Ok();
+        return Ok(await _acessoManager.ValidarCredenciais(user));
     }
 
     [HttpPost("RegistrarFornecedor")]
     public async Task<IActionResult> Post(UserModelDto userDto)
     {
-        return Ok(userDto);
+        if (await _acessoManager.CriarFornecedor(userDto))
+            return Ok();
+
+        return BadRequest();
     }
 
     [HttpPost("LoginPrestador")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(UserModelDto user)
+    public async Task<IActionResult> Login(PrestadorLoginDto prestador)
     {
-        var token = await _acessoManager.ValidarCredenciais(user);
+        var token = await _acessoManager.ValidarCredenciais(_mapper.Map<UserModelDto>(prestador));
         if (token.Authenticated)
             return Ok(token);
 

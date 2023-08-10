@@ -10,7 +10,7 @@ builder.Services.AddSwaggerConfiguration(builder.Configuration);
 
 builder.Services.RegisterServices(builder.Configuration);
 
-builder.Services.RegisterContext(builder.Configuration); 
+builder.Services.RegisterContext(builder.Configuration);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

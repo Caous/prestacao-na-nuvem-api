@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartOficina.Seguranca.Infrastructure.Context;
 
 #nullable disable
 
-namespace SmartOficina.Seguranca.Infrastructure.Migrations
+namespace SmartOficina.Seguranca.Infrastrucure.Migrations
 {
     [DbContext(typeof(SegurancaContext))]
-    [Migration("20230808005036_Intial")]
-    partial class Intial
+    partial class SegurancaContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,7 +228,6 @@ namespace SmartOficina.Seguranca.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsrDescricaoDesativacao")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
