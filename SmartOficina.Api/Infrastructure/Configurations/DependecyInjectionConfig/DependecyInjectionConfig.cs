@@ -50,10 +50,7 @@ public static class DependecyInjectionConfig
         #endregion
 
         #region Json
-        services.AddControllers(opt =>
-        {
-            opt.Filters.Add<ApiKeyAttribute>();
-        }).AddJsonOptions(cfg =>
+        services.AddControllers().AddJsonOptions(cfg =>
         {
             cfg.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             cfg.JsonSerializerOptions.MaxDepth = 0;
