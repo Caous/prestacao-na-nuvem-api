@@ -8,6 +8,12 @@ builder.Services.RegisterServices(builder.Configuration);
 
 builder.Services.RegisterContext(builder.Configuration);
 
+var tokenConfigurations = new TokenConfigurations();
+new ConfigureFromConfigurationOptions<TokenConfigurations>(
+    builder.Configuration.GetSection("TokenConfigurations"))
+        .Configure(tokenConfigurations);
+builder.Services.AddJwtSecurity(tokenConfigurations);
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();

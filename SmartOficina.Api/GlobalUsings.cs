@@ -37,6 +37,5 @@ global using SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration
 global using SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
 global using SmartOficina.Api.Infrastructure.Configurations.SwaggerConfig;
 global using SmartOficina.Api.Infrastructure.Constants;
-//global using SmartOficina.Api.Infrastructure.Configurations.Tokens;
-//global using SmartOficina.Api.Infrastructure.Configurations.Security;
+global using SmartOficina.Api.Infrastructure.Configurations.Security;
 
