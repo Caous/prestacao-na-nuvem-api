@@ -217,6 +217,7 @@ namespace SmartOficina.Api.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TipoMedidaItem = table.Column<int>(type: "int", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Marca = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     Modelo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
