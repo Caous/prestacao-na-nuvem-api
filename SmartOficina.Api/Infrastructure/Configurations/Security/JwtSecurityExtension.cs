@@ -2,7 +2,7 @@
 
 public static class JwtSecurityExtension
 {
-    public static IServiceCollection AddJwtSecurity
+    public static void AddJwtSecurity
     (
         this IServiceCollection services,
         TokenConfigurations tokenConfigurations
@@ -12,27 +12,33 @@ public static class JwtSecurityExtension
         {
             authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            authOptions.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
         }).AddJwtBearer(bearerOptions =>
         {
-            var paramsValidation = bearerOptions.TokenValidationParameters;
-            paramsValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.SecretJwtKey));
-            paramsValidation.ValidAudience = tokenConfigurations.Audience;
-            paramsValidation.ValidIssuer = tokenConfigurations.Issuer;
-
-            // Valida a assinatura de um token recebido
-            paramsValidation.ValidateIssuerSigningKey = true;
-
-            // Verifica se um token recebido ainda é válido
-            paramsValidation.ValidateLifetime = true;
-
+            bearerOptions.TokenValidationParameters = new TokenValidationParameters
+            {
+                // Valida a assinatura de um token recebido
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.SecretJwtKey)),
+                ValidAudience = tokenConfigurations.Audience,
+                ValidIssuer = tokenConfigurations.Issuer,
+            
+                // Verifica se um token recebido ainda é válido
+                ValidateLifetime = true,
+                
+            };
+            
             // Tempo de tolerância para a expiração de um token (utilizado
             // caso haja problemas de sincronismo de horário entre diferentes
             // computadores envolvidos no processo de comunicação)
-            paramsValidation.ClockSkew = TimeSpan.Zero;
+            //paramsValidation.ClockSkew = TimeSpan.Zero;
+
+
+
+
         });
 
-        // Ativa o uso do token como forma de autorizar o acesso
-        // a recursos deste projeto
         services.AddAuthorization(auth =>
         {
             auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
@@ -40,6 +46,5 @@ public static class JwtSecurityExtension
                 .RequireAuthenticatedUser().Build());
         });
 
-        return services;
     }
 }

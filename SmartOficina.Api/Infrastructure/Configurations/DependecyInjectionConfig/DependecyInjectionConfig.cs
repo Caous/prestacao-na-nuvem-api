@@ -4,29 +4,25 @@ public static class DependecyInjectionConfig
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        //#region Autentication
-        //services.AddScoped<IdentityInitializer>();
+        #region Version
 
-        //services.AddIdentity<UserAutentication, IdentityRole>(options =>
+        //services.AddApiVersioning(opt =>
         //{
-        //    options.Password.RequireDigit = true;
-        //    options.Password.RequireNonAlphanumeric = false;
-        //    options.Password.RequireUppercase = true;
-        //    options.Password.RequireLowercase = true;
-        //    options.Password.RequiredLength = 6;
-        //})
-        //        .AddEntityFrameworkStores<OficinaContext>()
-        //        .AddDefaultTokenProviders();
-        //#endregion
 
-        //#region JWT
-        //var tokenConfigurations = new TokenConfigurations();
-        //new ConfigureFromConfigurationOptions<TokenConfigurations>(
-        //    configuration.GetSection("TokenConfigurations"))
-        //        .Configure(tokenConfigurations);
+        //    opt.ReportApiVersions = true;
+        //    opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+        //    opt.AssumeDefaultVersionWhenUnspecified = true;
 
-        //services.AddJwtSecurity(tokenConfigurations);
-        //#endregion
+        //});
+
+        //services.AddVersionedApiExplorer(opt =>
+        //{
+
+        //    opt.GroupNameFormat = "'v'VVV";
+        //    opt.SubstituteApiVersionInUrl = true;
+
+        //});
+        #endregion
 
         #region Injection Repository
         services.AddScoped<IClienteRepository, ClienteRepository>();

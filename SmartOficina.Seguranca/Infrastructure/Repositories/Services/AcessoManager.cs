@@ -106,7 +106,8 @@ public class AcessoManager : IAcessoManager
             SigningCredentials = _signingConfigurations.SigningCredentials,
             Subject = identity,
             NotBefore = dataCriacao,
-            Expires = dataExpiracao
+            Expires = dataExpiracao,
+            
         });
         var token = handler.WriteToken(securityToken);
 
