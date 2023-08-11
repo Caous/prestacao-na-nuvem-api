@@ -2,7 +2,7 @@
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
-public class CategoriaServicoController : ControllerBase
+public class CategoriaServicoController : MainController
 {
     private readonly ICategoriaServicoRepository _repository;
     private readonly IMapper _mapper;
@@ -15,11 +15,15 @@ public class CategoriaServicoController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
-    {        
+    {
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
+        //ToDo: Adicionar validação para ver se foi preenchido o prestadorId dentro do token
+        categoriaServico.PrestadorId = PrestadorId;
+
 
         return Ok(await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico)));
     }
@@ -27,7 +31,6 @@ public class CategoriaServicoController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var xpto = User.Claims.FirstOrDefault(x=> x.Type == "PrestadorId").Value;
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
@@ -38,7 +41,7 @@ public class CategoriaServicoController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id ==  null)
+        if (!ModelState.IsValid || id == null)
         {
             if (ModelState.ErrorCount < 1)
                 ModelState.AddModelError("error", "Id invalid");
@@ -54,7 +57,7 @@ public class CategoriaServicoController : ControllerBase
 
         if (!ModelState.IsValid || !categoriaServico.Id.HasValue)
         {
-            if(ModelState.ErrorCount < 1)
+            if (ModelState.ErrorCount < 1)
                 ModelState.AddModelError("error", "Id invalid");
 
             return BadRequest(ModelState.First().Value);

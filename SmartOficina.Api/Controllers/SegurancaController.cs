@@ -2,7 +2,7 @@
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
-public class SegurancaController : ControllerBase
+public class SegurancaController : MainController
 {
     // GET: api/<SegurancaController>
     [HttpGet]

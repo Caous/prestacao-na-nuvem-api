@@ -2,7 +2,7 @@
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
-public class SubServicoController : ControllerBase
+public class SubServicoController : MainController  
 {
     private readonly ISubServicoRepository _repository;
     private readonly IMapper _mapper;

@@ -2,7 +2,7 @@
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
-public class VeiculoController : ControllerBase
+public class VeiculoController : MainController
 {
     private readonly IVeiculoRepository _repository;
     private readonly IMapper _mapper;
