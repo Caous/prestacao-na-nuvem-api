@@ -27,7 +27,7 @@ public class CategoriaServicoController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        //var xpto = User.Claims.FirstOrDefault(x=> x.Type == "PrestadorId").Value;
+        var xpto = User.Claims.FirstOrDefault(x=> x.Type == "PrestadorId").Value;
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
