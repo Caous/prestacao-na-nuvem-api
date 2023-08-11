@@ -4,11 +4,12 @@ public static class SwaggerConfig
 {
     public static void AddSwaggerConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSwaggerGen(setup =>
+        services.AddSwaggerGen(c =>
          {
-             setup.SwaggerDoc("v1", new OpenApiInfo { Title = "Smart Oficina v1", Version = "v1" });
-             
-             var jwtSecurityScheme = new OpenApiSecurityScheme
+             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Smart Oficina v1", Version = "v1" });
+
+
+             var scheme = new OpenApiSecurityScheme
              {
                  BearerFormat = "JWT",
                  Name = "JWT Authentication",
@@ -24,12 +25,10 @@ public static class SwaggerConfig
                  }
              };
 
-             setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+             c.OperationFilter<AuthResponsesOperationFilter>();
 
-             setup.AddSecurityRequirement(new OpenApiSecurityRequirement
-                                                                        {
-                                                                            { jwtSecurityScheme, Array.Empty<string>() }
-                                                                        });
+             c.AddSecurityDefinition(scheme.Reference.Id, scheme);
+
          });
     }
 }
