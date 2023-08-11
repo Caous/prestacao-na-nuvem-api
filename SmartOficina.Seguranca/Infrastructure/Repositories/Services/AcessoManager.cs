@@ -26,6 +26,7 @@ public class AcessoManager : IAcessoManager
             user.UsrDescricaoCadastro = "system";
 
         var userModel = _mapper.Map<UserModel>(user);
+        userModel.Id = Guid.NewGuid().ToString();
         var result = await _userManager.CreateAsync(userModel, user.Password);
 
         if (result.Succeeded)
