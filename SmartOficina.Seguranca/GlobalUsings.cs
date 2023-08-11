@@ -15,6 +15,9 @@ global using System.Security.Claims;
 global using System.Security.Principal;
 global using Microsoft.OpenApi.Models;
 global using Microsoft.AspNetCore.Mvc;
+global using Swashbuckle.AspNetCore.SwaggerGen;
+global using FluentValidation;
+
 
 //SmartOficina
 global using SmartOficina.Seguranca.Infrastructure.Configurations.Security;
@@ -27,3 +30,4 @@ global using SmartOficina.Seguranca.Infrastructure.Repositories.Services;
 global using SmartOficina.Seguranca.Infrastructure.Configurations.ContextConfiguration;
 global using SmartOficina.Seguranca.Infrastructure.Configurations.DependecyInjectionConfig;
 global using SmartOficina.Seguranca.Infrastructure.Configurations.SwaggerConfig;
+global using SmartOficina.Seguranca.Infrastructure.Constants;

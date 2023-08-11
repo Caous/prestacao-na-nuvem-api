@@ -25,11 +25,11 @@
 
   <ItemGroup>
     <Folder Include="SmartOficina.API\Domain\" />
-    <Folder Include="SmartOficina.Seguranca\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SmartOficina.Api\SmartOficina.Api.csproj" />
+    <ProjectReference Include="..\SmartOficina.Seguranca\SmartOficina.Seguranca.csproj" />
   </ItemGroup>
 
 </Project>

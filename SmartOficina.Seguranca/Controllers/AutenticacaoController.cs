@@ -2,7 +2,7 @@
 
 [Route("api/[controller]")]
 [ApiController]
-public class AutenticacaoController : ControllerBase
+public class AutenticacaoController : MainController
 {
     private readonly IAcessoManager _acessoManager;
     private readonly IMapper _mapper;
@@ -13,11 +13,11 @@ public class AutenticacaoController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet("PrestadorUser")]
+    [HttpGet("BuscarPrestador")]
     public async Task<IActionResult> GetPrestadorUser(string email, Guid? id, string? CpfCnpj)
     {
 
-        UserModel user = await _acessoManager.GetUserPorEmail(email);
+        UserModel? user = await _acessoManager.GetUserPorEmail(email);
 
         if (user != null)
             return Ok(user);
@@ -25,16 +25,22 @@ public class AutenticacaoController : ControllerBase
             return BadRequest("User not found!");
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(UserModelDto user)
+    [HttpPost("RegistrarPrestador")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Post(PrestadorCadastroDto prestadorDto)
     {
-        return Ok(await _acessoManager.ValidarCredenciais(user));
-    }
+        if (prestadorDto.UsrCadastro == null || prestadorDto.UsrCadastro == Guid.Empty || prestadorDto.UsrDescricaoCadastro.IsNullOrEmpty())
+        {
+            UserModel user = await _acessoManager.GetUserPorEmail("OficinaNaNuvemAdm@i4us.com.br");
 
-    [HttpPost("RegistrarFornecedor")]
-    public async Task<IActionResult> Post(UserModelDto userDto)
-    {
-        if (await _acessoManager.CriarPrestador(userDto))
+            if (user != null)
+            {
+                prestadorDto.UsrDescricaoCadastro = user.UserName;
+                prestadorDto.UsrCadastro = new Guid(user.Id);
+            }
+        }
+
+        if (await _acessoManager.CriarPrestador(prestadorDto))
             return Ok();
 
         return BadRequest();
@@ -42,9 +48,13 @@ public class AutenticacaoController : ControllerBase
 
     [HttpPost("LoginPrestador")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(PrestadorLoginDto prestador)
+    public async Task<IActionResult> LoginPrestador(PrestadorLoginDto prestador)
     {
+        if (prestador.Email.IsNullOrEmpty() && prestador.UserName.IsNullOrEmpty())
+            return BadRequest($"{PrestadorConst.PrestadorEmailVazio} ou {PrestadorConst.PrestadorNomeUsarioVazio}");
+
         var token = await _acessoManager.ValidarCredenciais(_mapper.Map<UserModelDto>(prestador));
+
         if (token.Authenticated)
             return Ok(token);
 

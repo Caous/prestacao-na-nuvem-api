@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 public abstract class MainController : ControllerBase
 {

@@ -20,13 +20,12 @@ public class AcessoManager : IAcessoManager
         _signingConfigurations = signingConfigurations;
         _mapper = mapper;
     }
-    public async Task<bool> CriarPrestador(UserModelDto user)
+    public async Task<bool> CriarPrestador(PrestadorCadastroDto user)
     {
-        if (string.IsNullOrEmpty(user.UsrDescricaoCadastro))
-            user.UsrDescricaoCadastro = "system";
-
         var userModel = _mapper.Map<UserModel>(user);
+        
         userModel.Id = Guid.NewGuid().ToString();
+
         var result = await _userManager.CreateAsync(userModel, user.Password);
 
         if (result.Succeeded)

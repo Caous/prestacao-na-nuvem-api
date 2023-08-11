@@ -8,7 +8,6 @@ public static class SwaggerConfig
          {
              c.SwaggerDoc("v1", new OpenApiInfo { Title = "Smart Oficina v1", Version = "v1" });
 
-
              var scheme = new OpenApiSecurityScheme
              {
                  BearerFormat = "JWT",
