@@ -4,6 +4,7 @@ public class PrestadorControllerTest
 {
     private readonly Mock<IPrestadorRepository> _repository = new();
     private readonly Mock<IMapper> _mapper = new();
+    private readonly Mock<IFuncionarioPrestadorRepository> _funcionarioRepository = new();
 
     [Fact]
     public async Task Deve_Retornar_ListaDePrestador_Usando()
@@ -12,7 +13,7 @@ public class PrestadorControllerTest
         ICollection<Prestador> PrestadorsFake = CriaListaFornecedoresFake();
         _repository.Setup(s => s.GetAll()).ReturnsAsync(PrestadorsFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _mapper.Object).GetAll();
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAll();
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<Prestador>;
         //Assert
@@ -40,7 +41,7 @@ public class PrestadorControllerTest
         _repository.Setup(s => s.Create(It.IsAny<Prestador>())).ReturnsAsync(PrestadorFake);
         _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _mapper.Object).Add(PrestadorDtoFake);
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).Add(PrestadorDtoFake);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as Prestador;
         //Assert
@@ -66,7 +67,7 @@ public class PrestadorControllerTest
         _repository.Setup(s => s.FindById(It.IsAny<Guid>())).ReturnsAsync(PrestadorFake);
         _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _mapper.Object).GetId(PrestadorDtoFake.Id.Value);
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetId(PrestadorDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as Prestador;
         //Assert
@@ -92,7 +93,7 @@ public class PrestadorControllerTest
         _repository.Setup(s => s.Update(It.IsAny<Prestador>())).ReturnsAsync(PrestadorFake);
         _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _mapper.Object).AtualizarPrestador(PrestadorDtoFake);
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).AtualizarPrestador(PrestadorDtoFake);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as Prestador;
         //Assert
@@ -119,7 +120,7 @@ public class PrestadorControllerTest
         _repository.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(PrestadorFake);
         _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _mapper.Object).DesativarPrestadorServico(PrestadorDtoFake.Id.Value);
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).DesativarPrestadorServico(PrestadorDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as Prestador;
         //Assert
@@ -145,7 +146,7 @@ public class PrestadorControllerTest
         _repository.Setup(s => s.Delete(It.IsAny<Guid>()));
         _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _mapper.Object).DeletarPrestador(PrestadorDtoFake.Id.Value);
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).DeletarPrestador(PrestadorDtoFake.Id.Value);
 
         //Assert
         _repository.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Once());

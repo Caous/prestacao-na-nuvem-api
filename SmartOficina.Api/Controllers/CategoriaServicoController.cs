@@ -23,9 +23,9 @@ public class CategoriaServicoController : MainController
 
         //ToDo: Adicionar validação para ver se foi preenchido o prestadorId dentro do token
         categoriaServico.PrestadorId = PrestadorId;
+        var result = await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico));
 
-
-        return Ok(await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico)));
+        return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
     [HttpGet]
@@ -35,7 +35,10 @@ public class CategoriaServicoController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.GetAll());
+        
+        var result = await _repository.GetAll();
+
+        return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
     }
 
     [HttpGet("{id}")]
@@ -48,7 +51,10 @@ public class CategoriaServicoController : MainController
 
             return BadRequest(ModelState.First().Value);
         }
-        return Ok(await _repository.FindById(id));
+
+        var result = await _repository.FindById(id);
+
+        return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
     [HttpPut]
@@ -62,7 +68,10 @@ public class CategoriaServicoController : MainController
 
             return BadRequest(ModelState.First().Value);
         }
-        return Ok(await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico)));
+
+        var result = await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico));
+
+        return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
     [HttpPut("DesativarCategoria")]
@@ -75,7 +84,10 @@ public class CategoriaServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Desabled(id));
+
+        var result = await _repository.Desabled(id);
+
+        return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
     [HttpDelete]
@@ -91,7 +103,7 @@ public class CategoriaServicoController : MainController
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
             await _repository.Delete(id);
-            return Ok();
+            return Ok("Deletado");
         }
         catch (Exception ex)
         {

@@ -5,11 +5,13 @@
 public class PrestadorController : MainController
 {
     private readonly IPrestadorRepository _repository;
+    private readonly IFuncionarioPrestadorRepository _repositoryFuncionario;
     private readonly IMapper _mapper;
 
-    public PrestadorController(IPrestadorRepository repository, IMapper mapper)
+    public PrestadorController(IPrestadorRepository repository, IFuncionarioPrestadorRepository repositoryFuncionario, IMapper mapper)
     {
         _repository = repository;
+        _repositoryFuncionario = repositoryFuncionario;
         _mapper = mapper;
     }
 
@@ -21,13 +23,17 @@ public class PrestadorController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Create(_mapper.Map<Prestador>(prestador)));
+
+        var result = await _repository.Create(_mapper.Map<Prestador>(prestador));
+
+        return Ok(_mapper.Map<PrestadorDto>(result));
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _repository.GetAll());
+        var result = await _repository.GetAll();
+        return Ok(_mapper.Map<ICollection<PrestadorDto>>(result));
     }
 
     [HttpGet("{id}")]
@@ -40,7 +46,10 @@ public class PrestadorController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.FindById(id));
+
+        var result = await _repository.FindById(id);
+
+        return Ok(_mapper.Map<PrestadorDto>(result));
     }
 
     [HttpPut]
@@ -53,7 +62,10 @@ public class PrestadorController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Update(_mapper.Map<Prestador>(prestador)));
+
+        var result = await _repository.Update(_mapper.Map<Prestador>(prestador));
+
+        return Ok(_mapper.Map<PrestadorDto>(result));
     }
 
     [HttpPut("DesativarPrestador")]
@@ -66,7 +78,10 @@ public class PrestadorController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Desabled(id));
+
+        var result = await _repository.Desabled(id);
+
+        return Ok(_mapper.Map<PrestadorDto>(result));
     }
 
     [HttpDelete]
@@ -82,7 +97,7 @@ public class PrestadorController : MainController
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
             await _repository.Delete(id);
-            return Ok();
+            return Ok("Deletado");
         }
         catch (Exception ex)
         {
@@ -99,13 +114,17 @@ public class PrestadorController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok();
+
+        var result = await _repositoryFuncionario.Create(_mapper.Map<FuncionarioPrestador>(func));
+
+        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
     }
 
     [HttpGet("Funcionario")]
     public async Task<IActionResult> GetAllFuncionario()
     {
-        return Ok();
+        var result = await _repositoryFuncionario.GetAll();
+        return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
     }
 
     [HttpGet("Funcionario/{id}")]
@@ -118,7 +137,10 @@ public class PrestadorController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok();
+
+        var result = await _repositoryFuncionario.FindById(id);
+
+        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
     }
 
     [HttpPut("Funcionario")]
@@ -131,7 +153,10 @@ public class PrestadorController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok();
+
+        var result = await _repositoryFuncionario.Update(_mapper.Map<FuncionarioPrestador>(func));
+
+        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
     }
 
     [HttpPut("DesativarFuncionario")]
@@ -144,7 +169,11 @@ public class PrestadorController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Desabled(id));
+
+        var result = await _repositoryFuncionario.Desabled(id);
+
+        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+
     }
 
     [HttpDelete("Funcionario")]
@@ -159,8 +188,10 @@ public class PrestadorController : MainController
 
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
-            
-            return Ok();
+
+            await _repositoryFuncionario.Delete(id);
+
+            return Ok("Deletado");
         }
         catch (Exception ex)
         {
@@ -168,5 +199,5 @@ public class PrestadorController : MainController
         }
     }
     #endregion
-    
+
 }

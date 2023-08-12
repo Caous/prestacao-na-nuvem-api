@@ -20,13 +20,20 @@ public class VeiculoController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Create(_mapper.Map<Veiculo>(veiculo)));
+
+
+        var result = await _repository.Create(_mapper.Map<Veiculo>(veiculo));
+        return Ok(_mapper.Map<VeiculoDto>(result));
+
+
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _repository.GetAll());
+        var result = await _repository.GetAll();
+        return Ok(_mapper.Map<ICollection<VeiculoDto>>(result));
+
     }
 
     [HttpGet("{id}")]
@@ -39,7 +46,10 @@ public class VeiculoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.FindById(id));
+
+        var result = await _repository.FindById(id);
+        return Ok(_mapper.Map<VeiculoDto>(result));
+
     }
 
     [HttpPut]
@@ -52,7 +62,10 @@ public class VeiculoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Update(_mapper.Map<Veiculo>(veiculo)));
+
+        var result = await _repository.Update(_mapper.Map<Veiculo>(veiculo));
+        return Ok(_mapper.Map<VeiculoDto>(result));
+
     }
 
     [HttpPut("DesativarVeiculo")]
@@ -65,7 +78,9 @@ public class VeiculoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Desabled(id));
+
+        var result = await _repository.Desabled(id);
+        return Ok(_mapper.Map<VeiculoDto>(result));
     }
 
     [HttpDelete]
@@ -81,7 +96,7 @@ public class VeiculoController : MainController
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
             await _repository.Delete(id);
-            return Ok();
+            return Ok("Deletado");
         }
         catch (Exception ex)
         {

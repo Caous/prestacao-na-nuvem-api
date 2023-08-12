@@ -20,7 +20,10 @@ public class ClienteController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Create(_mapper.Map<Cliente>(cliente)));
+
+        var result = await _repository.Create(_mapper.Map<Cliente>(cliente));
+
+        return Ok(_mapper.Map<ClienteDto>(result));
     }
 
     [HttpGet]
@@ -30,7 +33,8 @@ public class ClienteController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.GetAll());
+        var result = await _repository.GetAll();
+        return Ok(_mapper.Map<ICollection<ClienteDto>>(result));
     }
 
     [HttpGet("{id}")]
@@ -43,7 +47,8 @@ public class ClienteController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.FindById(id));
+        var result = await _repository.FindById(id);
+        return Ok(_mapper.Map<ClienteDto>(result));
     }
 
     [HttpPut]
@@ -56,7 +61,10 @@ public class ClienteController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Update(_mapper.Map<Cliente>(cliente)));
+
+        var result = await _repository.Update(_mapper.Map<Cliente>(cliente));
+
+        return Ok(_mapper.Map<ClienteDto>(result));
     }
 
     [HttpPut("DesativarCliente")]
@@ -69,7 +77,10 @@ public class ClienteController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Desabled(id));
+
+        var result = await _repository.Desabled(id);
+
+        return Ok(_mapper.Map<ClienteDto>(result));
     }
 
     [HttpDelete]
@@ -85,7 +96,7 @@ public class ClienteController : MainController
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
             await _repository.Delete(id);
-            return Ok();
+            return Ok("Deletado");
         }
         catch (Exception ex)
         {

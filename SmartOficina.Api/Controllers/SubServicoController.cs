@@ -2,7 +2,7 @@
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
-public class SubServicoController : MainController  
+public class SubServicoController : MainController
 {
     private readonly ISubServicoRepository _repository;
     private readonly IMapper _mapper;
@@ -19,13 +19,18 @@ public class SubServicoController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Create(_mapper.Map<SubCategoriaServico>(subServico)));
+
+        var result = await _repository.Create(_mapper.Map<SubCategoriaServico>(subServico));
+
+        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _repository.GetAllWithIncludes());
+        var result = await _repository.GetAllWithIncludes();
+        return Ok(_mapper.Map<ICollection<SubCategoriaServicoDto>>(result));
+
     }
 
     [HttpGet("{id}")]
@@ -38,7 +43,10 @@ public class SubServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.FindById(id));
+
+        var result = await _repository.FindById(id);
+        return Ok(_mapper.Map<ICollection<SubCategoriaServicoDto>>(result));
+
     }
 
     [HttpPut]
@@ -51,7 +59,10 @@ public class SubServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Update(_mapper.Map<SubCategoriaServico>(subServico)));
+
+        var result = await _repository.Update(_mapper.Map<SubCategoriaServico>(subServico));
+        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
+        
     }
 
     [HttpPut("DesativarSubServico")]
@@ -64,7 +75,10 @@ public class SubServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Desabled(id));
+
+        var result = await _repository.Desabled(id);
+        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
+        
     }
 
     [HttpDelete]
@@ -80,7 +94,7 @@ public class SubServicoController : MainController
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
             await _repository.Delete(id);
-            return Ok();
+            return Ok("Deletado");
         }
         catch (Exception ex)
         {

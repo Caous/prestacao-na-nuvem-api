@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace SmartOficina.UnitTest.SmartOficina.Seguranca.Infrastructure.Repositories.Services;
 
-namespace SmartOficina.UnitTest.SmartOficina.Seguranca.Infrastructure.Repositories.Services
+public class AcessoManagerTest
 {
-    internal class AcessoManagerTest
-    {
-    }
+
 }

@@ -44,15 +44,17 @@ public class PrestacaoServicoController : MainController
         }
 
 
+        var result = await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico));
 
-
-        return Ok(await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico)));
+        return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _repository.GetAll());
+        var result = await _repository.GetAll();
+
+        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(result));
     }
 
     [HttpGet("{id}")]
@@ -65,7 +67,10 @@ public class PrestacaoServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.FindById(id));
+
+        var result = await _repository.FindById(id);
+
+        return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
     [HttpGet("PrestacaoServicoEnriquecidoPrestador/{id}")]
@@ -115,8 +120,9 @@ public class PrestacaoServicoController : MainController
         if (prestacaoServico.Cliente != null)
             prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
 
-
-        return Ok(await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico)));
+        var result = await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico));
+        
+        return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
     [HttpPut("DesativarPrestacao")]
@@ -129,7 +135,8 @@ public class PrestacaoServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(await _repository.Desabled(id));
+        var result = await _repository.Desabled(id);
+        return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
     [HttpDelete]
@@ -145,7 +152,7 @@ public class PrestacaoServicoController : MainController
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
             await _repository.Delete(id);
-            return Ok();
+            return Ok("Deletado");
         }
         catch (Exception ex)
         {
