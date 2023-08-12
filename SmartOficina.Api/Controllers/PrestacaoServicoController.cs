@@ -73,6 +73,32 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
+    [HttpGet("PrestacaoServicoFechadosPrestador/{id}")]
+    public async Task<IActionResult> GetByPrestacaoServicoFechadosPrestador(Guid id)
+    {
+        if (!ModelState.IsValid || id == null)
+        {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
+        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(id, EPrestacaoServicoStatus.Concluido)));
+    }
+
+    [HttpGet("PrestacaoServicoAbertoPrestador/{id}")]
+    public async Task<IActionResult> GetByPrestacaoServicoAbertosPrestador(Guid id)
+    {
+        if (!ModelState.IsValid || id == null)
+        {
+            if (ModelState.ErrorCount < 1)
+                ModelState.AddModelError("error", "Id invalid");
+
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
+        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(id, EPrestacaoServicoStatus.Aberto)));
+    }
+
     [HttpGet("PrestacaoServicoEnriquecidoPrestador/{id}")]
     public async Task<IActionResult> GetByPrestacaoServicoEnriquecidoPrestador(Guid id)
     {
