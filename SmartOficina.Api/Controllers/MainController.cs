@@ -11,4 +11,21 @@ public abstract class MainController : ControllerBase
         }
     }
 
+    public Guid UserId
+    {
+        get
+        {
+            return new Guid(User.Claims.FirstOrDefault(c => c.Type == "IdUserLogin").Value);
+
+        }
+    }
+
+    public string UserName
+    {
+        get
+        {
+            return User.Claims.FirstOrDefault(c => c.Type == "UserName").Value;
+        }
+    }
+
 }

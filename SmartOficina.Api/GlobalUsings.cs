@@ -20,7 +20,7 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.EntityFrameworkCore.Design;
 global using System.Text.Json;
-
+global using System.IdentityModel.Tokens.Jwt;
 
 
 //API

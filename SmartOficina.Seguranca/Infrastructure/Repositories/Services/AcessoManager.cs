@@ -90,7 +90,9 @@ public class AcessoManager : IAcessoManager
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                         new Claim(JwtRegisteredClaimNames.UniqueName, user.Id!),
                         new Claim(ClaimTypes.Role, role),
-                        new Claim("PrestadorId", user.PrestadorId?.ToString() ?? "")
+                        new Claim("PrestadorId", user.PrestadorId?.ToString() ?? ""),
+                        new Claim("UserName", user.UserName?.ToString() ?? ""),
+                        new Claim("IdUserLogin", user.Id!)
 
             }
         );

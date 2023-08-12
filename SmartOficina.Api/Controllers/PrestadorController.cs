@@ -24,6 +24,9 @@ public class PrestadorController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+        prestador.UsrCadastro = UserId;
+        prestador.UsrCadastroDesc = UserName;
+
         var result = await _repository.Create(_mapper.Map<Prestador>(prestador));
 
         return Ok(_mapper.Map<PrestadorDto>(result));
