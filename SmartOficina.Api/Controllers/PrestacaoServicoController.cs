@@ -5,11 +5,13 @@
 public class PrestacaoServicoController : MainController
 {
     private readonly IPrestacaoServicoRepository _repository;
+    private readonly IProdutoRepository _produtoRepository;
     private readonly IMapper _mapper;
 
-    public PrestacaoServicoController(IPrestacaoServicoRepository repository, IMapper mapper)
+    public PrestacaoServicoController(IPrestacaoServicoRepository repository,IProdutoRepository produtoRepository, IMapper mapper)
     {
         _repository = repository;
+        _produtoRepository = produtoRepository;
         _mapper = mapper;
     }
 
@@ -43,8 +45,16 @@ public class PrestacaoServicoController : MainController
             }
         }
 
-
         var result = await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico));
+
+        foreach (var item in prestacaoServico.Produtos) {
+            for (int i = 0; i < item.Qtd; i++)
+            {
+                item.PrestacaoServicoId = result.Id;
+                await _produtoRepository.Create(_mapper.Map<Produto>(item));
+            }        
+        }
+
 
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
