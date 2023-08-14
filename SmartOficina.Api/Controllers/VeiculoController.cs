@@ -21,6 +21,11 @@ public class VeiculoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+        if (!veiculo.PrestadorId.HasValue)
+            veiculo.PrestadorId = PrestadorId;
+
+        veiculo.UsrCadastroDesc = UserName;
+        veiculo.UsrCadastro = UserId; 
 
         var result = await _repository.Create(_mapper.Map<Veiculo>(veiculo));
         return Ok(_mapper.Map<VeiculoDto>(result));

@@ -20,6 +20,13 @@ public class SubServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+
+        if (!subServico.PrestadorId.HasValue)
+            subServico.PrestadorId = PrestadorId;
+
+        subServico.UsrCadastroDesc = UserName;
+        subServico.UsrCadastro = UserId;
+
         var result = await _repository.Create(_mapper.Map<SubCategoriaServico>(subServico));
 
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));

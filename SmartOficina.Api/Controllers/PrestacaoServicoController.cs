@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Model;
+
+namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
@@ -23,6 +25,9 @@ public class PrestacaoServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+        if (!prestacaoServico.PrestadorId.HasValue)
+            prestacaoServico.PrestadorId = PrestadorId;
+
         if (prestacaoServico.Produtos != null)
         {
             foreach (var item in prestacaoServico.Produtos)
@@ -30,6 +35,7 @@ public class PrestacaoServicoController : MainController
                 item.PrestadorId = prestacaoServico.PrestadorId.Value;
             }
         }
+
         if (prestacaoServico.Veiculo != null)
             prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
 
@@ -38,12 +44,15 @@ public class PrestacaoServicoController : MainController
 
         if (prestacaoServico.Servicos != null)
         {
-
             foreach (var item in prestacaoServico.Servicos)
             {
                 item.PrestadorId = prestacaoServico.PrestadorId.Value;
             }
         }
+
+
+        prestacaoServico.UsrCadastroDesc = UserName;
+        prestacaoServico.UsrCadastro = UserId;
 
         var result = await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico));
 

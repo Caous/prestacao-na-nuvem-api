@@ -7,7 +7,9 @@ public abstract class MainController : ControllerBase
     {
         get
         {
-            return new Guid(User.Claims.FirstOrDefault(c => c.Type == "PrestadorId").Value);
+            if (User.Claims.FirstOrDefault(c => c.Type == "PrestadorId") == null && !User.Claims.First(c => c.Type == "UserName").Value.Equals("OficinaNaNuvemAdm"))
+                throw new Exception("Usuário logado de forma indevida");
+            return new Guid(User.Claims.First(c => c.Type == "PrestadorId").Value);
         }
     }
 
@@ -15,7 +17,7 @@ public abstract class MainController : ControllerBase
     {
         get
         {
-            return new Guid(User.Claims.FirstOrDefault(c => c.Type == "IdUserLogin").Value);
+            return new Guid(User.Claims.First(c => c.Type == "IdUserLogin").Value);
 
         }
     }
@@ -24,7 +26,7 @@ public abstract class MainController : ControllerBase
     {
         get
         {
-            return User.Claims.FirstOrDefault(c => c.Type == "UserName").Value;
+            return User.Claims.First(c => c.Type == "UserName").Value;
         }
     }
 

@@ -8,6 +8,7 @@ public static class DbContextConfiguration
         services.AddDbContext<OficinaContext>(opt =>
             {
                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            });
+            },
+            ServiceLifetime.Transient);
     }
 }

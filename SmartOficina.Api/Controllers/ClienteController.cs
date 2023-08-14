@@ -21,6 +21,12 @@ public class ClienteController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+        if (!cliente.PrestadorId.HasValue)
+            cliente.PrestadorId = PrestadorId;
+
+        cliente.UsrCadastroDesc = UserName;
+        cliente.UsrCadastro = UserId;
+
         var result = await _repository.Create(_mapper.Map<Cliente>(cliente));
 
         return Ok(_mapper.Map<ClienteDto>(result));

@@ -21,8 +21,12 @@ public class CategoriaServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        //ToDo: Adicionar validação para ver se foi preenchido o prestadorId dentro do token
-        categoriaServico.PrestadorId = PrestadorId;
+        if (!categoriaServico.PrestadorId.HasValue)
+            categoriaServico.PrestadorId = PrestadorId;
+
+        categoriaServico.UsrCadastroDesc = UserName;
+        categoriaServico.UsrCadastro = UserId;
+
         var result = await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico));
 
         return Ok(_mapper.Map<CategoriaServicoDto>(result));

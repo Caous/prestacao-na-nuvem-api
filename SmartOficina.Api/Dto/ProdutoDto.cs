@@ -11,7 +11,7 @@ public class ProdutoDto : Base
     public required float Valor_Compra { get; set; }
     public required float Valor_Venda { get; set; }
     public int Qtd { get; set; }
-    public required Guid PrestadorId { get; set; }
+    public Guid? PrestadorId { get; set; }
     public Guid? PrestacaoServicoId { get; set; }
     public PrestacaoServicoDto? PrestacaoServico { get; set; }
 }
