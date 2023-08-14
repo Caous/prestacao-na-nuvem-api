@@ -27,5 +27,17 @@ public static class DependecyInjectionConfig
 
         services.AddJwtSecurity(tokenConfigurations);
         #endregion
+
+        #region Cors
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("http://localhost:5173");
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+            });
+        });
+        #endregion
     }
 }
