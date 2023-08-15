@@ -92,30 +92,30 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
-    [HttpGet("PrestacaoServicoFechadosPrestador/{id}")]
-    public async Task<IActionResult> GetByPrestacaoServicoFechadosPrestador(Guid id)
+    [HttpGet("PrestacaoServicoFechadosPrestador")]
+    public async Task<IActionResult> GetByPrestacaoServicoFechadosPrestador()
     {
-        if (!ModelState.IsValid || id == null)
+        if (!ModelState.IsValid)
         {
             if (ModelState.ErrorCount < 1)
                 ModelState.AddModelError("error", "Id invalid");
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(id, EPrestacaoServicoStatus.Concluido)));
+        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, EPrestacaoServicoStatus.Concluido)));
     }
 
     [HttpGet("PrestacaoServicoAbertoPrestador/{id}")]
-    public async Task<IActionResult> GetByPrestacaoServicoAbertosPrestador(Guid id)
+    public async Task<IActionResult> GetByPrestacaoServicoAbertosPrestador()
     {
-        if (!ModelState.IsValid || id == null)
+        if (!ModelState.IsValid)
         {
             if (ModelState.ErrorCount < 1)
                 ModelState.AddModelError("error", "Id invalid");
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(id, EPrestacaoServicoStatus.Aberto)));
+        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, EPrestacaoServicoStatus.Aberto)));
     }
 
     [HttpGet("PrestacaoServicoEnriquecidoPrestador")]
