@@ -50,20 +50,24 @@ public class PrestacaoServicoController : MainController
         prestacaoServico.UsrCadastroDesc = UserName;
         prestacaoServico.UsrCadastro = UserId;
 
+
         var produtos = new List<ProdutoDto>();
 
-        foreach (var prod in prestacaoServico.Produtos)
+        if (prestacaoServico.Produtos != null)
         {
-            for (int i = 0; i < prod.Qtd; i++)
+            foreach (var prod in prestacaoServico.Produtos)
             {
-                produtos.Add(prod);
+                for (int i = 0; i < prod.Qtd; i++)
+                {
+                    produtos.Add(prod);
+                }
             }
         }
 
         prestacaoServico.Produtos = produtos;
 
         var result = await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico));
-                
+
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
@@ -125,8 +129,6 @@ public class PrestacaoServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        
-
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestador(PrestadorId)));
     }
 
@@ -165,7 +167,7 @@ public class PrestacaoServicoController : MainController
             prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
 
         var result = await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico));
-        
+
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
