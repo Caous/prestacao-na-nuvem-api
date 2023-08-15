@@ -9,11 +9,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _context = context;
     }
 
-    public async Task<T> Create(T item)
+    public virtual async Task<T> Create(T item)
     {
         await _context.Set<T>().AddAsync(item);
         await _context.SaveChangesAsync();
-        await _context.DisposeAsync();
         return item;
     }
 

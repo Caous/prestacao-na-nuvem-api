@@ -9,6 +9,17 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         _context = context;
     }
 
+    public override async Task<PrestacaoServico> Create(PrestacaoServico item)
+    {
+        await _context.PrestacaoServico.AddAsync(item);
+
+        await _context.SaveChangesAsync();
+
+        await _context.DisposeAsync();
+
+        return item;
+    }
+
     public async Task<PrestacaoServico> FindById(Guid id)
     {
         var result = _context.PrestacaoServico
@@ -49,7 +60,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         _context.Set<PrestacaoServico>().Update(item);
         await _context.SaveChangesAsync();
         await _context.DisposeAsync();
-        
+
         return item;
     }
 

@@ -1,19 +1,15 @@
-﻿using SmartOficina.Api.Domain.Model;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
 public class PrestacaoServicoController : MainController
 {
     private readonly IPrestacaoServicoRepository _repository;
-    private readonly IProdutoRepository _produtoRepository;
     private readonly IMapper _mapper;
 
-    public PrestacaoServicoController(IPrestacaoServicoRepository repository,IProdutoRepository produtoRepository, IMapper mapper)
+    public PrestacaoServicoController(IPrestacaoServicoRepository repository, IMapper mapper)
     {
         _repository = repository;
-        _produtoRepository = produtoRepository;
         _mapper = mapper;
     }
 
@@ -54,17 +50,20 @@ public class PrestacaoServicoController : MainController
         prestacaoServico.UsrCadastroDesc = UserName;
         prestacaoServico.UsrCadastro = UserId;
 
-        var result = await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico));
+        var produtos = new List<ProdutoDto>();
 
-        foreach (var item in prestacaoServico.Produtos) {
-            for (int i = 0; i < item.Qtd; i++)
+        foreach (var prod in prestacaoServico.Produtos)
+        {
+            for (int i = 0; i < prod.Qtd; i++)
             {
-                item.PrestacaoServicoId = result.Id;
-                await _produtoRepository.Create(_mapper.Map<Produto>(item));
-            }        
+                produtos.Add(prod);
+            }
         }
 
+        prestacaoServico.Produtos = produtos;
 
+        var result = await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico));
+                
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
