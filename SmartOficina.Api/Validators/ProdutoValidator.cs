@@ -35,10 +35,5 @@ public class ProdutoValidator : AbstractValidator<ProdutoDto>
        .NotNull()
        .WithMessage(ProdutoConst.ValorVendaValidation);
 
-        //RuleFor(x => x.PrestadorId)
-        //.NotEmpty()
-        //.WithMessage(ClienteConst.PrestadorValidation)
-        //.NotNull()
-        //.WithMessage(ClienteConst.PrestadorValidation);
     }
 }
