@@ -105,7 +105,7 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, EPrestacaoServicoStatus.Concluido)));
     }
 
-    [HttpGet("PrestacaoServicoAbertoPrestador/{id}")]
+    [HttpGet("PrestacaoServicoAbertoPrestador")]
     public async Task<IActionResult> GetByPrestacaoServicoAbertosPrestador()
     {
         if (!ModelState.IsValid)
