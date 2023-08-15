@@ -4,6 +4,6 @@ public class PrestacaoServicoValidator : AbstractValidator<PrestacaoServicoDto>
 {
     public PrestacaoServicoValidator()
     {
-
+        
     }
 }
