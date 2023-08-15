@@ -27,7 +27,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
             .Include(i => i.Prestador)
             .Include(i => i.Cliente)
             .Include(i => i.Veiculo)
-            .Include(i=> i.Produtos)
+            .Include(i => i.Produtos)
             .Include(i => i.Servicos)
                 .ThenInclude(i => i.SubCategoriaServico)
                 .ThenInclude(i => i.Categoria)
@@ -71,6 +71,10 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         if (prestacao is not null)
         {
             prestacao.Status = status;
+
+            if (prestacao.Status == EPrestacaoServicoStatus.Concluido)
+                prestacao.DataConclusaoServico = DateTime.Now;
+
             await _context.SaveChangesAsync();
             await _context.DisposeAsync();
         }

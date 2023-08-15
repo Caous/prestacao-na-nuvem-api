@@ -7,6 +7,7 @@ public class VeiculoDto : Base
     public required string Modelo { get; set; }
     public EVeiculoTipo Tipo { get; set; }
     public string? Chassi { get; set; }
+    public int Km { get; set; }
     public int Ano { get; set; }
     public string TipoCombustivel { get; set; }
 }

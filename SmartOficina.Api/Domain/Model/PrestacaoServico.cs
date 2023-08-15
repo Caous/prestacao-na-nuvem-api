@@ -14,6 +14,7 @@ public class PrestacaoServico : Base
     public Guid? ClienteId { get; set; }
     public Veiculo? Veiculo { get; set; }
     public Guid? VeiculoId { get; set; }
+    public DateTime? DataConclusaoServico { get; set; }
     public ICollection<Servico>? Servicos { get; set; }
     public ICollection<Produto>? Produtos { get; set; }
 

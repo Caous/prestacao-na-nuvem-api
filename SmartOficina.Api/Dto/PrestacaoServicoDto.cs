@@ -7,6 +7,7 @@ public class PrestacaoServicoDto : Base
     public PrestadorDto? Prestador { get; set; }
     public ClienteDto? Cliente { get; set; }
     public Guid? ClienteId { get; set; }
+    public DateTime? DataConclusaoServico { get; set; }
     public VeiculoDto? Veiculo { get; set; }
     public Guid? VeiculoId { get; set; }
     public ICollection<ServicoDto>? Servicos { get; set; }

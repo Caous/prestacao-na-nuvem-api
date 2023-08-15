@@ -14,6 +14,7 @@ public class Veiculo : Base
     public Guid PrestadorId { get; set; }
     public Prestador Prestador { get; set; }
     public int Ano { get; set; }
+    public int Km { get; set; }
     public string? TipoCombustivel { get; set; }
     public ICollection<PrestacaoServico>? Servicos { get; set; }
 }
