@@ -21,16 +21,21 @@ public class VeiculoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        if (!veiculo.PrestadorId.HasValue)
-            veiculo.PrestadorId = PrestadorId;
-
-        veiculo.UsrCadastroDesc = UserName;
-        veiculo.UsrCadastro = UserId; 
+        MapearLogin(veiculo);
 
         var result = await _repository.Create(_mapper.Map<Veiculo>(veiculo));
         return Ok(_mapper.Map<VeiculoDto>(result));
 
 
+    }
+
+    private void MapearLogin(VeiculoDto veiculo)
+    {
+        if (!veiculo.PrestadorId.HasValue)
+            veiculo.PrestadorId = PrestadorId;
+
+        veiculo.UsrCadastroDesc = UserName;
+        veiculo.UsrCadastro = UserId;
     }
 
     [HttpGet]
@@ -67,6 +72,8 @@ public class VeiculoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+        
+        MapearLogin(veiculo);
 
         var result = await _repository.Update(_mapper.Map<Veiculo>(veiculo));
         return Ok(_mapper.Map<VeiculoDto>(result));

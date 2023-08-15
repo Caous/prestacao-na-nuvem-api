@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Model;
+
+namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
@@ -13,6 +15,16 @@ public class CategoriaServicoController : MainController
         _mapper = mapper;
     }
 
+    private void MapearLogin(CategoriaServicoDto categoriaServico)
+    {
+        if (!categoriaServico.PrestadorId.HasValue)
+            categoriaServico.PrestadorId = PrestadorId;
+
+        categoriaServico.UsrCadastroDesc = UserName;
+        categoriaServico.UsrCadastro = UserId;
+
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
     {
@@ -21,16 +33,13 @@ public class CategoriaServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        if (!categoriaServico.PrestadorId.HasValue)
-            categoriaServico.PrestadorId = PrestadorId;
-
-        categoriaServico.UsrCadastroDesc = UserName;
-        categoriaServico.UsrCadastro = UserId;
+        MapearLogin(categoriaServico);
 
         var result = await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico));
 
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
+
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -39,7 +48,7 @@ public class CategoriaServicoController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        
+
         var result = await _repository.GetAll();
 
         return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
@@ -73,6 +82,8 @@ public class CategoriaServicoController : MainController
             return BadRequest(ModelState.First().Value);
         }
 
+        MapearLogin(categoriaServico);
+
         var result = await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico));
 
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
@@ -88,7 +99,7 @@ public class CategoriaServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-
+                
         var result = await _repository.Desabled(id);
 
         return Ok(_mapper.Map<CategoriaServicoDto>(result));

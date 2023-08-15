@@ -24,12 +24,17 @@ public class PrestadorController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        prestador.UsrCadastro = UserId;
-        prestador.UsrCadastroDesc = UserName;
+        MapearLogin(prestador);
 
         var result = await _repository.Create(_mapper.Map<Prestador>(prestador));
 
         return Ok(_mapper.Map<PrestadorDto>(result));
+    }
+
+    private void MapearLogin(PrestadorDto prestador)
+    {
+        prestador.UsrCadastro = UserId;
+        prestador.UsrCadastroDesc = UserName;
     }
 
     [HttpGet]
@@ -65,6 +70,8 @@ public class PrestadorController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
+        MapearLogin(prestador);
 
         var result = await _repository.Update(_mapper.Map<Prestador>(prestador));
 
@@ -110,6 +117,16 @@ public class PrestadorController : MainController
     #endregion
 
     #region Controller Funcionario Prestador
+
+    private void MapearLoginFuncionario(FuncionarioPrestadorDto func)
+    {
+        if (!func.PrestadorId.HasValue)
+            func.PrestadorId = PrestadorId;
+
+        func.UsrCadastroDesc = UserName;
+        func.UsrCadastro = UserId;
+    }
+
     [HttpPost("Funcionario")]
     public async Task<IActionResult> AddFuncionario(FuncionarioPrestadorDto func)
     {
@@ -117,6 +134,8 @@ public class PrestadorController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
+        MapearLoginFuncionario(func);
 
         var result = await _repositoryFuncionario.Create(_mapper.Map<FuncionarioPrestador>(func));
 
@@ -156,6 +175,7 @@ public class PrestadorController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+        MapearLoginFuncionario(func);
 
         var result = await _repositoryFuncionario.Update(_mapper.Map<FuncionarioPrestador>(func));
 

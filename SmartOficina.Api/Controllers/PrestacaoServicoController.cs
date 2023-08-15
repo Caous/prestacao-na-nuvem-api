@@ -105,6 +105,7 @@ public class PrestacaoServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+        // Colocar no fechado status fechado concluido e cancelado
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, EPrestacaoServicoStatus.Concluido)));
     }
 
@@ -118,6 +119,7 @@ public class PrestacaoServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+        // Colocar no aberto tudo diferente de fechado concluido e cancelado
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, EPrestacaoServicoStatus.Aberto)));
     }
 

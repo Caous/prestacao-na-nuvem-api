@@ -21,15 +21,20 @@ public class ProdutoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+        MapearLogin(produto);
+
+        var result = await _repository.Create(_mapper.Map<Produto>(produto));
+
+        return Ok(_mapper.Map<ProdutoDto>(result));
+    }
+
+    private void MapearLogin(ProdutoDto produto)
+    {
         if (!produto.PrestadorId.HasValue)
             produto.PrestadorId = PrestadorId;
 
         produto.UsrCadastroDesc = UserName;
         produto.UsrCadastro = UserId;
-
-        var result = await _repository.Create(_mapper.Map<Produto>(produto));
-
-        return Ok(_mapper.Map<ProdutoDto>(result));
     }
 
     [HttpGet]
@@ -65,6 +70,8 @@ public class ProdutoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
+        MapearLogin(produto);
 
         var result = await _repository.Update(_mapper.Map<Produto>(produto));
 

@@ -20,16 +20,20 @@ public class SubServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+        MapearLogin(subServico);
 
+        var result = await _repository.Create(_mapper.Map<SubCategoriaServico>(subServico));
+
+        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
+    }
+
+    private void MapearLogin(SubCategoriaServicoDto subServico)
+    {
         if (!subServico.PrestadorId.HasValue)
             subServico.PrestadorId = PrestadorId;
 
         subServico.UsrCadastroDesc = UserName;
         subServico.UsrCadastro = UserId;
-
-        var result = await _repository.Create(_mapper.Map<SubCategoriaServico>(subServico));
-
-        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
     }
 
     [HttpGet]
@@ -66,6 +70,8 @@ public class SubServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
+        MapearLogin(subServico);
 
         var result = await _repository.Update(_mapper.Map<SubCategoriaServico>(subServico));
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
