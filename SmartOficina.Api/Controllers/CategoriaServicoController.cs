@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Domain.Model;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
@@ -57,7 +55,7 @@ public class CategoriaServicoController : MainController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
+        if (!ModelState.IsValid)
         {
             if (ModelState.ErrorCount < 1)
                 ModelState.AddModelError("error", "Id invalid");
@@ -92,7 +90,7 @@ public class CategoriaServicoController : MainController
     [HttpPut("DesativarCategoria")]
     public async Task<IActionResult> DesativarCategoria(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
+        if (!ModelState.IsValid)
         {
             if (ModelState.ErrorCount < 1)
                 ModelState.AddModelError("error", "Id invalid");
@@ -110,7 +108,7 @@ public class CategoriaServicoController : MainController
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
+            if (!ModelState.IsValid)
             {
                 if (ModelState.ErrorCount < 1)
                     ModelState.AddModelError("error", "Id invalid");

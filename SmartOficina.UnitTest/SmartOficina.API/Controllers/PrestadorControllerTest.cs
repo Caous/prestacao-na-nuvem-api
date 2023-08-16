@@ -7,7 +7,7 @@ public class PrestadorControllerTest
     private readonly Mock<IFuncionarioPrestadorRepository> _funcionarioRepository = new();
 
     [Fact]
-    public async Task Deve_Retornar_ListaDePrestador_Usando()
+    public async Task Deve_Retornar_ListaDePrestador()
     {
         //Arrange
         ICollection<Prestador> PrestadorsFake = CriaListaFornecedoresFake();
@@ -154,6 +154,41 @@ public class PrestadorControllerTest
         Assert.NotNull(response);
 
     }
+
+
+    [Fact]
+    public async Task Deve_Retornar_ListaDeFuncionarios()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestador> funcionarioFake = CriarListaFuncionarioFake();
+        _funcionarioRepository.Setup(s => s.GetAll()).ReturnsAsync(funcionarioFake);
+        //Act
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario();
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as ICollection<FuncionarioPrestador>;
+        //Assert
+        _funcionarioRepository.Verify(s => s.GetAll(), Times.Once());
+        _mapper.Verify(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>), Times.Once());
+        _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>), Times.Once());
+        Assert.NotNull(result);
+        Assert.Equal(result.First().Telefone, funcionarioFake.First().Telefone);
+        Assert.Equal(result.First().CPF, funcionarioFake.First().CPF);
+        Assert.Equal(result.First().DataCadastro, funcionarioFake.First().DataCadastro);
+        Assert.Equal(result.First().Id, funcionarioFake.First().Id);
+        Assert.Equal(result.First().Cargo, funcionarioFake.First().Cargo);
+        Assert.Equal(result.First().Email, funcionarioFake.First().Email);
+        Assert.Equal(result.First().Endereco, funcionarioFake.First().Endereco);
+        Assert.Equal(result.First().Nome, funcionarioFake.First().Nome);
+        Assert.Equal(result.First().Prestador.CPF, funcionarioFake.First().Prestador.CPF);
+        Assert.Equal(result.First().Prestador.Nome, funcionarioFake.First().Prestador.Nome);
+
+    }
+
+    private ICollection<FuncionarioPrestador> CriarListaFuncionarioFake()
+    {
+        return new List<FuncionarioPrestador>() { new FuncionarioPrestador() { Cargo = "teste", CPF = "123456789", Email = "teste@teste.com.br", Nome = "teste func", RG = "52453", Telefone = "1234556", DataCadastro = DateTime.Now, Endereco = "rua teste", Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid(), Prestador = CriaFornecedorFake(Guid.NewGuid()), PrestadorId = Guid.NewGuid() } };
+    }
+
     private static ICollection<Prestador> CriaListaFornecedoresFake()
     {
         return new List<Prestador>() { new Prestador() { CPF = "123456789", EmailEmpresa = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Guid.NewGuid() } };

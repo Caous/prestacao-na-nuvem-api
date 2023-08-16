@@ -105,8 +105,9 @@ public class PrestacaoServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        // Colocar no fechado status fechado concluido e cancelado
-        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, EPrestacaoServicoStatus.Concluido)));
+
+        List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Concluido, EPrestacaoServicoStatus.Rejeitado };
+        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status)));
     }
 
     [HttpGet("PrestacaoServicoAbertoPrestador")]
@@ -119,8 +120,9 @@ public class PrestacaoServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        // Colocar no aberto tudo diferente de fechado concluido e cancelado
-        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, EPrestacaoServicoStatus.Aberto)));
+
+        List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Aberto, EPrestacaoServicoStatus.Analise, EPrestacaoServicoStatus.Andamento, EPrestacaoServicoStatus.Aprovado};
+        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status)));
     }
 
     [HttpGet("PrestacaoServicoEnriquecidoPrestador")]

@@ -98,10 +98,10 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         return result;
     }
 
-    public async Task<ICollection<PrestacaoServico>> GetByPrestacoesServicosStatus(Guid prestadorId, EPrestacaoServicoStatus statusPrestacao)
+    public async Task<ICollection<PrestacaoServico>> GetByPrestacoesServicosStatus(Guid prestadorId, ICollection<EPrestacaoServicoStatus> statusPrestacao)
     {
         var result = await _context.PrestacaoServico
-            .Where(f => f.PrestadorId == prestadorId && f.Status == statusPrestacao)
+            .Where(f => f.PrestadorId == prestadorId && statusPrestacao.Contains(f.Status))
             .Include(i => i.Prestador)
             .Include(i => i.Cliente)
             .Include(i => i.Veiculo)
