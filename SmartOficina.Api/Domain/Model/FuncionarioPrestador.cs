@@ -18,4 +18,5 @@ public class FuncionarioPrestador :  Base
     //ToDo: Criar classe Cargo
     public required string Cargo { get; set; }
     public Prestador Prestador { get; set; }
+    public ICollection<PrestacaoServico>? OrdemServicos { get; set; }
 }

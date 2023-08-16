@@ -149,6 +149,13 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
     }
 
+    [HttpGet("Funcionario/Prestador/id")]
+    public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id)
+    {
+        var result = await _repositoryFuncionario.GetListaFuncionarioPrestadorAsync(id);
+        return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
+    }
+
     [HttpGet("Funcionario/{id}")]
     public async Task<IActionResult> GetIdFuncionario(Guid id)
     {
