@@ -1,5 +1,5 @@
 ﻿namespace SmartOficina.Api.Infrastructure.Configurations.ContextConfiguration;
-//ToDo: Colocar campos de usuario desativação, data desativação e usuario inclusão
+
 public class PrestacaoServicoConfiguration : IEntityTypeConfiguration<PrestacaoServico>
 {
     public void Configure(EntityTypeBuilder<PrestacaoServico> builder)
@@ -16,6 +16,8 @@ public class PrestacaoServicoConfiguration : IEntityTypeConfiguration<PrestacaoS
             .HasDefaultValueSql("FORMAT((NEXT VALUE FOR PrestacaoOrdem), 'OS#')");
 
         builder.HasOne(p => p.Prestador).WithMany(s => s.OrdemServicos).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasOne(p => p.FuncionarioPrestador).WithMany(s => s.OrdemServicos).HasForeignKey(f => f.FuncionarioPrestadorId).OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(c => c.Cliente).WithMany(s => s.Servicos).HasForeignKey(f => f.ClienteId).OnDelete(DeleteBehavior.Restrict);
 
