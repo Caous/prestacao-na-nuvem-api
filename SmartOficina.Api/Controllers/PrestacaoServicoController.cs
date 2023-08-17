@@ -147,6 +147,9 @@ public class PrestacaoServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+        if (!prestacaoServico.PrestadorId.HasValue)
+            prestacaoServico.PrestadorId = PrestadorId;
+
         if (prestacaoServico.Produtos != null)
         {
             foreach (var item in prestacaoServico.Produtos)

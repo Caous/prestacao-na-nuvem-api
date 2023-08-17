@@ -17,6 +17,10 @@ public class ProdutoValidator : AbstractValidator<ProdutoDto>
        .NotNull()
        .WithMessage(ProdutoConst.MarcaValidation);
 
+        RuleFor(x => x.TipoMedidaItem)
+        .NotNull()
+        .WithMessage(ProdutoConst.TipoMedidaValidation);
+
         RuleFor(x => x.Valor_Compra)
        .NotEmpty()
        .WithMessage(ProdutoConst.ValorCompraValidation)
