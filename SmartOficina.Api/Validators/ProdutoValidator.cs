@@ -18,8 +18,6 @@ public class ProdutoValidator : AbstractValidator<ProdutoDto>
        .WithMessage(ProdutoConst.MarcaValidation);
 
         RuleFor(x => x.TipoMedidaItem)
-        .NotEmpty()
-        .WithMessage(ProdutoConst.TipoMedidaValidation)
         .NotNull()
         .WithMessage(ProdutoConst.TipoMedidaValidation);
 

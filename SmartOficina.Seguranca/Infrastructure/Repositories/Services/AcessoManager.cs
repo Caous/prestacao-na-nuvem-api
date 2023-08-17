@@ -63,9 +63,9 @@ public class AcessoManager : IAcessoManager
         UserModel usuario;
 
         if (!string.IsNullOrEmpty(user.UserName))
-            usuario = await _userManager.FindByNameAsync(user.UserName);
+            usuario = await _userManager.FindByNameAsync(user.UserName.ToUpper());
         else
-            usuario = await _userManager.FindByEmailAsync(user.Email);
+            usuario = await _userManager.FindByEmailAsync(user.Email.ToUpper());
 
 
         if (usuario != null)
