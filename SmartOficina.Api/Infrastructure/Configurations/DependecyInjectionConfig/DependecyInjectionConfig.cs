@@ -58,19 +58,7 @@ public static class DependecyInjectionConfig
         #endregion
 
         #region Fluent
-        services.AddControllers().AddFluentValidation(options =>
-        {
-            // Validate child properties and root collection elements
-            options.ImplicitlyValidateChildProperties = true;
-            options.ImplicitlyValidateRootCollectionElements = true;
-
-            // Automatic registration of validators in assembly
-            options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        });
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         #endregion
-
-
-
-
     }
 }
