@@ -16,8 +16,6 @@ public class ProdutoConfiguration : IEntityTypeConfiguration<Produto>
 
         builder.Property(p => p.Modelo).HasMaxLength(50).IsRequired();
 
-        builder.Property(p => p.Garantia).HasMaxLength(10).IsRequired();
-
         builder.Property(p => p.Valor_Compra).IsRequired();
 
         builder.Property(p => p.Valor_Venda).IsRequired();

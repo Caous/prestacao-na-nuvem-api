@@ -9,6 +9,9 @@ public class MapperProfile : Profile
                     .ReverseMap();
 
         CreateMap<PrestadorLoginDto, UserModelDto>()
+                     .ReverseMap();
+
+        CreateMap<PrestadorCadastroDto, UserModel>()
                     .ReverseMap();
     }
 }
