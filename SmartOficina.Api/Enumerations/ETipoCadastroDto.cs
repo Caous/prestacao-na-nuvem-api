@@ -1,4 +1,4 @@
-﻿namespace SmartOficina.Api.Dto;
+﻿namespace SmartOficina.Api.Enumerations;
 
 public enum ETipoCadastroDto
 {

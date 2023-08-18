@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Dto;
+﻿using SmartOficina.Api.Enumerations;
+
+namespace SmartOficina.Api.Dto;
 
 public class ProdutoDto : Base
 {

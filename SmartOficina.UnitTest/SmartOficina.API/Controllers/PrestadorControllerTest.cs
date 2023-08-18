@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Infrastructure.Migrations;
-
-namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
+﻿namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
 public class PrestadorControllerTest
 {
