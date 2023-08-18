@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartOficina.Api.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using SmartOficina.Api.Infrastructure.Context;
 namespace SmartOficina.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(OficinaContext))]
-    partial class OficinaContextModelSnapshot : ModelSnapshot
+    [Migration("20230818014836_CampoValorServico")]
+    partial class CampoValorServico
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
