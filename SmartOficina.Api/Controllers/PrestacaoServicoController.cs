@@ -28,21 +28,33 @@ public class PrestacaoServicoController : MainController
         {
             foreach (var item in prestacaoServico.Produtos)
             {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value;
+                item.PrestadorId = prestacaoServico.PrestadorId.Value; 
+                item.UsrCadastro = UserId;
+                item.UsrCadastroDesc = UserName;
             }
         }
 
         if (prestacaoServico.Veiculo != null)
+        {
             prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
+            prestacaoServico.UsrCadastro = UserId;
+            prestacaoServico.UsrCadastroDesc = UserName;
+        }
 
         if (prestacaoServico.Cliente != null)
+        {
             prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
+            prestacaoServico.UsrCadastro = UserId;
+            prestacaoServico.UsrCadastroDesc = UserName;
+        }
 
         if (prestacaoServico.Servicos != null)
         {
             foreach (var item in prestacaoServico.Servicos)
             {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value;
+                item.PrestadorId = prestacaoServico.PrestadorId.Value; 
+                item.UsrCadastro = UserId;
+                item.UsrCadastroDesc = UserName;
             }
         }
 
@@ -155,6 +167,8 @@ public class PrestacaoServicoController : MainController
             foreach (var item in prestacaoServico.Produtos)
             {
                 item.PrestadorId = prestacaoServico.PrestadorId.Value;
+                item.UsrCadastro = UserId;
+                item.UsrCadastroDesc = UserName;
             }
         }
 
@@ -164,6 +178,8 @@ public class PrestacaoServicoController : MainController
             foreach (var item in prestacaoServico.Servicos)
             {
                 item.PrestadorId = prestacaoServico.PrestadorId.Value;
+                item.UsrCadastro = UserId;
+                item.UsrCadastroDesc = UserName;
             }
         }
 
