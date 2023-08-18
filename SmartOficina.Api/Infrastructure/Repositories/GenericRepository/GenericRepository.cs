@@ -59,7 +59,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return result;
     }
 
-    public async Task<T> Update(T item)
+    public virtual async Task<T> Update(T item)
     {
         _context.Set<T>().Update(item);
         await _context.SaveChangesAsync();

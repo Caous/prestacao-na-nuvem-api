@@ -173,6 +173,25 @@ public class PrestacaoServicoController : MainController
         if (prestacaoServico.Cliente != null)
             prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
 
+
+        var produtos = new List<ProdutoDto>();
+
+        if (prestacaoServico.Produtos != null)
+        {
+            foreach (var prod in prestacaoServico.Produtos)
+            {
+                if (prod.Qtd == 0)
+                    produtos.Add(prod);
+
+                for (int i = 0; i < prod.Qtd; i++)
+                {
+                    produtos.Add(prod);
+                }
+            }
+        }
+
+        prestacaoServico.Produtos = produtos;
+
         var result = await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico));
 
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));

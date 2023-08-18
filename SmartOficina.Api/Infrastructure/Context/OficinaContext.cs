@@ -14,7 +14,6 @@ public class OficinaContext : DbContext
     public DbSet<Veiculo> Veiculo { get; set; }
     public DbSet<SubCategoriaServico> SubCategoriaServico { get; set; }
     public DbSet<CategoriaServico> CategoriaServico { get; set; }
-    public DbSet<Produto> ProdutoEstoque { get; set; }
     public DbSet<FuncionarioPrestador> FuncionarioPrestador { get; set; }
     public DbSet<Produto> Produto { get; set; }
 

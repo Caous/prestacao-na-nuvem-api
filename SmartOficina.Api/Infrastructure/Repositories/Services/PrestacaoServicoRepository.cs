@@ -37,28 +37,61 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         return result.FirstOrDefault();
     }
 
-    public async Task<PrestacaoServico> Update(PrestacaoServico item)
+    public override async Task<PrestacaoServico> Update(PrestacaoServico item)
     {
-        if (item.Servicos.Any())
+        if (item != null && item.Servicos != null && item.Servicos.Any())
         {
+            var servicoId = item.Servicos.Where(x => x.Id != Guid.Empty).Select(x => x.Id);
+            var servicoASerDeletado = await _context.Servico.Where(x=> x.PrestacaoServicoId == item.Id && !servicoId.Contains(x.Id)).ToListAsync();
+
+            foreach (var serv in servicoASerDeletado)
+            {
+                _context.Servico.Remove(serv);
+            }
+
             foreach (var servico in item.Servicos)
             {
-                var servicoConsulta = _context.Set<Servico>().AsNoTracking().FirstOrDefault(x => x.Id == servico.Id);
-
-                if (servicoConsulta == null)
+                servico.SubCategoriaServico = null;
+               
+                if (servico.Id == Guid.Empty)
                 {
                     servico.PrestacaoServicoId = item.Id;
-                    await _context.Set<Servico>().AddAsync(servico);
-                    await _context.SaveChangesAsync();
+                    _context.Servico.Add(servico);
                 }
                 else
                 {
-                    _context.Set<Servico>().Update(servico);
-                    await _context.SaveChangesAsync();
+                    servico.PrestacaoServicoId = item.Id;
+                    _context.Servico.Update(servico);
                 }
             }
         }
-        _context.Set<PrestacaoServico>().Update(item);
+
+        if (item != null && item.Produtos != null && item.Produtos.Any())
+        {
+            var produtoId = item.Produtos.Where(x => x.Id != Guid.Empty).Select(x => x.Id);
+            var produtosASerDeletado = await _context.Produto.Where(x => x.PrestacaoServicoId == item.Id && !produtoId.Contains(x.Id)).ToListAsync();
+
+            foreach (var serv in produtosASerDeletado)
+            {
+                _context.Produto.Remove(serv);
+            }
+
+            foreach (var prod in item.Produtos)
+            {
+                if (prod.Id == Guid.Empty)
+                {
+                    prod.PrestacaoServicoId = item.Id;
+                    _context.Produto.Add(prod);
+                }
+                else
+                {
+                    prod.PrestacaoServicoId = item.Id;
+                    _context.Produto.Update(prod);
+                }
+            }
+        }
+
+        _context.PrestacaoServico.Update(item);
         await _context.SaveChangesAsync();
         await _context.DisposeAsync();
 

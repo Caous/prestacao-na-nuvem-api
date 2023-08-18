@@ -56,7 +56,7 @@ public class SubServicoController : MainController
         }
 
         var result = await _repository.FindById(id);
-        return Ok(_mapper.Map<ICollection<SubCategoriaServicoDto>>(result));
+        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
 
     }
 
