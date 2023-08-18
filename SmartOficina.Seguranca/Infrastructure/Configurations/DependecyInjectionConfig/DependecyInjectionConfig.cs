@@ -33,7 +33,7 @@ public static class DependecyInjectionConfig
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost:5173");
+                policy.WithOrigins("http://localhost:5173", "https://smart-oficina-ui.vercel.app");
                 policy.AllowAnyHeader();
                 policy.AllowAnyMethod();
             });
