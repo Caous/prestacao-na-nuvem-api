@@ -40,7 +40,7 @@ public class ProdutoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll();
+        var result = await _repository.GetAll(PrestadorId);
         return Ok(_mapper.Map<ICollection<ProdutoDto>>(result));
     }
 

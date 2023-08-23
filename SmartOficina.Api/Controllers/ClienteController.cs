@@ -44,7 +44,7 @@ public class ClienteController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        var result = await _repository.GetAll();
+        var result = await _repository.GetAll(PrestadorId);
         return Ok(_mapper.Map<ICollection<ClienteDto>>(result));
     }
 

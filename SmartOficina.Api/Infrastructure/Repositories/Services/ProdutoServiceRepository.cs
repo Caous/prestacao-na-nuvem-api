@@ -7,8 +7,10 @@ public class ProdutoRepository : GenericRepository<Produto>, IProdutoRepository
         _context = context;
     }
 
-    public override async Task<ICollection<Produto>> GetAll()
+    public override async Task<ICollection<Produto>> GetAll(Guid id)
     {
-        return _context.Produto.Where(x => x.PrestacaoServicoId == null).ToList();
+        var result = await _context.Produto.Where(x => x.PrestacaoServicoId == null && x.PrestadorId == id).ToArrayAsync();
+        await _context.DisposeAsync();
+        return result;
     }
 }

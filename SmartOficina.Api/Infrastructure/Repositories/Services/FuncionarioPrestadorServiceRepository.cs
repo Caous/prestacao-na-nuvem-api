@@ -13,7 +13,7 @@ namespace SmartOficina.Api.Infrastructure.Repositories.Services
         public async Task<ICollection<FuncionarioPrestador>> GetListaFuncionarioPrestadorAsync(Guid id)
         {
             var result = _context.FuncionarioPrestador
-                 .Where(f => f.Id == id)
+                 .Where(f => f.PrestadorId == id)
                  .Include(i => i.Prestador)
                  .ToList();
             await _context.DisposeAsync();

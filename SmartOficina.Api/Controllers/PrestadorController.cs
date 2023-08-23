@@ -40,7 +40,7 @@ public class PrestadorController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll();
+        var result = await _repository.GetAll(PrestadorId);
         return Ok(_mapper.Map<ICollection<PrestadorDto>>(result));
     }
 
@@ -145,7 +145,7 @@ public class PrestadorController : MainController
     [HttpGet("Funcionario")]
     public async Task<IActionResult> GetAllFuncionario()
     {
-        var result = await _repositoryFuncionario.GetAll();
+        var result = await _repositoryFuncionario.GetAll(PrestadorId);
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
     }
 

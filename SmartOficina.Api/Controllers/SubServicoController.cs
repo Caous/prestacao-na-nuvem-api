@@ -39,7 +39,7 @@ public class SubServicoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAllWithIncludes();
+        var result = await _repository.GetAll(PrestadorId);
         return Ok(_mapper.Map<ICollection<SubCategoriaServicoDto>>(result));
 
     }

@@ -2,8 +2,17 @@
 
 public class VeiculoRepository : GenericRepository<Veiculo>, IVeiculoRepository
 {
+    private readonly OficinaContext _context;
     public VeiculoRepository(OficinaContext context) : base(context)
     {
+        _context = context;
+    }
+
+    public override async Task<ICollection<Veiculo>> GetAll(Guid id)
+    {
+        var result = await _context.Veiculo.Where(x => x.PrestadorId == id).ToArrayAsync();
+        await _context.DisposeAsync();
+        return result;
     }
 
 }

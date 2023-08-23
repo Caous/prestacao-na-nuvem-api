@@ -13,13 +13,13 @@ public class PrestadorControllerTest
     {
         //Arrange
         ICollection<Prestador> PrestadorsFake = CriaListaFornecedoresFake();
-        _repository.Setup(s => s.GetAll()).ReturnsAsync(PrestadorsFake);
+        _repository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(PrestadorsFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAll();
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAll(Guid.NewGuid());
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<Prestador>;
         //Assert
-        _repository.Verify(s => s.GetAll(), Times.Once());
+        _repository.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
         _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>), Times.Never());
         Assert.NotNull(result);
         Assert.Equal(result.First().Telefone, PrestadorsFake.First().Telefone);
@@ -166,13 +166,13 @@ public class PrestadorControllerTest
     {
         //Arrange
         ICollection<FuncionarioPrestador> funcionarioFake = CriarListaFuncionarioFake();
-        _funcionarioRepository.Setup(s => s.GetAll()).ReturnsAsync(funcionarioFake);
+        _funcionarioRepository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario();
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario(Guid.NewGuid());
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<FuncionarioPrestador>;
         //Assert
-        _funcionarioRepository.Verify(s => s.GetAll(), Times.Once());
+        _funcionarioRepository.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
         _mapper.Verify(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>), Times.Once());
         _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>), Times.Once());
         Assert.NotNull(result);

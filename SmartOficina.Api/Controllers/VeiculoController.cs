@@ -41,7 +41,7 @@ public class VeiculoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll();
+        var result = await _repository.GetAll(PrestadorId);
         return Ok(_mapper.Map<ICollection<VeiculoDto>>(result));
 
     }
@@ -72,7 +72,7 @@ public class VeiculoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        
+
         MapearLogin(veiculo);
 
         var result = await _repository.Update(_mapper.Map<Veiculo>(veiculo));
