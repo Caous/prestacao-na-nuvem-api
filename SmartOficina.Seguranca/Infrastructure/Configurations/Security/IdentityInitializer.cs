@@ -6,11 +6,9 @@ public class IdentityInitializer
     private readonly RoleManager<IdentityRole> _roleManager;
 
     public IdentityInitializer(SegurancaContext context,
-            UserManager<UserModel> userManager,
             RoleManager<IdentityRole> roleManager)
     {
         _context = context;
-        _userManager = userManager;
         _roleManager = roleManager;
     }
     public void Initialize()
