@@ -15,7 +15,7 @@ public class PrestadorControllerTest
         ICollection<Prestador> PrestadorsFake = CriaListaFornecedoresFake();
         _repository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(PrestadorsFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAll(Guid.NewGuid());
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAll();
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<Prestador>;
         //Assert
@@ -168,7 +168,7 @@ public class PrestadorControllerTest
         ICollection<FuncionarioPrestador> funcionarioFake = CriarListaFuncionarioFake();
         _funcionarioRepository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario(Guid.NewGuid());
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario();
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<FuncionarioPrestador>;
         //Assert

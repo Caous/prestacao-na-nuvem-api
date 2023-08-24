@@ -13,7 +13,7 @@ public class CategoriaServicoControllerTest
         _repositoryMock.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(categoriasFake);
         //Act
         CategoriaServicoController controllerCategoria = new CategoriaServicoController(_repositoryMock.Object, _mapper.Object);
-        var response = await controllerCategoria.GetAll(Guid.NewGuid());
+        var response = await controllerCategoria.GetAll();
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<CategoriaServico>;
 

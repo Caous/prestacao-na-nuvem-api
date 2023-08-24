@@ -12,7 +12,7 @@ public class ClienteControllerTest
         ICollection<Cliente> clientesFake = CriaListaClienteFake();
         _repository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(clientesFake);
         //Act
-        var response = await new ClienteController(_repository.Object, _mapper.Object).GetAll(Guid.NewGuid());
+        var response = await new ClienteController(_repository.Object, _mapper.Object).GetAll();
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<Cliente>;
         //Assert
