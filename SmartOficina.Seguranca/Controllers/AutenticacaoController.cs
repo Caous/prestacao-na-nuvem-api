@@ -31,7 +31,7 @@ public class AutenticacaoController : MainController
     {
         if (prestadorDto.UsrCadastro == null || prestadorDto.UsrCadastro == Guid.Empty || prestadorDto.UsrDescricaoCadastro.IsNullOrEmpty())
         {
-            UserModel user = await _acessoManager.GetUserPorEmail("OficinaNaNuvemAdm@i4us.com.br");
+            UserModel user = await _acessoManager.GetUserPorEmail(prestadorDto.Email);
 
             if (user != null)
             {

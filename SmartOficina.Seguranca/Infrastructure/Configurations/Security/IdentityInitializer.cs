@@ -3,7 +3,6 @@
 public class IdentityInitializer
 {
     private readonly SegurancaContext _context;
-    private readonly UserManager<UserModel> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
     public IdentityInitializer(SegurancaContext context,
@@ -63,32 +62,9 @@ public class IdentityInitializer
                 }
             }
 
-            CreateUser(
-                new UserModel()
-                {
-                    UserName = "OficinaNaNuvemAdm",
-                    Email = "OficinaNaNuvemAdm@i4us.com.br",
-                    NormalizedEmail = "OficinaNaNuvemAdm@i4us.com.br",
-                    UsrCadastro = Guid.NewGuid(),
-                    UsrDescricaoCadastro = "Usuário adm",
-                    EmailConfirmed = true
-                }, "@fic4N4N@v3m", Roles.Administrador);
-
+            
         }
     }
 
-    private void CreateUser(
-    UserModel user,
-    string password,
-        string role)
-    {
-        if (_userManager.FindByNameAsync(user.UserName).Result == null)
-        {
-            var resultado = _userManager
-                .CreateAsync(user, password).Result;
-
-            if (resultado.Succeeded)
-                _userManager.AddToRoleAsync(user, role).Wait();
-        }
-    }
+    
 }
