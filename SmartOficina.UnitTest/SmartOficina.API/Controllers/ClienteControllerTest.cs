@@ -5,29 +5,54 @@ public class ClienteControllerTest
     private readonly Mock<IClienteRepository> _repository = new();
     private readonly Mock<IMapper> _mapper = new();
 
+    private static DefaultHttpContext CreateFakeClaims(ICollection<Cliente> clientes)
+    {
+        var fakeHttpContext = new DefaultHttpContext();
+        ClaimsIdentity identity = new(
+            new[] {
+                        new Claim("PrestadorId", clientes.First().PrestadorId.ToString()),
+                        new Claim("UserName", "Teste"),
+                        new Claim("IdUserLogin", clientes.First().PrestadorId.ToString())
+
+            }
+        );
+        fakeHttpContext.User = new System.Security.Claims.ClaimsPrincipal(identity);
+        return fakeHttpContext;
+    }
+
+    private ClienteController GenerateControllerFake(ICollection<Cliente> clientesFake)
+    {
+        return new ClienteController(_repository.Object, _mapper.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(clientesFake) } };
+    }
+
     [Fact]
     public async Task Deve_Retornar_ListaDeCliente_Usando_ParametroID()
     {
         //Arrange
         ICollection<Cliente> clientesFake = CriaListaClienteFake();
+        ICollection<ClienteDto> clientesDtoFake = CriaListaClienteDtoFake();
+
         _repository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(clientesFake);
+        _mapper.Setup(s => s.Map<ICollection<ClienteDto>>(It.IsAny<ICollection<Cliente>>())).Returns(clientesDtoFake);
+        ClienteController controller = GenerateControllerFake(clientesFake);
         //Act
-        var response = await new ClienteController(_repository.Object, _mapper.Object).GetAll();
+        var response = await controller.GetAll();
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as ICollection<Cliente>;
+        var result = okResult.Value as ICollection<ClienteDto>;
         //Assert
         _repository.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<Cliente>(It.IsAny<ClienteDto>), Times.Never());
+        _mapper.Verify(s => s.Map<ICollection<ClienteDto>>(It.IsAny<ICollection<Cliente>>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.First().Telefone, clientesFake.First().Telefone);
-        Assert.Equal(result.First().CPF, clientesFake.First().CPF);
-        Assert.Equal(result.First().DataCadastro, clientesFake.First().DataCadastro);
-        Assert.Equal(result.First().Id, clientesFake.First().Id);
-        Assert.Equal(result.First().Email, clientesFake.First().Email);
-        Assert.Equal(result.First().Endereco, clientesFake.First().Endereco);
-        Assert.Equal(result.First().Nome, clientesFake.First().Nome);
-        Assert.Equal(result.First().Rg, clientesFake.First().Rg);
+        Assert.Equal(result.First().Telefone, clientesDtoFake.First().Telefone);
+        Assert.Equal(result.First().CPF, clientesDtoFake.First().CPF);
+        Assert.Equal(result.First().DataCadastro, clientesDtoFake.First().DataCadastro);
+        Assert.Equal(result.First().Id, clientesDtoFake.First().Id);
+        Assert.Equal(result.First().Email, clientesDtoFake.First().Email);
+        Assert.Equal(result.First().Endereco, clientesDtoFake.First().Endereco);
+        Assert.Equal(result.First().Nome, clientesDtoFake.First().Nome);
+        Assert.Equal(result.First().Rg, clientesDtoFake.First().Rg);
     }
+
 
     [Fact]
     public async Task Deve_Cadastrar_Um_Cliente_RetornarSucesso()
@@ -38,23 +63,24 @@ public class ClienteControllerTest
         ClienteDto clienteDtoFake = CriaClienteDtoFake(id);
 
         _repository.Setup(s => s.Create(It.IsAny<Cliente>())).ReturnsAsync(clienteFake);
-        _mapper.Setup(s => s.Map<Cliente>(It.IsAny<ClienteDto>())).Returns(clienteFake);
+        _mapper.Setup(s => s.Map<ClienteDto>(It.IsAny<Cliente>())).Returns(clienteDtoFake);
+        ClienteController controller = GenerateControllerFake(new List<Cliente>() { clienteFake });
         //Act
-        var response = await new ClienteController(_repository.Object, _mapper.Object).AddAsync(clienteDtoFake);
+        var response = await controller.AddAsync(clienteDtoFake);
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as Cliente;
+        var result = okResult.Value as ClienteDto;
         //Assert
         _repository.Verify(s => s.Create(It.IsAny<Cliente>()), Times.Once());
-        _mapper.Verify(s => s.Map<Cliente>(It.IsAny<ClienteDto>()), Times.Once());
+        _mapper.Verify(s => s.Map<ClienteDto>(It.IsAny<Cliente>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, clienteFake.Telefone);
-        Assert.Equal(result.CPF, clienteFake.CPF);
-        Assert.Equal(result.DataCadastro, clienteFake.DataCadastro);
-        Assert.Equal(result.Id, clienteFake.Id);
-        Assert.Equal(result.Email, clienteFake.Email);
-        Assert.Equal(result.Endereco, clienteFake.Endereco);
-        Assert.Equal(result.Nome, clienteFake.Nome);
-        Assert.Equal(result.Rg, clienteFake.Rg);
+        Assert.Equal(result.Telefone, clienteDtoFake.Telefone);
+        Assert.Equal(result.CPF, clienteDtoFake.CPF);
+        Assert.Equal(result.DataCadastro, clienteDtoFake.DataCadastro);
+        Assert.Equal(result.Id, clienteDtoFake.Id);
+        Assert.Equal(result.Email, clienteDtoFake.Email);
+        Assert.Equal(result.Endereco, clienteDtoFake.Endereco);
+        Assert.Equal(result.Nome, clienteDtoFake.Nome);
+        Assert.Equal(result.Rg, clienteDtoFake.Rg);
     }
 
     [Fact]
@@ -65,23 +91,24 @@ public class ClienteControllerTest
         ClienteDto clienteDtoFake = CriaClienteDtoFake(clienteFake.Id);
 
         _repository.Setup(s => s.FindById(It.IsAny<Guid>())).ReturnsAsync(clienteFake);
-        _mapper.Setup(s => s.Map<Cliente>(It.IsAny<ClienteDto>())).Returns(clienteFake);
+        _mapper.Setup(s => s.Map<ClienteDto>(It.IsAny<Cliente>())).Returns(clienteDtoFake);
+        ClienteController controller = GenerateControllerFake(new List<Cliente>() { clienteFake });
         //Act
-        var response = await new ClienteController(_repository.Object, _mapper.Object).GetId(clienteDtoFake.Id.Value);
+        var response = await controller.GetId(clienteDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as Cliente;
+        var result = okResult.Value as ClienteDto;
         //Assert
         _repository.Verify(s => s.FindById(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<Cliente>(It.IsAny<ClienteDto>()), Times.Never());
+        _mapper.Verify(s => s.Map<ClienteDto>(It.IsAny<Cliente>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, clienteFake.Telefone);
-        Assert.Equal(result.CPF, clienteFake.CPF);
-        Assert.Equal(result.DataCadastro, clienteFake.DataCadastro);
-        Assert.Equal(result.Id, clienteFake.Id);
-        Assert.Equal(result.Email, clienteFake.Email);
-        Assert.Equal(result.Endereco, clienteFake.Endereco);
-        Assert.Equal(result.Nome, clienteFake.Nome);
-        Assert.Equal(result.Rg, clienteFake.Rg);
+        Assert.Equal(result.Telefone, clienteDtoFake.Telefone);
+        Assert.Equal(result.CPF, clienteDtoFake.CPF);
+        Assert.Equal(result.DataCadastro, clienteDtoFake.DataCadastro);
+        Assert.Equal(result.Id, clienteDtoFake.Id);
+        Assert.Equal(result.Email, clienteDtoFake.Email);
+        Assert.Equal(result.Endereco, clienteDtoFake.Endereco);
+        Assert.Equal(result.Nome, clienteDtoFake.Nome);
+        Assert.Equal(result.Rg, clienteDtoFake.Rg);
     }
 
     [Fact]
@@ -92,23 +119,24 @@ public class ClienteControllerTest
         ClienteDto clienteDtoFake = CriaClienteDtoFake(Guid.NewGuid());
 
         _repository.Setup(s => s.Update(It.IsAny<Cliente>())).ReturnsAsync(clienteFake);
-        _mapper.Setup(s => s.Map<Cliente>(It.IsAny<ClienteDto>())).Returns(clienteFake);
+        _mapper.Setup(s => s.Map<ClienteDto>(It.IsAny<Cliente>())).Returns(clienteDtoFake);
+        ClienteController controller = GenerateControllerFake(new List<Cliente>() { clienteFake });
         //Act
-        var response = await new ClienteController(_repository.Object, _mapper.Object).AtualizarCliente(clienteDtoFake);
+        var response = await controller.AtualizarCliente(clienteDtoFake);
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as Cliente;
+        var result = okResult.Value as ClienteDto;
         //Assert
         _repository.Verify(s => s.Update(It.IsAny<Cliente>()), Times.Once());
-        _mapper.Verify(s => s.Map<Cliente>(It.IsAny<ClienteDto>()), Times.Once());
+        _mapper.Verify(s => s.Map<ClienteDto>(It.IsAny<Cliente>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, clienteFake.Telefone);
-        Assert.Equal(result.CPF, clienteFake.CPF);
-        Assert.Equal(result.DataCadastro, clienteFake.DataCadastro);
-        Assert.Equal(result.Id, clienteFake.Id);
-        Assert.Equal(result.Email, clienteFake.Email);
-        Assert.Equal(result.Endereco, clienteFake.Endereco);
-        Assert.Equal(result.Nome, clienteFake.Nome);
-        Assert.Equal(result.Rg, clienteFake.Rg);
+        Assert.Equal(result.Telefone, clienteDtoFake.Telefone);
+        Assert.Equal(result.CPF, clienteDtoFake.CPF);
+        Assert.Equal(result.DataCadastro, clienteDtoFake.DataCadastro);
+        Assert.Equal(result.Id, clienteDtoFake.Id);
+        Assert.Equal(result.Email, clienteDtoFake.Email);
+        Assert.Equal(result.Endereco, clienteDtoFake.Endereco);
+        Assert.Equal(result.Nome, clienteDtoFake.Nome);
+        Assert.Equal(result.Rg, clienteDtoFake.Rg);
     }
 
 
@@ -120,23 +148,24 @@ public class ClienteControllerTest
         ClienteDto clienteDtoFake = CriaClienteDtoFake(clienteFake.Id);
 
         _repository.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(clienteFake);
-        _mapper.Setup(s => s.Map<Cliente>(It.IsAny<ClienteDto>())).Returns(clienteFake);
+        _mapper.Setup(s => s.Map<ClienteDto>(It.IsAny<Cliente>())).Returns(clienteDtoFake);
+        ClienteController controller = GenerateControllerFake(new List<Cliente>() { clienteFake });
         //Act
-        var response = await new ClienteController(_repository.Object, _mapper.Object).DesativarCliente(clienteDtoFake.Id.Value);
+        var response = await controller.DesativarCliente(clienteDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as Cliente;
+        var result = okResult.Value as ClienteDto;
         //Assert
         _repository.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<Cliente>(It.IsAny<ClienteDto>()), Times.Never());
+        _mapper.Verify(s => s.Map<ClienteDto>(It.IsAny<Cliente>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, clienteFake.Telefone);
-        Assert.Equal(result.CPF, clienteFake.CPF);
-        Assert.Equal(result.DataCadastro, clienteFake.DataCadastro);
-        Assert.Equal(result.Id, clienteFake.Id);
-        Assert.Equal(result.Email, clienteFake.Email);
-        Assert.Equal(result.Endereco, clienteFake.Endereco);
-        Assert.Equal(result.Nome, clienteFake.Nome);
-        Assert.Equal(result.Rg, clienteFake.Rg);
+        Assert.Equal(result.Telefone, clienteDtoFake.Telefone);
+        Assert.Equal(result.CPF, clienteDtoFake.CPF);
+        Assert.Equal(result.DataCadastro, clienteDtoFake.DataCadastro);
+        Assert.Equal(result.Id, clienteDtoFake.Id);
+        Assert.Equal(result.Email, clienteDtoFake.Email);
+        Assert.Equal(result.Endereco, clienteDtoFake.Endereco);
+        Assert.Equal(result.Nome, clienteDtoFake.Nome);
+        Assert.Equal(result.Rg, clienteDtoFake.Rg);
     }
 
     [Fact]
@@ -160,6 +189,10 @@ public class ClienteControllerTest
     private static ICollection<Cliente> CriaListaClienteFake()
     {
         return new List<Cliente>() { new Cliente() { CPF = "123456789", Email = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() } };
+    }
+    private static ICollection<ClienteDto> CriaListaClienteDtoFake()
+    {
+        return new List<ClienteDto>() { new ClienteDto() { CPF = "123456789", Email = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() } };
     }
 
 

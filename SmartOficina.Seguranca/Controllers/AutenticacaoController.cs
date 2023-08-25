@@ -13,6 +13,7 @@ public class AutenticacaoController : MainController
         _mapper = mapper;
     }
 
+    [Authorize]
     [HttpGet("BuscarPrestador")]
     public async Task<IActionResult> GetPrestadorUser(string email, Guid? id, string? CpfCnpj)
     {
@@ -25,8 +26,8 @@ public class AutenticacaoController : MainController
             return BadRequest("User not found!");
     }
 
+    [Authorize]
     [HttpPost("RegistrarPrestador")]
-    [AllowAnonymous]
     public async Task<IActionResult> Post(PrestadorCadastroDto prestadorDto)
     {
         if (prestadorDto.UsrCadastro == null || prestadorDto.UsrCadastro == Guid.Empty || prestadorDto.UsrDescricaoCadastro.IsNullOrEmpty())
@@ -46,8 +47,8 @@ public class AutenticacaoController : MainController
         return BadRequest();
     }
 
-    [HttpPost("LoginPrestador")]
     [AllowAnonymous]
+    [HttpPost("LoginPrestador")]
     public async Task<IActionResult> LoginPrestador(PrestadorLoginDto prestador)
     {
         if (prestador.Email.IsNullOrEmpty() && prestador.UserName.IsNullOrEmpty())

@@ -48,7 +48,7 @@ public class CategoriaServicoController : MainController
         }
 
         var result = await _repository.GetAll(PrestadorId);
-
+      
         return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
     }
 
