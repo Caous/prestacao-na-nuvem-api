@@ -6,10 +6,10 @@ public class ClienteDto : Base
     {
 
     }
-    public required string Nome { get; set; }
-    public required string Telefone { get; set; }
-    public required string Email { get; set; }
-    public string? Rg { get; set; }
-    public required string CPF { get; set; }
-    public string? Endereco { get; set; }
+    public required string Nome { get; set; } //Obri Character 125
+    public required string Telefone { get; set; } //Obri Character 14 
+    public required string Email { get; set; } //Obri Character 250
+    public string? Rg { get; set; } //Op Character 9
+    public required string CPF { get; set; } //Obri Character 11
+    public string? Endereco { get; set; } //Obri Character 250
 }
