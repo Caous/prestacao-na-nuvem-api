@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Util;
+
+namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
@@ -21,11 +23,20 @@ public class ClienteController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
+        TratarDto(cliente);
+
         MapearLogin(cliente);
 
         var result = await _repository.Create(_mapper.Map<Cliente>(cliente));
 
         return Ok(_mapper.Map<ClienteDto>(result));
+    }
+
+    private void TratarDto(ClienteDto cliente)
+    {
+        cliente.CPF = CpfValidations.CpfSemPontuacao(cliente.CPF);
+        cliente.Rg = RgValidations.RemoverPontuacaoRg(cliente.Rg);
+        cliente.Telefone = TelefoneValidations.RemoverPontuacaoTelefone(cliente.Telefone);
     }
 
     private void MapearLogin(ClienteDto cliente)
