@@ -40,14 +40,14 @@ public class CategoriaServicoController : MainController
 
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromBody] string _titulo, string _desc)
     {
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.GetAll(PrestadorId);
+        var result = await _repository.GetAll(PrestadorId, new CategoriaServico() { Desc = _desc, Titulo = _titulo, PrestadorId = PrestadorId });
 
         return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
     }
@@ -97,7 +97,7 @@ public class CategoriaServicoController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-                
+
         var result = await _repository.Desabled(id);
 
         return Ok(_mapper.Map<CategoriaServicoDto>(result));

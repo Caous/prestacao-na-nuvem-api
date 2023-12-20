@@ -7,19 +7,19 @@ public class PrestadorControllerTest
     private readonly Mock<IFuncionarioPrestadorRepository> _funcionarioRepository = new();
 
     #region Prestador 
-    
+
     [Fact]
     public async Task Deve_Retornar_ListaDePrestador()
     {
         //Arrange
         ICollection<Prestador> PrestadorsFake = CriaListaFornecedoresFake();
-        _repository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(PrestadorsFake);
+        _repository.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Prestador>())).ReturnsAsync(PrestadorsFake);
         //Act
         var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAll();
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<Prestador>;
         //Assert
-        _repository.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
+        _repository.Verify(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Prestador>()), Times.Once());
         _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>), Times.Never());
         Assert.NotNull(result);
         Assert.Equal(result.First().Telefone, PrestadorsFake.First().Telefone);
@@ -166,13 +166,13 @@ public class PrestadorControllerTest
     {
         //Arrange
         ICollection<FuncionarioPrestador> funcionarioFake = CriarListaFuncionarioFake();
-        _funcionarioRepository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
+        _funcionarioRepository.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<FuncionarioPrestador>())).ReturnsAsync(funcionarioFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario();
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario(string.Empty, string.Empty, string.Empty);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<FuncionarioPrestador>;
         //Assert
-        _funcionarioRepository.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
+        _funcionarioRepository.Verify(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<FuncionarioPrestador>()), Times.Once());
         _mapper.Verify(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>), Times.Once());
         _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>), Times.Once());
         Assert.NotNull(result);

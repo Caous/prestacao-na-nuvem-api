@@ -8,10 +8,19 @@ public class CategoriaServicoRepository : GenericRepository<CategoriaServico>, I
         _context = context;
     }
 
-    public async override Task<ICollection<CategoriaServico>> GetAll(Guid id)
+    public async override Task<ICollection<CategoriaServico>> GetAll(Guid id, CategoriaServico filter)
     {
         var result = await _context.CategoriaServico.Where(x => x.PrestadorId == id).ToArrayAsync();
         await _context.DisposeAsync();
+
+        if (filter != null && result.Any())
+        {
+            if (!filter.Titulo.IsMissing())
+                result = result.Where(x => x.Titulo == filter.Titulo).ToArray();
+            if (!filter.Desc.IsMissing())
+                result = result.Where(x => x.Desc == filter.Desc).ToArray();
+        }
+
         return result;
     }
 }

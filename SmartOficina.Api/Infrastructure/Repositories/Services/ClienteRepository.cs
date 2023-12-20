@@ -8,10 +8,20 @@ public class ClienteRepository : GenericRepository<Cliente>, IClienteRepository
         _context = context;
     }
 
-    public async override Task<ICollection<Cliente>> GetAll(Guid id)
+    public async override Task<ICollection<Cliente>> GetAll(Guid id, Cliente filter)
     {
         var result = await _context.Cliente.Where(x => x.PrestadorId == id).ToArrayAsync();
         await _context.DisposeAsync();
+
+        if (filter != null && result.Any())
+        {
+            if (!filter.Nome.IsMissing())
+                result = result.Where(x => x.Nome == filter.Nome).ToArray();
+            if (!filter.CPF.IsMissing())
+                result = result.Where(x => x.CPF == filter.CPF).ToArray();
+            if (!filter.Email.IsMissing())
+                result = result.Where(x => x.Email == filter.Email).ToArray();
+        }
         return result;
     }
 }

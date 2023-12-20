@@ -1,24 +1,30 @@
-﻿
+﻿namespace SmartOficina.Api.Infrastructure.Repositories.Services;
 
-namespace SmartOficina.Api.Infrastructure.Repositories.Services
+public class FuncionarioPrestadorServiceRepository : GenericRepository<FuncionarioPrestador>, IFuncionarioPrestadorRepository
 {
-    public class FuncionarioPrestadorServiceRepository : GenericRepository<FuncionarioPrestador>, IFuncionarioPrestadorRepository
+    private readonly OficinaContext _context;
+    public FuncionarioPrestadorServiceRepository(OficinaContext context) : base(context)
     {
-        private readonly OficinaContext _context;
-        public FuncionarioPrestadorServiceRepository(OficinaContext context) : base(context)
-        {
-            _context = context;
-        }
+        _context = context;
+    }
 
-        public async Task<ICollection<FuncionarioPrestador>> GetListaFuncionarioPrestadorAsync(Guid id)
-        {
-            var result = _context.FuncionarioPrestador
-                 .Where(f => f.PrestadorId == id)
-                 .Include(i => i.Prestador)
-                 .ToList();
-            await _context.DisposeAsync();
+    public async Task<ICollection<FuncionarioPrestador>> GetListaFuncionarioPrestadorAsync(Guid id, FuncionarioPrestador filter)
+    {
+        var result = _context.FuncionarioPrestador
+             .Where(f => f.PrestadorId == id)
+             .Include(i => i.Prestador)
+             .ToList();
+        await _context.DisposeAsync();
 
-            return result;
+        if (filter != null && result.Any())
+        {
+            if (!filter.Nome.IsMissing())
+                result = result.Where(x => x.Nome == filter.Nome).ToList();
+            if (!filter.CPF.IsMissing())
+                result = result.Where(x => x.CPF == filter.CPF).ToList();
+            if (!filter.Email.IsMissing())
+                result = result.Where(x => x.Email == filter.Email).ToList();
         }
+        return result;
     }
 }
