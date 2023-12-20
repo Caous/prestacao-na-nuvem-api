@@ -143,9 +143,9 @@ public class PrestadorController : MainController
     }
 
     [HttpGet("Funcionario")]
-    public async Task<IActionResult> GetAllFuncionario([FromBody] string _cpf, string _email, string _nome)
+    public async Task<IActionResult> GetAllFuncionario(string? cpf, string? email, string? nome)
     {
-        var result = await _repositoryFuncionario.GetAll(PrestadorId, new FuncionarioPrestador() { Cargo = string.Empty, CPF = _cpf, Email = _email, Nome = _nome, RG = string.Empty, Telefone = string.Empty });
+        var result = await _repositoryFuncionario.GetAll(PrestadorId, new FuncionarioPrestador() { Cargo = string.Empty, CPF = cpf, Email = email, Nome = nome, RG = string.Empty, Telefone = string.Empty });
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
     }
 

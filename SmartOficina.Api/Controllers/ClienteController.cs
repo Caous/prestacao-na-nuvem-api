@@ -49,13 +49,13 @@ public class ClienteController : MainController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromBody] string _cpf, string _nome, string _email)
+    public async Task<IActionResult> GetAll(string? cpf, string? nome, string? email)
     {
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        var result = await _repository.GetAll(PrestadorId, new Cliente() { CPF = _cpf, Email = _email, Nome = _nome, PrestadorId = PrestadorId, Telefone = string.Empty });
+        var result = await _repository.GetAll(PrestadorId, new Cliente() { CPF = cpf, Email = email, Nome = nome, PrestadorId = PrestadorId, Telefone = string.Empty });
         return Ok(_mapper.Map<ICollection<ClienteDto>>(result));
     }
 

@@ -40,14 +40,14 @@ public class CategoriaServicoController : MainController
 
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromBody] string _titulo, string _desc)
+    public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.GetAll(PrestadorId, new CategoriaServico() { Desc = _desc, Titulo = _titulo, PrestadorId = PrestadorId });
+        var result = await _repository.GetAll(PrestadorId, new CategoriaServico() { Desc = desc, Titulo = titulo, PrestadorId = PrestadorId });
 
         return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
     }
