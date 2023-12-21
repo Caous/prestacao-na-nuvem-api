@@ -49,6 +49,9 @@ public class ClienteController : MainController
 
         var result = await _repository.Create(_mapper.Map<Cliente>(cliente));
 
+        if (result == null)
+            NoContent();
+
         return Ok(_mapper.Map<ClienteDto>(result));
     }
 
@@ -75,7 +78,12 @@ public class ClienteController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
         var result = await _repository.GetAll(PrestadorId, new Cliente() { CPF = cpf, Email = email, Nome = nome, PrestadorId = PrestadorId, Telefone = string.Empty });
+
+        if (result == null || !result.Any())
+            NoContent();
+
         return Ok(_mapper.Map<ICollection<ClienteDto>>(result));
     }
 
@@ -94,7 +102,12 @@ public class ClienteController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+        
         var result = await _repository.FindById(id);
+
+        if (result == null)
+            NoContent();
+
         return Ok(_mapper.Map<ClienteDto>(result));
     }
 
@@ -118,6 +131,9 @@ public class ClienteController : MainController
 
         var result = await _repository.Update(_mapper.Map<Cliente>(cliente));
 
+        if (result == null)
+            NoContent();
+
         return Ok(_mapper.Map<ClienteDto>(result));
     }
 
@@ -138,6 +154,9 @@ public class ClienteController : MainController
         }
 
         var result = await _repository.Desabled(id);
+
+        if (result == null)
+            NoContent();
 
         return Ok(_mapper.Map<ClienteDto>(result));
     }

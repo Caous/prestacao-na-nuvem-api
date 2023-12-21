@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Validators;
+﻿using SmartOficina.Api.Util;
+
+namespace SmartOficina.Api.Validators;
 
 public class ClienteValidator : AbstractValidator<ClienteDto>
 {
@@ -23,6 +25,11 @@ public class ClienteValidator : AbstractValidator<ClienteDto>
             .WithMessage(ClienteConst.TelefoneValidation);
 
         RuleFor(x => x.CPF)
+           .Custom((cpf, context) =>
+           {
+               if (CpfValidations.FormartValidation(cpf))
+                   context.AddFailure(ClienteConst.CpfNaoValidado);
+           })
            .NotEmpty()
            .WithMessage(ClienteConst.CPFValidation)
            .NotNull()

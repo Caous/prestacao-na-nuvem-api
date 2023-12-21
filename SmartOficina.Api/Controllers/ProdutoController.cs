@@ -39,6 +39,9 @@ public class ProdutoController : MainController
 
         var result = await _repository.Create(_mapper.Map<Produto>(produto));
 
+        if (result == null)
+            NoContent();
+
         return Ok(_mapper.Map<ProdutoDto>(result));
     }
 
@@ -62,6 +65,10 @@ public class ProdutoController : MainController
     public async Task<IActionResult> GetAll(string? marca, string? nome, string? modelo)
     {
         var result = await _repository.GetAll(PrestadorId, new Produto() { Marca = marca, Nome = nome, Modelo = modelo, PrestadorId = PrestadorId, Valor_Compra = 0, Valor_Venda = 0 });
+
+        if (result == null || !result.Any())
+            NoContent();
+
         return Ok(_mapper.Map<ICollection<ProdutoDto>>(result));
     }
 
@@ -82,6 +89,9 @@ public class ProdutoController : MainController
         }
 
         var result = await _repository.FindById(id);
+
+        if (result == null)
+            NoContent();
 
         return Ok(_mapper.Map<ProdutoDto>(result));
     }
@@ -105,7 +115,8 @@ public class ProdutoController : MainController
         MapearLogin(produto);
 
         var result = await _repository.Update(_mapper.Map<Produto>(produto));
-
+        if (result == null)
+            NoContent();
         return Ok(_mapper.Map<ProdutoDto>(result));
     }
 
@@ -126,7 +137,10 @@ public class ProdutoController : MainController
         }
 
         var result = await _repository.Desabled(id);
-
+        
+        if (result == null)
+            NoContent();
+        
         return Ok(_mapper.Map<ProdutoDto>(result));
     }
 

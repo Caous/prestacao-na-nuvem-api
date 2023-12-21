@@ -1,5 +1,8 @@
-﻿namespace SmartOficina.Api.Validators;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace SmartOficina.Api.Validators;
+
+[ExcludeFromCodeCoverage]
 public class CategoriaServicoValidator : AbstractValidator<CategoriaServicoDto>
 {
     public CategoriaServicoValidator()

@@ -1,7 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace SmartOficina.Api.Util;
 
+[ExcludeFromCodeCoverage]
 public abstract class TelefoneValidations
 {
     public static string RemoverPontuacaoTelefone(string telefone)

@@ -11,4 +11,9 @@ public class CategoriaServico : Base
     public required Guid PrestadorId { get; set; }
     public Prestador Prestador { get; set; }
     public ICollection<SubCategoriaServico>? SubCategoriaServicos { get; set; }
+
+    internal bool Any()
+    {
+        throw new NotImplementedException();
+    }
 }

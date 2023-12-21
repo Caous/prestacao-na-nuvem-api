@@ -3,7 +3,6 @@
 /// <summary>
 /// Controller de veículo
 /// </summary>
-
 [Route("api/[controller]")]
 [ApiController, Authorize]
 [Produces("application/json")]
@@ -39,6 +38,8 @@ public class VeiculoController : MainController
         MapearLogin(veiculo);
 
         var result = await _repository.Create(_mapper.Map<Veiculo>(veiculo));
+        if (result == null)
+            NoContent();
         return Ok(_mapper.Map<VeiculoDto>(result));
 
 
@@ -60,11 +61,13 @@ public class VeiculoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId, new Veiculo() { Marca = string.Empty, Modelo = string.Empty, Placa = string.Empty});
+        var result = await _repository.GetAll(PrestadorId, new Veiculo() { Marca = string.Empty, Modelo = string.Empty, Placa = string.Empty });
+        if (result == null || !result.Any())
+            NoContent();
         return Ok(_mapper.Map<ICollection<VeiculoDto>>(result));
 
     }
-    
+
     /// <summary>
     /// Recuperar um veículo por Id
     /// </summary>
@@ -82,6 +85,8 @@ public class VeiculoController : MainController
         }
 
         var result = await _repository.FindById(id);
+        if (result == null)
+            NoContent();
         return Ok(_mapper.Map<VeiculoDto>(result));
 
     }
@@ -105,6 +110,8 @@ public class VeiculoController : MainController
         MapearLogin(veiculo);
 
         var result = await _repository.Update(_mapper.Map<Veiculo>(veiculo));
+        if (result == null)
+            NoContent();
         return Ok(_mapper.Map<VeiculoDto>(result));
 
     }
@@ -126,6 +133,8 @@ public class VeiculoController : MainController
         }
 
         var result = await _repository.Desabled(id);
+        if (result == null)
+            NoContent();
         return Ok(_mapper.Map<VeiculoDto>(result));
     }
 

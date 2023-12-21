@@ -49,6 +49,9 @@ public class CategoriaServicoController : MainController
 
         var result = await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico));
 
+        if (result == null)
+            NoContent();
+
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
@@ -66,9 +69,19 @@ public class CategoriaServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.GetAll(PrestadorId, new CategoriaServico() { Desc = desc, Titulo = titulo, PrestadorId = PrestadorId });
+        CategoriaServico filter = MapperFilter(titulo, desc);
+
+        var result = await _repository.GetAll(PrestadorId, filter);
+
+        if (result == null || !result.Any())
+            NoContent();
 
         return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
+    }
+
+    private CategoriaServico MapperFilter(string? titulo, string? desc)
+    {
+        return new CategoriaServico() { Desc = desc, Titulo = titulo, PrestadorId = PrestadorId };
     }
 
     /// <summary>
@@ -88,6 +101,8 @@ public class CategoriaServicoController : MainController
         }
 
         var result = await _repository.FindById(id);
+        if (result == null)
+            NoContent();
 
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
@@ -113,6 +128,9 @@ public class CategoriaServicoController : MainController
 
         var result = await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico));
 
+        if (result == null)
+            NoContent();
+
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
@@ -133,6 +151,9 @@ public class CategoriaServicoController : MainController
         }
 
         var result = await _repository.Desabled(id);
+
+        if (result == null)
+            NoContent();
 
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }

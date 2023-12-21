@@ -39,6 +39,9 @@ public class SubServicoController : MainController
 
         var result = await _repository.Create(_mapper.Map<SubCategoriaServico>(subServico));
 
+        if (result == null)
+            NoContent();
+
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
     }
 
@@ -60,7 +63,9 @@ public class SubServicoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
-        var result = await _repository.GetAll(PrestadorId, new SubCategoriaServico() { Titulo = titulo, Desc = desc});
+        var result = await _repository.GetAll(PrestadorId, new SubCategoriaServico() { Titulo = titulo, Desc = desc });
+        if (result == null || !result.Any())
+            NoContent();
         return Ok(_mapper.Map<ICollection<SubCategoriaServicoDto>>(result));
 
     }
@@ -82,6 +87,8 @@ public class SubServicoController : MainController
         }
 
         var result = await _repository.FindById(id);
+        if (result == null)
+            NoContent();
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
 
     }
@@ -105,6 +112,8 @@ public class SubServicoController : MainController
         MapearLogin(subServico);
 
         var result = await _repository.Update(_mapper.Map<SubCategoriaServico>(subServico));
+        if (result == null)
+            NoContent();
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
 
     }
@@ -126,6 +135,10 @@ public class SubServicoController : MainController
         }
 
         var result = await _repository.Desabled(id);
+
+        if (result == null)
+            NoContent();
+
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
 
     }

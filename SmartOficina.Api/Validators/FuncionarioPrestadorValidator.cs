@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Validators;
+﻿using SmartOficina.Api.Util;
+
+namespace SmartOficina.Api.Validators;
 
 public class FuncionarioPrestadorValidator : AbstractValidator<FuncionarioPrestadorDto>
 {
@@ -23,12 +25,22 @@ public class FuncionarioPrestadorValidator : AbstractValidator<FuncionarioPresta
             .WithMessage(FuncionarioPrestadorConst.EmailValidation);
 
         RuleFor(x => x.RG)
+            .Custom((cpf, context) =>
+            {
+                if (RgValidations.ValidarRG(cpf))
+                    context.AddFailure(FuncionarioPrestadorConst.RgValitation);
+            })
            .NotEmpty()
            .WithMessage(FuncionarioPrestadorConst.RGValidation)
            .NotNull()
            .WithMessage(FuncionarioPrestadorConst.RGValidation);
 
         RuleFor(x => x.CPF)
+            .Custom((cpf, context) =>
+            {
+            if (CpfValidations.FormartValidation(cpf))
+                context.AddFailure(ClienteConst.CpfNaoValidado);
+            })
            .NotEmpty()
            .WithMessage(FuncionarioPrestadorConst.CPFValidation)
            .NotNull()
