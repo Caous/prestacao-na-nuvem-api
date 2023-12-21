@@ -1,7 +1,16 @@
 ﻿namespace SmartOficina.Api.Controllers;
 
+/// <summary>
+/// Controller de prestador de serviço e funcionário
+/// </summary>
 [Route("api/[controller]")]
 [ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class PrestadorController : MainController
 {
     private readonly IPrestadorRepository _repository;
@@ -16,6 +25,11 @@ public class PrestadorController : MainController
     }
 
     #region Controller Prestador
+    /// <summary>
+    /// Adicionar um prestador de serviço
+    /// </summary>
+    /// <param name="prestador"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Add(PrestadorDto prestador)
     {
@@ -37,6 +51,10 @@ public class PrestadorController : MainController
         prestador.UsrCadastroDesc = UserName;
     }
 
+    /// <summary>
+    /// Recuperar uma lista de prestadores
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -44,6 +62,11 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<ICollection<PrestadorDto>>(result));
     }
 
+    /// <summary>
+    /// Recuperar prestador de serviço id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
@@ -60,6 +83,11 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<PrestadorDto>(result));
     }
 
+    /// <summary>
+    /// Atualizar prestador de serviço
+    /// </summary>
+    /// <param name="prestador"></param>
+    /// <returns></returns>
     [HttpPut]
     public async Task<IActionResult> AtualizarPrestador(PrestadorDto prestador)
     {
@@ -78,6 +106,11 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<PrestadorDto>(result));
     }
 
+    /// <summary>
+    /// Desativa um prestador
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarPrestador")]
     public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
@@ -94,6 +127,11 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<PrestadorDto>(result));
     }
 
+    /// <summary>
+    /// Deletar um prestador
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     public async Task<IActionResult> DeletarPrestador(Guid id)
     {
@@ -127,6 +165,11 @@ public class PrestadorController : MainController
         func.UsrCadastro = UserId;
     }
 
+    /// <summary>
+    /// Adicionar um funcionário
+    /// </summary>
+    /// <param name="func"></param>
+    /// <returns></returns>
     [HttpPost("Funcionario")]
     public async Task<IActionResult> AddFuncionario(FuncionarioPrestadorDto func)
     {
@@ -142,6 +185,13 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
     }
 
+    /// <summary>
+    /// Recuperar todos os funcionários
+    /// </summary>
+    /// <param name="cpf"></param>
+    /// <param name="email"></param>
+    /// <param name="nome"></param>
+    /// <returns></returns>
     [HttpGet("Funcionario")]
     public async Task<IActionResult> GetAllFuncionario(string? cpf, string? email, string? nome)
     {
@@ -149,6 +199,14 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
     }
 
+    /// <summary>
+    /// Recuperar todos os funcionários por prestador
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="_cpf"></param>
+    /// <param name="_email"></param>
+    /// <param name="_nome"></param>
+    /// <returns></returns>
     [HttpGet("Funcionario/Prestador/id")]
     public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id, [FromBody] string _cpf, string _email, string _nome)
     {
@@ -156,6 +214,11 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
     }
 
+    /// <summary>
+    /// Recuperar funcionário por Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("Funcionario/{id}")]
     public async Task<IActionResult> GetIdFuncionario(Guid id)
     {
@@ -172,6 +235,11 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
     }
 
+    /// <summary>
+    /// Atualizar funcionario
+    /// </summary>
+    /// <param name="func"></param>
+    /// <returns></returns>
     [HttpPut("Funcionario")]
     public async Task<IActionResult> AtualizarFuncionario(FuncionarioPrestadorDto func)
     {
@@ -189,6 +257,11 @@ public class PrestadorController : MainController
         return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
     }
 
+    /// <summary>
+    /// Desativar um funcionário
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarFuncionario")]
     public async Task<IActionResult> DesativarFuncionario(Guid id)
     {
@@ -206,6 +279,11 @@ public class PrestadorController : MainController
 
     }
 
+    /// <summary>
+    /// Deletar um funcionário
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("Funcionario")]
     public async Task<IActionResult> DeletarFuncionario(Guid id)
     {

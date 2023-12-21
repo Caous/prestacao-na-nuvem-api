@@ -2,8 +2,17 @@
 
 namespace SmartOficina.Api.Controllers;
 
+/// <summary>
+/// Controller de cliente
+/// </summary>
 [Route("api/[controller]")]
 [ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class ClienteController : MainController
 {
     private readonly IClienteRepository _repository;
@@ -14,7 +23,18 @@ public class ClienteController : MainController
         _repository = repository;
         _mapper = mapper;
     }
+    private void TratarDto(ClienteDto cliente)
+    {
+        cliente.CPF = CpfValidations.CpfSemPontuacao(cliente.CPF);
+        cliente.Rg = RgValidations.RemoverPontuacaoRg(cliente.Rg);
+        cliente.Telefone = TelefoneValidations.RemoverPontuacaoTelefone(cliente.Telefone);
+    }
 
+    /// <summary>
+    /// Adicionar um cliente
+    /// </summary>
+    /// <param name="cliente"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddAsync(ClienteDto cliente)
     {
@@ -32,13 +52,6 @@ public class ClienteController : MainController
         return Ok(_mapper.Map<ClienteDto>(result));
     }
 
-    private void TratarDto(ClienteDto cliente)
-    {
-        cliente.CPF = CpfValidations.CpfSemPontuacao(cliente.CPF);
-        cliente.Rg = RgValidations.RemoverPontuacaoRg(cliente.Rg);
-        cliente.Telefone = TelefoneValidations.RemoverPontuacaoTelefone(cliente.Telefone);
-    }
-
     private void MapearLogin(ClienteDto cliente)
     {
         if (!cliente.PrestadorId.HasValue)
@@ -48,6 +61,13 @@ public class ClienteController : MainController
         cliente.UsrCadastro = UserId;
     }
 
+    /// <summary>
+    /// Recupera todos os cliente do prestador e também filtra
+    /// </summary>
+    /// <param name="cpf"></param>
+    /// <param name="nome"></param>
+    /// <param name="email"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll(string? cpf, string? nome, string? email)
     {
@@ -59,6 +79,11 @@ public class ClienteController : MainController
         return Ok(_mapper.Map<ICollection<ClienteDto>>(result));
     }
 
+    /// <summary>
+    /// Recupera um cliente especifício
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
@@ -73,6 +98,11 @@ public class ClienteController : MainController
         return Ok(_mapper.Map<ClienteDto>(result));
     }
 
+    /// <summary>
+    /// Atualiar um cliente
+    /// </summary>
+    /// <param name="cliente"></param>
+    /// <returns></returns>
     [HttpPut]
     public async Task<IActionResult> AtualizarCliente(ClienteDto cliente)
     {
@@ -91,6 +121,11 @@ public class ClienteController : MainController
         return Ok(_mapper.Map<ClienteDto>(result));
     }
 
+    /// <summary>
+    /// Desativa um cliente
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarCliente")]
     public async Task<IActionResult> DesativarCliente(Guid id)
     {
@@ -107,6 +142,12 @@ public class ClienteController : MainController
         return Ok(_mapper.Map<ClienteDto>(result));
     }
 
+
+    /// <summary>
+    /// Deletar um cliente
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     public async Task<IActionResult> DeletarCliente(Guid id)
     {

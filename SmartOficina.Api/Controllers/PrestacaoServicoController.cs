@@ -1,7 +1,16 @@
 ﻿namespace SmartOficina.Api.Controllers;
 
+/// <summary>
+/// Controller de prestação de serviço
+/// </summary>
 [Route("api/[controller]")]
 [ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class PrestacaoServicoController : MainController
 {
     private readonly IPrestacaoServicoRepository _repository;
@@ -13,6 +22,11 @@ public class PrestacaoServicoController : MainController
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Adicionar prestação de serviço
+    /// </summary>
+    /// <param name="prestacaoServico"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Add(PrestacaoServicoDto prestacaoServico)
     {
@@ -28,7 +42,7 @@ public class PrestacaoServicoController : MainController
         {
             foreach (var item in prestacaoServico.Produtos)
             {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value; 
+                item.PrestadorId = prestacaoServico.PrestadorId.Value;
                 item.UsrCadastro = UserId;
                 item.UsrCadastroDesc = UserName;
             }
@@ -52,7 +66,7 @@ public class PrestacaoServicoController : MainController
         {
             foreach (var item in prestacaoServico.Servicos)
             {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value; 
+                item.PrestadorId = prestacaoServico.PrestadorId.Value;
                 item.UsrCadastro = UserId;
                 item.UsrCadastroDesc = UserName;
             }
@@ -83,14 +97,23 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
+    /// <summary>
+    /// Recupera todas prestação de serviço
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId, new PrestacaoServico() { PrestadorId = PrestadorId});
+        var result = await _repository.GetAll(PrestadorId, new PrestacaoServico() { PrestadorId = PrestadorId });
 
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(result));
     }
 
+    /// <summary>
+    /// Recupera uma prestação de serviço por Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
@@ -107,6 +130,10 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
+    /// <summary>
+    /// Recupera ordens de serviço fechadas
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("PrestacaoServicoFechadosPrestador")]
     public async Task<IActionResult> GetByPrestacaoServicoFechadosPrestador()
     {
@@ -122,6 +149,10 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status)));
     }
 
+    /// <summary>
+    /// Recupera ordens de serviço abertas
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("PrestacaoServicoAbertoPrestador")]
     public async Task<IActionResult> GetByPrestacaoServicoAbertosPrestador()
     {
@@ -133,10 +164,14 @@ public class PrestacaoServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Aberto, EPrestacaoServicoStatus.Analise, EPrestacaoServicoStatus.Andamento, EPrestacaoServicoStatus.Aprovado, EPrestacaoServicoStatus.Teste};
+        List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Aberto, EPrestacaoServicoStatus.Analise, EPrestacaoServicoStatus.Andamento, EPrestacaoServicoStatus.Aprovado, EPrestacaoServicoStatus.Teste };
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status)));
     }
 
+    /// <summary>
+    /// Recupera prestação de serviços com vários dados
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("PrestacaoServicoEnriquecidoPrestador")]
     public async Task<IActionResult> GetByPrestacaoServicoEnriquecidoPrestador()
     {
@@ -148,6 +183,11 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestador(PrestadorId)));
     }
 
+    /// <summary>
+    /// Atualiza uma prestação de serviço
+    /// </summary>
+    /// <param name="prestacaoServico"></param>
+    /// <returns></returns>
     [HttpPut]
     public async Task<IActionResult> AtualizarPrestacaoServico(PrestacaoServicoDto prestacaoServico)
     {
@@ -213,6 +253,11 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
+    /// <summary>
+    /// Desativar prestação de serviço
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarPrestacao")]
     public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
@@ -227,6 +272,11 @@ public class PrestacaoServicoController : MainController
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
 
+    /// <summary>
+    /// Deletar uma prestação de serviço
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     public async Task<IActionResult> DeletarPrestador(Guid id)
     {
@@ -248,6 +298,12 @@ public class PrestacaoServicoController : MainController
         }
     }
 
+    /// <summary>
+    /// Mudar status de uma ordem de serviço
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="status"></param>
+    /// <returns></returns>
     [HttpPut("status/{id}/{status}")]
     public async Task<IActionResult> ChangeStatus(Guid id, EPrestacaoServicoStatus status)
     {

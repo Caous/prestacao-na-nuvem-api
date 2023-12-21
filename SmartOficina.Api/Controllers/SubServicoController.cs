@@ -1,9 +1,16 @@
-﻿using System.Drawing;
+﻿namespace SmartOficina.Api.Controllers;
 
-namespace SmartOficina.Api.Controllers;
-
+/// <summary>
+/// Controller de sub serviço
+/// </summary>
 [Route("api/[controller]")]
 [ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class SubServicoController : MainController
 {
     private readonly ISubServicoRepository _repository;
@@ -14,6 +21,12 @@ public class SubServicoController : MainController
         _repository = subServicoRepository;
         _mapper = mapper;
     }
+
+    /// <summary>
+    /// Adicionar um Sub serviço
+    /// </summary>
+    /// <param name="subServico"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddAsync(SubCategoriaServicoDto subServico)
     {
@@ -38,6 +51,12 @@ public class SubServicoController : MainController
         subServico.UsrCadastro = UserId;
     }
 
+    /// <summary>
+    /// Recupera todos os sub-serviços com filtros opcionais
+    /// </summary>
+    /// <param name="titulo"></param>
+    /// <param name="desc"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
@@ -46,6 +65,11 @@ public class SubServicoController : MainController
 
     }
 
+    /// <summary>
+    /// Recupera um sub-serviço por Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
@@ -62,6 +86,11 @@ public class SubServicoController : MainController
 
     }
 
+    /// <summary>
+    /// Atualizar um sub-serviço
+    /// </summary>
+    /// <param name="subServico"></param>
+    /// <returns></returns>
     [HttpPut]
     public async Task<IActionResult> AtualizarSubServico(SubCategoriaServicoDto subServico)
     {
@@ -80,6 +109,11 @@ public class SubServicoController : MainController
 
     }
 
+    /// <summary>
+    /// Desativar um sub-serviço
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarSubServico")]
     public async Task<IActionResult> DesativarSubServico(Guid id)
     {
@@ -96,6 +130,11 @@ public class SubServicoController : MainController
 
     }
 
+    /// <summary>
+    /// Deletar um sub-serviço
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     public async Task<IActionResult> DeletarSubServico(Guid id)
     {

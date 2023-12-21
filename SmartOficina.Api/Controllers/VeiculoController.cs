@@ -1,7 +1,17 @@
 ﻿namespace SmartOficina.Api.Controllers;
 
+/// <summary>
+/// Controller de veículo
+/// </summary>
+
 [Route("api/[controller]")]
 [ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class VeiculoController : MainController
 {
     private readonly IVeiculoRepository _repository;
@@ -13,6 +23,11 @@ public class VeiculoController : MainController
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Adicionar um veículo
+    /// </summary>
+    /// <param name="veiculo"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Add(VeiculoDto veiculo)
     {
@@ -38,6 +53,10 @@ public class VeiculoController : MainController
         veiculo.UsrCadastro = UserId;
     }
 
+    /// <summary>
+    /// Recuperar todos os veículos
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -45,7 +64,12 @@ public class VeiculoController : MainController
         return Ok(_mapper.Map<ICollection<VeiculoDto>>(result));
 
     }
-
+    
+    /// <summary>
+    /// Recuperar um veículo por Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
@@ -62,6 +86,11 @@ public class VeiculoController : MainController
 
     }
 
+    /// <summary>
+    /// Atualizar um veículo
+    /// </summary>
+    /// <param name="veiculo"></param>
+    /// <returns></returns>
     [HttpPut]
     public async Task<IActionResult> AtualizarVeiculo(VeiculoDto veiculo)
     {
@@ -80,6 +109,11 @@ public class VeiculoController : MainController
 
     }
 
+    /// <summary>
+    /// Desativar um veículo
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarVeiculo")]
     public async Task<IActionResult> DesativarVeiculo(Guid id)
     {
@@ -95,6 +129,11 @@ public class VeiculoController : MainController
         return Ok(_mapper.Map<VeiculoDto>(result));
     }
 
+    /// <summary>
+    /// Deletar um veículo
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     public async Task<IActionResult> DeletarVeiculo(Guid id)
     {

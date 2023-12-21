@@ -1,7 +1,16 @@
 ﻿namespace SmartOficina.Api.Controllers;
 
+/// <summary>
+/// Controller Categoria Serviço
+/// </summary>
 [Route("api/[controller]")]
 [ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class CategoriaServicoController : MainController
 {
     private readonly ICategoriaServicoRepository _repository;
@@ -23,6 +32,11 @@ public class CategoriaServicoController : MainController
 
     }
 
+    /// <summary>
+    /// Adicionar categoria de serviço
+    /// </summary>
+    /// <param name="categoriaServico"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
     {
@@ -38,7 +52,12 @@ public class CategoriaServicoController : MainController
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
-
+    /// <summary>
+    /// Recupera todos as Categorias de Serviços
+    /// </summary>
+    /// <param name="titulo"></param>
+    /// <param name="desc"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
@@ -52,6 +71,11 @@ public class CategoriaServicoController : MainController
         return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
     }
 
+    /// <summary>
+    /// Recuperar Categoria por ID
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
@@ -68,6 +92,11 @@ public class CategoriaServicoController : MainController
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
+    /// <summary>
+    /// Atualizar Categoria
+    /// </summary>
+    /// <param name="categoriaServico"></param>
+    /// <returns></returns>
     [HttpPut]
     public async Task<IActionResult> AtualizarCategoria(CategoriaServicoDto categoriaServico)
     {
@@ -87,6 +116,11 @@ public class CategoriaServicoController : MainController
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
+    /// <summary>
+    /// Desativar uma categoria
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarCategoria")]
     public async Task<IActionResult> DesativarCategoria(Guid id)
     {
@@ -103,6 +137,11 @@ public class CategoriaServicoController : MainController
         return Ok(_mapper.Map<CategoriaServicoDto>(result));
     }
 
+    /// <summary>
+    /// Deletar uma categoria
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     public async Task<IActionResult> DeletarCategoria(Guid id)
     {
