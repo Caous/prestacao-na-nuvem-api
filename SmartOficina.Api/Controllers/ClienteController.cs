@@ -11,7 +11,6 @@ namespace SmartOficina.Api.Controllers;
 [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
 [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
 [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class ClienteController : MainController
 {
