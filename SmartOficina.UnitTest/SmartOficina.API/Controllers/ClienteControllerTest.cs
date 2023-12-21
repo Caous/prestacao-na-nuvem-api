@@ -30,6 +30,7 @@ public class ClienteControllerTest
     {
         //Arrange
         ICollection<Cliente> clientesFake = CriaListaClienteFake();
+        List<ClienteDto> clientesDtoFake = new List<ClienteDto>() { new ClienteDto() { CPF = "", Email = "", Nome = "", Telefone = "" } };
         _repository.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Cliente>())).ReturnsAsync(clientesFake);
         //Act
         var response = await new ClienteController(_repository.Object, _mapper.Object).GetAll(string.Empty, string.Empty, string.Empty);

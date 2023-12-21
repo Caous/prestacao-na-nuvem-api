@@ -13,7 +13,10 @@ public class PrestadorControllerTest
     {
         //Arrange
         ICollection<Prestador> PrestadorsFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto();
+        List<PrestadorDto> prestadorDtoFakeList = new List<PrestadorDto>();
         _repository.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Prestador>())).ReturnsAsync(PrestadorsFake);
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         //Act
         var response = await controller.GetAll();
         var okResult = response as OkObjectResult;
@@ -22,13 +25,13 @@ public class PrestadorControllerTest
         _repository.Verify(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Prestador>()), Times.Once());
         _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>), Times.Never());
         Assert.NotNull(result);
-        Assert.Equal(result.First().Telefone, PrestadorDtoFake.First().Telefone);
-        Assert.Equal(result.First().CPF, PrestadorDtoFake.First().CPF);
-        Assert.Equal(result.First().DataCadastro, PrestadorDtoFake.First().DataCadastro);
-        Assert.Equal(result.First().Id, PrestadorDtoFake.First().Id);
-        Assert.Equal(result.First().EmailEmpresa, PrestadorDtoFake.First().EmailEmpresa);
-        Assert.Equal(result.First().Endereco, PrestadorDtoFake.First().Endereco);
-        Assert.Equal(result.First().Nome, PrestadorDtoFake.First().Nome);
+        Assert.Equal(result.First().Telefone, prestadorDtoFakeList.First().Telefone);
+        Assert.Equal(result.First().CPF, prestadorDtoFakeList.First().CPF);
+        Assert.Equal(result.First().DataCadastro, prestadorDtoFakeList.First().DataCadastro);
+        Assert.Equal(result.First().Id, prestadorDtoFakeList.First().Id);
+        Assert.Equal(result.First().EmailEmpresa, prestadorDtoFakeList.First().EmailEmpresa);
+        Assert.Equal(result.First().Endereco, prestadorDtoFakeList.First().Endereco);
+        Assert.Equal(result.First().Nome, prestadorDtoFakeList.First().Nome);
 
     }
 
@@ -59,6 +62,11 @@ public class PrestadorControllerTest
         Assert.Equal(result.EmailEmpresa, prestadorDtoFake.EmailEmpresa);
         Assert.Equal(result.Endereco, prestadorDtoFake.Endereco);
         Assert.Equal(result.Nome, prestadorDtoFake.Nome);
+    }
+
+    private PrestadorController GenerateControllerFake(List<PrestadorDto> prestadorDtos)
+    {
+        throw new NotImplementedException();
     }
 
     [Fact]
@@ -191,24 +199,25 @@ public class PrestadorControllerTest
     {
         //Arrange
         ICollection<FuncionarioPrestador> funcionarioFake = CriarListaFuncionarioFake();
-        _funcionarioRepository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
+        _funcionarioRepository.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<FuncionarioPrestador>())).ReturnsAsync(funcionarioFake);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario();
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario(string.Empty, string.Empty, string.Empty);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<FuncionarioPrestadorDto>;
         //Assert
-        _funcionarioRepository.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
+        _funcionarioRepository.Verify(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<FuncionarioPrestador>()), Times.Once());
         _mapper.Verify(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>), Times.Once());
         _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.First().Telefone, funcionarioDtoFake.First().Telefone);
-        Assert.Equal(result.First().CPF, funcionarioDtoFake.First().CPF);
-        Assert.Equal(result.First().DataCadastro, funcionarioDtoFake.First().DataCadastro);
-        Assert.Equal(result.First().Id, funcionarioDtoFake.First().Id);
-        Assert.Equal(result.First().Cargo, funcionarioDtoFake.First().Cargo);
-        Assert.Equal(result.First().Email, funcionarioDtoFake.First().Email);
-        Assert.Equal(result.First().Endereco, funcionarioDtoFake.First().Endereco);
-        Assert.Equal(result.First().Nome, funcionarioDtoFake.First().Nome);
+        Assert.Equal(result.First().Telefone, prestadorDtoFakeList.First().Telefone);
+        Assert.Equal(result.First().CPF, prestadorDtoFakeList.First().CPF);
+        Assert.Equal(result.First().DataCadastro, prestadorDtoFakeList.First().DataCadastro);
+        Assert.Equal(result.First().Id, prestadorDtoFakeList.First().Id);
+        Assert.Equal(result.First().Cargo, prestadorDtoFakeList.First().Cargo);
+        Assert.Equal(result.First().Email, prestadorDtoFakeList.First().Email);
+        Assert.Equal(result.First().Endereco, prestadorDtoFakeList.First().Endereco);
+        Assert.Equal(result.First().Nome, prestadorDtoFakeList.First().Nome);
 
     }
 
