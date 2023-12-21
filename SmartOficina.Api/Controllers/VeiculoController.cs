@@ -41,7 +41,7 @@ public class VeiculoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId);
+        var result = await _repository.GetAll(PrestadorId, new Veiculo() { Marca = string.Empty, Modelo = string.Empty, Placa = string.Empty});
         return Ok(_mapper.Map<ICollection<VeiculoDto>>(result));
 
     }

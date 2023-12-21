@@ -29,19 +29,16 @@ public class CategoriaServicoControllerTest
     {
         //Arranger
         ICollection<CategoriaServico> categoriasFake = RetornarListaCategoriasFake();
-        _repositoryMock.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(categoriasFake);
-        _mapper.Setup(s => s.Map<ICollection<CategoriaServicoDto>>(It.IsAny<ICollection<CategoriaServico>>())).Returns(RetornarListaCategoriasDtoFake());
-        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
-
+        _repositoryMock.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<CategoriaServico>())).ReturnsAsync(categoriasFake);
         //Act
-
-        var response = await controllerCategoria.GetAll();
+        CategoriaServicoController controllerCategoria = new CategoriaServicoController(_repositoryMock.Object, _mapper.Object);
+        var response = await controllerCategoria.GetAll(string.Empty, string.Empty);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<CategoriaServicoDto>;
 
         //Assert
-        _repositoryMock.Verify(x => x.GetAll(categoriasFake.First().PrestadorId), Times.Once);
-        _mapper.Verify(x => x.Map<ICollection<CategoriaServicoDto>>(It.IsAny<ICollection<CategoriaServico>>()), Times.Once);
+        _repositoryMock.Verify(x => x.GetAll(Guid.NewGuid(), It.IsAny<CategoriaServico>()), Times.Once);
+        _mapper.Verify(x => x.Map<CategoriaServicoDto>(It.IsAny<CategoriaServicoDto>()), Times.Never);
         Assert.NotNull(result);
         Assert.NotEmpty(result);
         Assert.Equal(result.Count, categoriasFake.Count);

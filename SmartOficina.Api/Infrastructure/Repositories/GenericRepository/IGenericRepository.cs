@@ -2,7 +2,7 @@
 
 public interface IGenericRepository<T> where T : class
 {
-    Task<ICollection<T>> GetAll(Guid id);
+    Task<ICollection<T>> GetAll(Guid id, T filter);
     Task<T> FindById(Guid Id);
     Task<T> Create(T item);
     Task<T> Update(T item);

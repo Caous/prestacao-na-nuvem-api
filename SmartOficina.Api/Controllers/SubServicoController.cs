@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using System.Drawing;
+
+namespace SmartOficina.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
@@ -37,9 +39,9 @@ public class SubServicoController : MainController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
-        var result = await _repository.GetAll(PrestadorId);
+        var result = await _repository.GetAll(PrestadorId, new SubCategoriaServico() { Titulo = titulo, Desc = desc});
         return Ok(_mapper.Map<ICollection<SubCategoriaServicoDto>>(result));
 
     }
@@ -75,7 +77,7 @@ public class SubServicoController : MainController
 
         var result = await _repository.Update(_mapper.Map<SubCategoriaServico>(subServico));
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
-        
+
     }
 
     [HttpPut("DesativarSubServico")]
@@ -91,7 +93,7 @@ public class SubServicoController : MainController
 
         var result = await _repository.Desabled(id);
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
-        
+
     }
 
     [HttpDelete]

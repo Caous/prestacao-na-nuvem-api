@@ -2,6 +2,6 @@
 {
     public interface IFuncionarioPrestadorRepository : IGenericRepository<FuncionarioPrestador>
     {
-        Task<ICollection<FuncionarioPrestador>> GetListaFuncionarioPrestadorAsync(Guid id);
+        Task<ICollection<FuncionarioPrestador>> GetListaFuncionarioPrestadorAsync(Guid id, FuncionarioPrestador filter);
     }
 }

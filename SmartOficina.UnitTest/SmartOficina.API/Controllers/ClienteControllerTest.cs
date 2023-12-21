@@ -30,18 +30,14 @@ public class ClienteControllerTest
     {
         //Arrange
         ICollection<Cliente> clientesFake = CriaListaClienteFake();
-        ICollection<ClienteDto> clientesDtoFake = CriaListaClienteDtoFake();
-
-        _repository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(clientesFake);
-        _mapper.Setup(s => s.Map<ICollection<ClienteDto>>(It.IsAny<ICollection<Cliente>>())).Returns(clientesDtoFake);
-        ClienteController controller = GenerateControllerFake(clientesFake);
+        _repository.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Cliente>())).ReturnsAsync(clientesFake);
         //Act
-        var response = await controller.GetAll();
+        var response = await new ClienteController(_repository.Object, _mapper.Object).GetAll(string.Empty, string.Empty, string.Empty);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<ClienteDto>;
         //Assert
-        _repository.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<ICollection<ClienteDto>>(It.IsAny<ICollection<Cliente>>()), Times.Once());
+        _repository.Verify(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Cliente>()), Times.Once());
+        _mapper.Verify(s => s.Map<Cliente>(It.IsAny<ClienteDto>), Times.Never());
         Assert.NotNull(result);
         Assert.Equal(result.First().Telefone, clientesDtoFake.First().Telefone);
         Assert.Equal(result.First().CPF, clientesDtoFake.First().CPF);

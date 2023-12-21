@@ -86,7 +86,7 @@ public class PrestacaoServicoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId);
+        var result = await _repository.GetAll(PrestadorId, new PrestacaoServico() { PrestadorId = PrestadorId});
 
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(result));
     }

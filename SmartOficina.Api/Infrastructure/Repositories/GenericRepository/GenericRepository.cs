@@ -51,7 +51,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public async Task<T> FindById(Guid Id) =>  await _context.Set<T>().FindAsync(Id);   
 
 
-    public virtual async Task<ICollection<T>> GetAll(Guid id)
+    public virtual async Task<ICollection<T>> GetAll(Guid id, T filter)
     {
         var result = await _context.Set<T>().ToListAsync();
         await _context.DisposeAsync();

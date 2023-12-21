@@ -38,9 +38,9 @@ public class ProdutoController : MainController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(string? marca, string? nome, string? modelo)
     {
-        var result = await _repository.GetAll(PrestadorId);
+        var result = await _repository.GetAll(PrestadorId, new Produto() { Marca = marca, Nome = nome, Modelo = modelo, PrestadorId = PrestadorId, Valor_Compra = 0, Valor_Venda = 0 });
         return Ok(_mapper.Map<ICollection<ProdutoDto>>(result));
     }
 
