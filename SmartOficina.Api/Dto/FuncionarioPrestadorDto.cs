@@ -2,6 +2,10 @@
 
 public class FuncionarioPrestadorDto : Base
 {
+    public FuncionarioPrestadorDto()
+    {
+           
+    }
     public required string Nome { get; set; }// 200
     public required string Telefone { get; set; }// 11
     public required string Email { get; set; }// 250

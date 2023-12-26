@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de sub serviço
@@ -12,12 +14,12 @@
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class SubServicoController : MainController
 {
-    private readonly ISubServicoRepository _repository;
-    private readonly IMapper _mapper;
 
-    public SubServicoController(ISubServicoRepository subServicoRepository, IMapper mapper)
+    private readonly IMapper _mapper;
+    private readonly ISubCategoriaServicoService _subCategoriaServicoService;
+    public SubServicoController(IMapper mapper, ISubCategoriaServicoService subCategoriaServicoService)
     {
-        _repository = subServicoRepository;
+        _subCategoriaServicoService = subCategoriaServicoService;
         _mapper = mapper;
     }
 
@@ -36,7 +38,7 @@ public class SubServicoController : MainController
 
         MapearLogin(subServico);
 
-        var result = await _repository.Create(_mapper.Map<SubCategoriaServico>(subServico));
+        var result = await _subCategoriaServicoService.CreateSubCategoria(subServico);
 
         if (result == null)
             NoContent();
@@ -62,11 +64,17 @@ public class SubServicoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
-        var result = await _repository.GetAll(PrestadorId, new SubCategoriaServico() { Titulo = titulo, Desc = desc });
+        SubCategoriaServicoDto filter = MapperFilter(titulo, desc);
+        var result = await _subCategoriaServicoService.GetAllSubCategoria(filter);
         if (result == null || !result.Any())
             NoContent();
         return Ok(_mapper.Map<ICollection<SubCategoriaServicoDto>>(result));
 
+    }
+
+    private static SubCategoriaServicoDto MapperFilter(string? titulo, string? desc)
+    {
+        return new SubCategoriaServicoDto() { Titulo = titulo, Desc = desc };
     }
 
     /// <summary>
@@ -85,7 +93,7 @@ public class SubServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.FindById(id);
+        var result = await _subCategoriaServicoService.FindByIdSubCategoria(id);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
@@ -110,7 +118,7 @@ public class SubServicoController : MainController
 
         MapearLogin(subServico);
 
-        var result = await _repository.Update(_mapper.Map<SubCategoriaServico>(subServico));
+        var result = await _subCategoriaServicoService.UpdateSubCategoria(subServico);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
@@ -133,7 +141,7 @@ public class SubServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.Desabled(id);
+        var result = await _subCategoriaServicoService.Desabled(id);
 
         if (result == null)
             NoContent();
@@ -159,7 +167,7 @@ public class SubServicoController : MainController
 
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
-            await _repository.Delete(id);
+            await _subCategoriaServicoService.Delete(id);
             return Ok("Deletado");
         }
         catch (Exception ex)

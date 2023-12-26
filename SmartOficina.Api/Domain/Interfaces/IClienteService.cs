@@ -2,10 +2,10 @@
 
 public interface IClienteService
 {
-    Task<ICollection<ClienteDto>> GetAllProduto(ClienteDto item);
-    Task<ClienteDto> FindByIdProduto(Guid Id);
-    Task<ClienteDto> CreateProduto(ClienteDto item);
-    Task<ClienteDto> UpdateProduto(ClienteDto item);
+    Task<ICollection<ClienteDto>> GetAllCliente(ClienteDto item);
+    Task<ClienteDto> FindByIdCliente(Guid Id);
+    Task<ClienteDto> CreateCliente(ClienteDto item);
+    Task<ClienteDto> UpdateCliente(ClienteDto item);
     Task Delete(Guid Id);
     Task<ClienteDto> Desabled(Guid id);
 }

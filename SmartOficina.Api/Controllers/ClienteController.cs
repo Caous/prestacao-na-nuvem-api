@@ -1,4 +1,5 @@
-﻿using SmartOficina.Api.Util;
+﻿using SmartOficina.Api.Domain.Interfaces;
+using SmartOficina.Api.Util;
 
 namespace SmartOficina.Api.Controllers;
 
@@ -14,12 +15,12 @@ namespace SmartOficina.Api.Controllers;
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class ClienteController : MainController
 {
-    private readonly IClienteRepository _repository;
     private readonly IMapper _mapper;
+    private readonly IClienteService _clienteService;
 
-    public ClienteController(IClienteRepository repository, IMapper mapper)
+    public ClienteController(IMapper mapper, IClienteService clienteService)
     {
-        _repository = repository;
+        _clienteService = clienteService;
         _mapper = mapper;
     }
     private void TratarDto(ClienteDto cliente)
@@ -46,7 +47,7 @@ public class ClienteController : MainController
 
         MapearLogin(cliente);
 
-        var result = await _repository.Create(_mapper.Map<Cliente>(cliente));
+        var result = await _clienteService.CreateCliente(cliente);
 
         if (result == null)
             NoContent();
@@ -77,13 +78,19 @@ public class ClienteController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+        ClienteDto clienteDto = MapearDto(cpf, nome, email);
 
-        var result = await _repository.GetAll(PrestadorId, new Cliente() { CPF = cpf, Email = email, Nome = nome, PrestadorId = PrestadorId, Telefone = string.Empty });
+        var result = await _clienteService.GetAllCliente(clienteDto);
 
         if (result == null || !result.Any())
             NoContent();
 
         return Ok(_mapper.Map<ICollection<ClienteDto>>(result));
+    }
+
+    private ClienteDto MapearDto(string? cpf, string? nome, string? email)
+    {
+        return new ClienteDto() { CPF = cpf, Email = email, Nome = nome, PrestadorId = PrestadorId, Telefone = string.Empty };
     }
 
     /// <summary>
@@ -101,8 +108,8 @@ public class ClienteController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
-        
-        var result = await _repository.FindById(id);
+
+        var result = await _clienteService.FindByIdCliente(id);
 
         if (result == null)
             NoContent();
@@ -128,7 +135,7 @@ public class ClienteController : MainController
 
         MapearLogin(cliente);
 
-        var result = await _repository.Update(_mapper.Map<Cliente>(cliente));
+        var result = await _clienteService.CreateCliente(cliente);
 
         if (result == null)
             NoContent();
@@ -152,7 +159,7 @@ public class ClienteController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.Desabled(id);
+        var result = await _clienteService.Desabled(id);
 
         if (result == null)
             NoContent();
@@ -178,7 +185,7 @@ public class ClienteController : MainController
 
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
-            await _repository.Delete(id);
+            await _clienteService.Delete(id);
             return Ok("Deletado");
         }
         catch (Exception ex)

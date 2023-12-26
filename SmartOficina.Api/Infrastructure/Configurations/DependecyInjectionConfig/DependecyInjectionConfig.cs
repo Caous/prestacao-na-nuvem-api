@@ -1,4 +1,7 @@
-﻿namespace SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
+﻿using SmartOficina.Api.Domain.Interfaces;
+using SmartOficina.Api.Domain.Services;
+
+namespace SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
 
 public static class DependecyInjectionConfig
 {
@@ -15,6 +18,17 @@ public static class DependecyInjectionConfig
         services.AddScoped<IServicoRepository, ServicoRepository>();
         services.AddScoped<IProdutoRepository, ProdutoRepository>();
         services.AddScoped<IFuncionarioPrestadorRepository, FuncionarioPrestadorServiceRepository>();
+        #endregion
+
+        #region Injection Services
+        services.AddScoped<IClienteService, ClienteService>();
+        services.AddScoped<ICategoriaService, CategoriaService>();
+        services.AddScoped<IFuncionarioService, FuncionarioService>();
+        services.AddScoped<IPrestacaoServicoService, PrestacaoServicoService>();
+        services.AddScoped<IPrestadorService, PrestadorService>();
+        services.AddScoped<IProdutoService, ProdutoService>();
+        services.AddScoped<ISubCategoriaServicoService, SubCategoriaServicoService>();
+        services.AddScoped<IVeiculoService, VeiculoService>();
         #endregion
 
         #region Cors

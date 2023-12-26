@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de prestação de serviço
@@ -12,10 +14,10 @@
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class PrestacaoServicoController : MainController
 {
-    private readonly IPrestacaoServicoRepository _repository;
+    private readonly IPrestacaoServicoService _repository;
     private readonly IMapper _mapper;
 
-    public PrestacaoServicoController(IPrestacaoServicoRepository repository, IMapper mapper)
+    public PrestacaoServicoController(IPrestacaoServicoService repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -91,7 +93,7 @@ public class PrestacaoServicoController : MainController
 
         prestacaoServico.Produtos = produtos;
 
-        var result = await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico));
+        var result = await _repository.CreatePrestacaoServico(prestacaoServico);
 
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
@@ -103,7 +105,9 @@ public class PrestacaoServicoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId, new PrestacaoServico() { PrestadorId = PrestadorId });
+        PrestacaoServicoDto filter = new PrestacaoServicoDto() { PrestadorId = PrestadorId };
+
+        var result = await _repository.GetAllPrestacaoServico(filter);
 
         return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(result));
     }
@@ -124,7 +128,7 @@ public class PrestacaoServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.FindById(id);
+        var result = await _repository.FindByIdPrestacaoServico(id);
 
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }
@@ -247,7 +251,7 @@ public class PrestacaoServicoController : MainController
 
         prestacaoServico.Produtos = produtos;
 
-        var result = await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico));
+        var result = await _repository.CreatePrestacaoServico(prestacaoServico);
 
         return Ok(_mapper.Map<PrestacaoServicoDto>(result));
     }

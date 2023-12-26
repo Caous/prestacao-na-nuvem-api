@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de prestador de serviço e funcionário
@@ -12,14 +14,14 @@
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class PrestadorController : MainController
 {
-    private readonly IPrestadorRepository _repository;
-    private readonly IFuncionarioPrestadorRepository _repositoryFuncionario;
+    private readonly IPrestadorService _prestadorService;
+    private readonly IFuncionarioService _funcionarioSerive;
     private readonly IMapper _mapper;
 
-    public PrestadorController(IPrestadorRepository repository, IFuncionarioPrestadorRepository repositoryFuncionario, IMapper mapper)
+    public PrestadorController(IPrestadorService prestadorService, IFuncionarioService funcionarioSerive, IMapper mapper)
     {
-        _repository = repository;
-        _repositoryFuncionario = repositoryFuncionario;
+        _prestadorService = prestadorService;
+        _funcionarioSerive = funcionarioSerive;
         _mapper = mapper;
     }
 
@@ -39,7 +41,7 @@ public class PrestadorController : MainController
 
         MapearLogin(prestador);
 
-        var result = await _repository.Create(_mapper.Map<Prestador>(prestador));
+        var result = await _prestadorService.CreatePrestador(prestador);
 
         return Ok(_mapper.Map<PrestadorDto>(result));
     }
@@ -57,7 +59,7 @@ public class PrestadorController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId, new Prestador());
+        var result = await _prestadorService.GetAllPrestador(new PrestadorDto() { PrestadorId = PrestadorId });
         return Ok(_mapper.Map<ICollection<PrestadorDto>>(result));
     }
 
@@ -77,7 +79,7 @@ public class PrestadorController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.FindById(id);
+        var result = await _prestadorService.FindByIdPrestador(id);
 
         return Ok(_mapper.Map<PrestadorDto>(result));
     }
@@ -100,7 +102,7 @@ public class PrestadorController : MainController
 
         MapearLogin(prestador);
 
-        var result = await _repository.Update(_mapper.Map<Prestador>(prestador));
+        var result = await _prestadorService.UpdatePrestador(prestador);
 
         return Ok(_mapper.Map<PrestadorDto>(result));
     }
@@ -121,7 +123,7 @@ public class PrestadorController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.Desabled(id);
+        var result = await _prestadorService.Desabled(id);
 
         return Ok(_mapper.Map<PrestadorDto>(result));
     }
@@ -143,7 +145,7 @@ public class PrestadorController : MainController
 
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
-            await _repository.Delete(id);
+            await _prestadorService.Delete(id);
             return Ok("Deletado");
         }
         catch (Exception ex)
@@ -179,7 +181,7 @@ public class PrestadorController : MainController
 
         MapearLoginFuncionario(func);
 
-        var result = await _repositoryFuncionario.Create(_mapper.Map<FuncionarioPrestador>(func));
+        var result = await _funcionarioSerive.CreateFuncionario(func);
 
         if (result == null)
             NoContent();
@@ -197,10 +199,17 @@ public class PrestadorController : MainController
     [HttpGet("Funcionario")]
     public async Task<IActionResult> GetAllFuncionario(string? cpf, string? email, string? nome)
     {
-        var result = await _repositoryFuncionario.GetAll(PrestadorId, new FuncionarioPrestador() { Cargo = string.Empty, CPF = cpf, Email = email, Nome = nome, RG = string.Empty, Telefone = string.Empty });
+        FuncionarioPrestadorDto filter = MapperFilter(cpf, email, nome);
+
+        var result = await _funcionarioSerive.GetAllFuncionario(filter);
         if (result == null || !result.Any())
             NoContent();
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
+    }
+
+    private static FuncionarioPrestadorDto MapperFilter(string? cpf, string? email, string? nome)
+    {
+        return new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = cpf, Email = email, Nome = nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
     }
 
     /// <summary>
@@ -214,7 +223,9 @@ public class PrestadorController : MainController
     [HttpGet("Funcionario/Prestador/id")]
     public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id, [FromBody] string _cpf, string _email, string _nome)
     {
-        var result = await _repositoryFuncionario.GetListaFuncionarioPrestadorAsync(id, new FuncionarioPrestador() { Cargo = string.Empty, CPF = _cpf, Email = _email, Nome = _nome, RG = string.Empty, Telefone = string.Empty });
+        FuncionarioPrestadorDto filter = new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = _cpf, Email = _email, Nome = _nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
+
+        var result = await _funcionarioSerive.GetAllFuncionario(filter); 
         if (result == null || !result.Any())
             NoContent();
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
@@ -236,7 +247,7 @@ public class PrestadorController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repositoryFuncionario.FindById(id);
+        var result = await _funcionarioSerive.FindByIdFuncionario(id);
 
         if (result == null)
             NoContent();
@@ -261,7 +272,7 @@ public class PrestadorController : MainController
         }
         MapearLoginFuncionario(func);
 
-        var result = await _repositoryFuncionario.Update(_mapper.Map<FuncionarioPrestador>(func));
+        var result = await _funcionarioSerive.UpdateFuncionario(func);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
@@ -283,7 +294,7 @@ public class PrestadorController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repositoryFuncionario.Desabled(id);
+        var result = await _funcionarioSerive.Desabled(id);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
@@ -308,7 +319,7 @@ public class PrestadorController : MainController
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
 
-            await _repositoryFuncionario.Delete(id);
+            await _funcionarioSerive.Delete(id);
 
             return Ok("Deletado");
         }

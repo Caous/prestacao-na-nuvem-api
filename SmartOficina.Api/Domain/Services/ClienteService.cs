@@ -12,7 +12,7 @@ public class ClienteService : IClienteService
         _repository = repository;
         _mapper = mapper;
     }
-    public async Task<ClienteDto> CreateProduto(ClienteDto item)
+    public async Task<ClienteDto> CreateCliente(ClienteDto item)
     {
         var result = await _repository.Create(_mapper.Map<Cliente>(item));
 
@@ -31,21 +31,21 @@ public class ClienteService : IClienteService
         return _mapper.Map<ClienteDto>(result);
     }
 
-    public async Task<ClienteDto> FindByIdProduto(Guid id)
+    public async Task<ClienteDto> FindByIdCliente(Guid id)
     {
         var result = await _repository.FindById(id);
 
         return _mapper.Map<ClienteDto>(result);
     }
 
-    public async Task<ICollection<ClienteDto>> GetAllProduto(ClienteDto item)
+    public async Task<ICollection<ClienteDto>> GetAllCliente(ClienteDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Cliente>(item));
 
         return _mapper.Map<ICollection<ClienteDto>>(result);
     }
 
-    public async Task<ClienteDto> UpdateProduto(ClienteDto item)
+    public async Task<ClienteDto> UpdateCliente(ClienteDto item)
     {
         var result = await _repository.Update(_mapper.Map<Cliente>(item));
 

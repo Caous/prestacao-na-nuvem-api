@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller Categoria Serviço
@@ -12,13 +14,13 @@
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class CategoriaServicoController : MainController
 {
-    private readonly ICategoriaServicoRepository _repository;
     private readonly IMapper _mapper;
+    private readonly ICategoriaService _categoriaService;
 
-    public CategoriaServicoController(ICategoriaServicoRepository categoriaServicoRepository, IMapper mapper)
+    public CategoriaServicoController(IMapper mapper, ICategoriaService categoriaService)
     {
-        _repository = categoriaServicoRepository;
         _mapper = mapper;
+        _categoriaService = categoriaService;
     }
 
     private void MapearLogin(CategoriaServicoDto categoriaServico)
@@ -46,7 +48,7 @@ public class CategoriaServicoController : MainController
 
         MapearLogin(categoriaServico);
 
-        var result = await _repository.Create(_mapper.Map<CategoriaServico>(categoriaServico));
+        var result = await _categoriaService.CreateCategoria(categoriaServico);
 
         if (result == null)
             NoContent();
@@ -68,9 +70,9 @@ public class CategoriaServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        CategoriaServico filter = MapperFilter(titulo, desc);
+        CategoriaServicoDto filter = MapperFilter(titulo, desc);
 
-        var result = await _repository.GetAll(PrestadorId, filter);
+        var result = await _categoriaService.GetAllCategoria(filter);
 
         if (result == null || !result.Any())
             NoContent();
@@ -78,9 +80,9 @@ public class CategoriaServicoController : MainController
         return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
     }
 
-    private CategoriaServico MapperFilter(string? titulo, string? desc)
+    private CategoriaServicoDto MapperFilter(string? titulo, string? desc)
     {
-        return new CategoriaServico() { Desc = desc, Titulo = titulo, PrestadorId = PrestadorId };
+        return new CategoriaServicoDto() { Desc = desc, Titulo = titulo, PrestadorId = PrestadorId };
     }
 
     /// <summary>
@@ -99,7 +101,7 @@ public class CategoriaServicoController : MainController
             return BadRequest(ModelState.First().Value);
         }
 
-        var result = await _repository.FindById(id);
+        var result = await _categoriaService.FindByIdCategoria(id);
         if (result == null)
             NoContent();
 
@@ -125,7 +127,7 @@ public class CategoriaServicoController : MainController
 
         MapearLogin(categoriaServico);
 
-        var result = await _repository.Update(_mapper.Map<CategoriaServico>(categoriaServico));
+        var result = await _categoriaService.UpdateCategoria(categoriaServico);
 
         if (result == null)
             NoContent();
@@ -149,7 +151,7 @@ public class CategoriaServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.Desabled(id);
+        var result = await _categoriaService.Desabled(id);
 
         if (result == null)
             NoContent();
@@ -174,7 +176,8 @@ public class CategoriaServicoController : MainController
 
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
-            await _repository.Delete(id);
+
+            await _categoriaService.Delete(id);
             return Ok("Deletado");
         }
         catch (Exception ex)

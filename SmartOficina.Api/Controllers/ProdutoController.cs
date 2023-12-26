@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de produto
@@ -13,12 +15,12 @@
 public class ProdutoController : MainController
 {
     private readonly IMapper _mapper;
-    private readonly IProdutoRepository _repository;
+    private readonly IProdutoService _produtoService;
 
-    public ProdutoController(IMapper mapper, IProdutoRepository repository)
+    public ProdutoController(IMapper mapper, IProdutoService produtoService)
     {
         _mapper = mapper;
-        _repository = repository;
+        _produtoService = produtoService;
     }
 
     /// <summary>
@@ -36,7 +38,7 @@ public class ProdutoController : MainController
 
         MapearLogin(produto);
 
-        var result = await _repository.Create(_mapper.Map<Produto>(produto));
+        var result = await _produtoService.CreateProduto(produto);
 
         if (result == null)
             NoContent();
@@ -63,12 +65,19 @@ public class ProdutoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll(string? marca, string? nome, string? modelo)
     {
-        var result = await _repository.GetAll(PrestadorId, new Produto() { Marca = marca, Nome = nome, Modelo = modelo, PrestadorId = PrestadorId, Valor_Compra = 0, Valor_Venda = 0 });
+        ProdutoDto filter = MapperFilter(marca, nome, modelo);
+
+        var result = await _produtoService.GetAllProduto(filter);
 
         if (result == null || !result.Any())
             NoContent();
 
         return Ok(_mapper.Map<ICollection<ProdutoDto>>(result));
+    }
+
+    private ProdutoDto MapperFilter(string? marca, string? nome, string? modelo)
+    {
+        return new ProdutoDto() { Marca = marca, Nome = nome, Modelo = modelo, PrestadorId = PrestadorId, Valor_Compra = 0, Valor_Venda = 0 };
     }
 
     /// <summary>
@@ -87,7 +96,7 @@ public class ProdutoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.FindById(id);
+        var result = await _produtoService.FindByIdProduto(id);
 
         if (result == null)
             NoContent();
@@ -113,7 +122,7 @@ public class ProdutoController : MainController
 
         MapearLogin(produto);
 
-        var result = await _repository.Update(_mapper.Map<Produto>(produto));
+        var result = await _produtoService.CreateProduto(produto);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<ProdutoDto>(result));
@@ -135,11 +144,11 @@ public class ProdutoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.Desabled(id);
-        
+        var result = await _produtoService.Desabled(id);
+
         if (result == null)
             NoContent();
-        
+
         return Ok(_mapper.Map<ProdutoDto>(result));
     }
 
@@ -160,7 +169,7 @@ public class ProdutoController : MainController
 
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
-            await _repository.Delete(id);
+            await _produtoService.Delete(id);
             return Ok("Deletado");
         }
         catch (Exception ex)

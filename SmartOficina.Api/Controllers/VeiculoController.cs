@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de veículo
@@ -12,12 +14,12 @@
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class VeiculoController : MainController
 {
-    private readonly IVeiculoRepository _repository;
+    private readonly IVeiculoService _veiculoService;
     private readonly IMapper _mapper;
 
-    public VeiculoController(IVeiculoRepository repository, IMapper mapper)
+    public VeiculoController(IVeiculoService veiculoService, IMapper mapper)
     {
-        _repository = repository;
+        _veiculoService = veiculoService;
         _mapper = mapper;
     }
 
@@ -36,7 +38,7 @@ public class VeiculoController : MainController
 
         MapearLogin(veiculo);
 
-        var result = await _repository.Create(_mapper.Map<Veiculo>(veiculo));
+        var result = await _veiculoService.CreateVeiculos(veiculo);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<VeiculoDto>(result));
@@ -60,11 +62,18 @@ public class VeiculoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId, new Veiculo() { Marca = string.Empty, Modelo = string.Empty, Placa = string.Empty });
+        VeiculoDto filter = MapperFilter();
+
+        var result = await _veiculoService.GetAllVeiculos(filter);
         if (result == null || !result.Any())
             NoContent();
         return Ok(_mapper.Map<ICollection<VeiculoDto>>(result));
 
+    }
+
+    private static VeiculoDto MapperFilter()
+    {
+        return new VeiculoDto() { Marca = string.Empty, Modelo = string.Empty, Placa = string.Empty };
     }
 
     /// <summary>
@@ -83,7 +92,7 @@ public class VeiculoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.FindById(id);
+        var result = await _veiculoService.FindByIdVeiculos(id);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<VeiculoDto>(result));
@@ -108,7 +117,7 @@ public class VeiculoController : MainController
 
         MapearLogin(veiculo);
 
-        var result = await _repository.Update(_mapper.Map<Veiculo>(veiculo));
+        var result = await _veiculoService.CreateVeiculos(veiculo);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<VeiculoDto>(result));
@@ -131,7 +140,7 @@ public class VeiculoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        var result = await _repository.Desabled(id);
+        var result = await _veiculoService.Desabled(id);
         if (result == null)
             NoContent();
         return Ok(_mapper.Map<VeiculoDto>(result));
@@ -154,7 +163,7 @@ public class VeiculoController : MainController
 
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
             }
-            await _repository.Delete(id);
+            await _veiculoService.Delete(id);
             return Ok("Deletado");
         }
         catch (Exception ex)
