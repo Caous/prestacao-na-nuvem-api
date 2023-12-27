@@ -1,50 +1,53 @@
-﻿namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
+﻿using Moq;
+using SmartOficina.Api.Domain.Interfaces;
+
+namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
 public class CategoriaServicoControllerTest
 {
-    //private readonly Mock<ICategoriaServicoRepository> _repositoryMock = new();
-    //private readonly Mock<IMapper> _mapper = new();
+    private readonly Mock<ICategoriaService> _repositoryMock = new();
+    private readonly Mock<IMapper> _mapper = new();
 
-    //private static DefaultHttpContext CreateFakeClaims(ICollection<CategoriaServico> categoriasFake)
-    //{
-    //    var fakeHttpContext = new DefaultHttpContext();
-    //    ClaimsIdentity identity = new(
-    //        new[] {
-    //                    new Claim("PrestadorId", categoriasFake.First().PrestadorId.ToString()),
-    //                    new Claim("UserName", "Teste"),
-    //                    new Claim("IdUserLogin", categoriasFake.First().PrestadorId.ToString())
+    private static DefaultHttpContext CreateFakeClaims(ICollection<CategoriaServicoDto> categoriasFake)
+    {
+        var fakeHttpContext = new DefaultHttpContext();
+        ClaimsIdentity identity = new(
+            new[] {
+                        new Claim("PrestadorId", categoriasFake.First().PrestadorId.ToString()),
+                        new Claim("UserName", "Teste"),
+                        new Claim("IdUserLogin", categoriasFake.First().PrestadorId.ToString())
 
-    //        }
-    //    );
-    //    fakeHttpContext.User = new System.Security.Claims.ClaimsPrincipal(identity);
-    //    return fakeHttpContext;
-    //}
-    //private CategoriaServicoController CreateFakeController(ICollection<CategoriaServico> categoriasFake)
-    //{
-    //    return new CategoriaServicoController(_repositoryMock.Object, _mapper.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(categoriasFake) } };
-    //}
+            }
+        );
+        fakeHttpContext.User = new System.Security.Claims.ClaimsPrincipal(identity);
+        return fakeHttpContext;
+    }
+    private CategoriaServicoController CreateFakeController(ICollection<CategoriaServicoDto> categoriasFake)
+    {
+        return new CategoriaServicoController(_mapper.Object, _repositoryMock.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(categoriasFake) } };
+    }
 
-    //[Fact]
-    //public async Task Deve_Retornar_Lista_CategoriaServico()
-    //{
-    //    //Arranger
-    //    ICollection<CategoriaServico> categoriasFake = RetornarListaCategoriasFake();
-    //    _repositoryMock.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<CategoriaServico>())).ReturnsAsync(categoriasFake);
-    //    //Act
-    //    CategoriaServicoController controllerCategoria = new CategoriaServicoController(_repositoryMock.Object, _mapper.Object);
-    //    var response = await controllerCategoria.GetAll(string.Empty, string.Empty);
-    //    var okResult = response as OkObjectResult;
-    //    var result = okResult.Value as ICollection<CategoriaServicoDto>;
+    [Fact]
+    public async Task Deve_Retornar_Lista_CategoriaServico()
+    {
+        //Arranger
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake();
+        _repositoryMock.Setup(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriasFake);
+        //Act
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        var response = await controllerCategoria.GetAll(string.Empty, string.Empty);
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as ICollection<CategoriaServicoDto>;
 
-    //    //Assert
-    //    _repositoryMock.Verify(x => x.GetAll(Guid.NewGuid(), It.IsAny<CategoriaServico>()), Times.Once);
-    //    _mapper.Verify(x => x.Map<CategoriaServicoDto>(It.IsAny<CategoriaServicoDto>()), Times.Never);
-    //    Assert.NotNull(result);
-    //    Assert.NotEmpty(result);
-    //    Assert.Equal(result.Count, categoriasFake.Count);
-    //    Assert.Equal(result.First().Desc, categoriasFake.First().Desc);
-    //    Assert.Equal(result.First().Titulo, categoriasFake.First().Titulo);
-    //}
+        //Assert
+        _repositoryMock.Verify(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
+        _mapper.Verify(x => x.Map<CategoriaServicoDto>(It.IsAny<CategoriaServicoDto>()), Times.Never);
+        Assert.NotNull(result);
+        Assert.NotEmpty(result);
+        Assert.Equal(result.Count, categoriasFake.Count);
+        Assert.Equal(result.First().Desc, categoriasFake.First().Desc);
+        Assert.Equal(result.First().Titulo, categoriasFake.First().Titulo);
+    }
 
 
     //[Fact]
@@ -196,10 +199,10 @@ public class CategoriaServicoControllerTest
     //    return new CategoriaServico() { Desc = "Descricao teste", Titulo = "Titulo teste", DataCadastro = DateTime.Now, Id = Id.HasValue ? Id.Value : Guid.Empty, UsrCadastro = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
     //}
 
-    //private static ICollection<CategoriaServico> RetornarListaCategoriasFake()
-    //{
-    //    return new List<CategoriaServico>() { new CategoriaServico() { Titulo = "Titulo Categoria Fake", Desc = "Descricao Categoria Fake", PrestadorId = Guid.NewGuid() } };
-    //}
+    private static ICollection<CategoriaServicoDto> RetornarListaCategoriasFake()
+    {
+        return new List<CategoriaServicoDto>() { new CategoriaServicoDto() { Titulo = "Titulo Categoria Fake", Desc = "Descricao Categoria Fake", PrestadorId = Guid.NewGuid() } };
+    }
 
     //private static ICollection<CategoriaServicoDto> RetornarListaCategoriasDtoFake()
     //{

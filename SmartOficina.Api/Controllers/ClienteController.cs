@@ -50,7 +50,7 @@ public class ClienteController : MainController
         var result = await _clienteService.CreateCliente(cliente);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
         return Ok(_mapper.Map<ClienteDto>(result));
     }

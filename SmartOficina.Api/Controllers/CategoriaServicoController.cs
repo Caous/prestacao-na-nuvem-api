@@ -77,7 +77,7 @@ public class CategoriaServicoController : MainController
         if (result == null || !result.Any())
             NoContent();
 
-        return Ok(_mapper.Map<ICollection<CategoriaServicoDto>>(result));
+        return Ok(result);
     }
 
     private CategoriaServicoDto MapperFilter(string? titulo, string? desc)
