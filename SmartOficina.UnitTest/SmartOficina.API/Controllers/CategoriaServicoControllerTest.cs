@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Azure;
+using Moq;
 using SmartOficina.Api.Domain.Interfaces;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
@@ -31,7 +32,7 @@ public class CategoriaServicoControllerTest
     public async Task Deve_Retornar_Lista_CategoriaServico()
     {
         //Arranger
-        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake();
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Gustavo", "94 kg");
         _repositoryMock.Setup(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriasFake);
         //Act
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
@@ -49,6 +50,27 @@ public class CategoriaServicoControllerTest
         Assert.Equal(result.First().Titulo, categoriasFake.First().Titulo);
     }
 
+    [Fact]
+    public async Task Nao_Deve_Retornar_ListaCategoriaService()
+    {
+        //Arranger (parametros)
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Gustavo", "94 kg");
+
+        List<CategoriaServicoDto> categoriaServicoFake = null;
+        _repositoryMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaServicoFake);
+        CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
+
+        //Act (ação/execução)
+        var response = await categoriaServicoControler.GetAll(string.Empty, string.Empty);
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as ICollection<CategoriaServicoDto>;
+
+        //Assert (verificação)
+        _repositoryMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once); //Verifco se ele foi chamado apenas uma vez :)
+        _mapper.Verify(x => x.Map<CategoriaServicoDto>(It.IsAny<CategoriaServicoDto>()), Times.Never); //Verifco se ele nuncaa foi chamado:)
+        Assert.Null(result);
+
+    }
 
     //[Fact]
     //public async Task Deve_Cadastrar_Uma_Categoria_RetornarOk()
@@ -199,7 +221,7 @@ public class CategoriaServicoControllerTest
     //    return new CategoriaServico() { Desc = "Descricao teste", Titulo = "Titulo teste", DataCadastro = DateTime.Now, Id = Id.HasValue ? Id.Value : Guid.Empty, UsrCadastro = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
     //}
 
-    private static ICollection<CategoriaServicoDto> RetornarListaCategoriasFake()
+    private static ICollection<CategoriaServicoDto> RetornarListaCategoriasFake(string titulo, string descricao)
     {
         return new List<CategoriaServicoDto>() { new CategoriaServicoDto() { Titulo = "Titulo Categoria Fake", Desc = "Descricao Categoria Fake", PrestadorId = Guid.NewGuid() } };
     }
