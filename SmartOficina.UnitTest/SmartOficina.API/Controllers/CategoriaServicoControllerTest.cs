@@ -68,7 +68,7 @@ public class CategoriaServicoControllerTest
         //Assert (verificação)
         _repositoryMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once); //Verifco se ele foi chamado apenas uma vez :)
         _mapper.Verify(x => x.Map<CategoriaServicoDto>(It.IsAny<CategoriaServicoDto>()), Times.Never); //Verifco se ele nuncaa foi chamado:)
-        Assert.Null(result);
+        Assert.Null(result); //Verifico se é nulo
 
     }
 
