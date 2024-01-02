@@ -15,13 +15,11 @@ namespace SmartOficina.Api.Controllers;
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class ClienteController : MainController
 {
-    private readonly IMapper _mapper;
     private readonly IClienteService _clienteService;
 
-    public ClienteController(IMapper mapper, IClienteService clienteService)
+    public ClienteController(IClienteService clienteService)
     {
         _clienteService = clienteService;
-        _mapper = mapper;
     }
     private void TratarDto(ClienteDto cliente)
     {
@@ -52,7 +50,7 @@ public class ClienteController : MainController
         if (result == null)
             return NoContent();
 
-        return Ok(_mapper.Map<ClienteDto>(result));
+        return Ok(result);
     }
 
     private void MapearLogin(ClienteDto cliente)
@@ -83,9 +81,9 @@ public class ClienteController : MainController
         var result = await _clienteService.GetAllCliente(clienteDto);
 
         if (result == null || !result.Any())
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<ICollection<ClienteDto>>(result));
+        return Ok(result);
     }
 
     private ClienteDto MapearDto(string? cpf, string? nome, string? email)
@@ -102,19 +100,15 @@ public class ClienteController : MainController
     public async Task<IActionResult> GetId(Guid id)
     {
         if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+
 
         var result = await _clienteService.FindByIdCliente(id);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<ClienteDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -135,12 +129,12 @@ public class ClienteController : MainController
 
         MapearLogin(cliente);
 
-        var result = await _clienteService.CreateCliente(cliente);
+        var result = await _clienteService.UpdateCliente(cliente);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<ClienteDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -151,20 +145,15 @@ public class ClienteController : MainController
     [HttpPut("DesativarCliente")]
     public async Task<IActionResult> DesativarCliente(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         var result = await _clienteService.Desabled(id);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<ClienteDto>(result));
+        return Ok(result);
     }
 
 
@@ -178,13 +167,9 @@ public class ClienteController : MainController
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
+
             await _clienteService.Delete(id);
             return Ok("Deletado");
         }

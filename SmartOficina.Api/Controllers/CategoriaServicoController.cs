@@ -14,12 +14,10 @@ namespace SmartOficina.Api.Controllers;
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class CategoriaServicoController : MainController
 {
-    private readonly IMapper _mapper;
     private readonly ICategoriaService _categoriaService;
 
-    public CategoriaServicoController(IMapper mapper, ICategoriaService categoriaService)
+    public CategoriaServicoController(ICategoriaService categoriaService)
     {
-        _mapper = mapper;
         _categoriaService = categoriaService;
     }
 
@@ -51,9 +49,9 @@ public class CategoriaServicoController : MainController
         var result = await _categoriaService.CreateCategoria(categoriaServico);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<CategoriaServicoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -75,7 +73,7 @@ public class CategoriaServicoController : MainController
         var result = await _categoriaService.GetAllCategoria(filter);
 
         if (result == null || !result.Any())
-            NoContent();
+            return NoContent();
 
         return Ok(result);
     }
@@ -94,18 +92,13 @@ public class CategoriaServicoController : MainController
     public async Task<IActionResult> GetId(Guid id)
     {
         if (!ModelState.IsValid)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
             return BadRequest(ModelState.First().Value);
-        }
-
+        
         var result = await _categoriaService.FindByIdCategoria(id);
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<CategoriaServicoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -130,9 +123,9 @@ public class CategoriaServicoController : MainController
         var result = await _categoriaService.UpdateCategoria(categoriaServico);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<CategoriaServicoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -144,19 +137,13 @@ public class CategoriaServicoController : MainController
     public async Task<IActionResult> DesativarCategoria(Guid id)
     {
         if (!ModelState.IsValid)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
-            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);        
 
         var result = await _categoriaService.Desabled(id);
 
         if (result == null)
-            NoContent();
-
-        return Ok(_mapper.Map<CategoriaServicoDto>(result));
+            return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -170,12 +157,7 @@ public class CategoriaServicoController : MainController
         try
         {
             if (!ModelState.IsValid)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
 
             await _categoriaService.Delete(id);
             return Ok("Deletado");

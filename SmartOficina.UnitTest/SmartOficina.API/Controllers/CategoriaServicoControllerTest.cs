@@ -1,13 +1,11 @@
-﻿using Azure;
-using Moq;
-using SmartOficina.Api.Domain.Interfaces;
+﻿using SmartOficina.Api.Domain.Interfaces;
+using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
 public class CategoriaServicoControllerTest
 {
-    private readonly Mock<ICategoriaService> _repositoryMock = new();
-    private readonly Mock<IMapper> _mapper = new();
+    private readonly Mock<ICategoriaService> _serviceMock = new();
 
     private static DefaultHttpContext CreateFakeClaims(ICollection<CategoriaServicoDto> categoriasFake)
     {
@@ -25,15 +23,15 @@ public class CategoriaServicoControllerTest
     }
     private CategoriaServicoController CreateFakeController(ICollection<CategoriaServicoDto> categoriasFake)
     {
-        return new CategoriaServicoController(_mapper.Object, _repositoryMock.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(categoriasFake) } };
+        return new CategoriaServicoController(_serviceMock.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(categoriasFake) } };
     }
 
     [Fact]
     public async Task Deve_Retornar_Lista_CategoriaServico()
     {
         //Arranger
-        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Gustavo", "94 kg");
-        _repositoryMock.Setup(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriasFake);
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriasFake);
         //Act
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         var response = await controllerCategoria.GetAll(string.Empty, string.Empty);
@@ -41,8 +39,7 @@ public class CategoriaServicoControllerTest
         var result = okResult.Value as ICollection<CategoriaServicoDto>;
 
         //Assert
-        _repositoryMock.Verify(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
-        _mapper.Verify(x => x.Map<CategoriaServicoDto>(It.IsAny<CategoriaServicoDto>()), Times.Never);
+        _serviceMock.Verify(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
         Assert.NotNull(result);
         Assert.NotEmpty(result);
         Assert.Equal(result.Count, categoriasFake.Count);
@@ -54,180 +51,368 @@ public class CategoriaServicoControllerTest
     public async Task Nao_Deve_Retornar_ListaCategoriaService()
     {
         //Arranger (parametros)
-        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Gustavo", "94 kg");
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
 
         List<CategoriaServicoDto> categoriaServicoFake = null;
-        _repositoryMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaServicoFake);
+        _serviceMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaServicoFake);
         CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
 
         //Act (ação/execução)
         var response = await categoriaServicoControler.GetAll(string.Empty, string.Empty);
-        var okResult = response as OkObjectResult;
-        var result = okResult.Value as ICollection<CategoriaServicoDto>;
+        var okResult = response as NoContentResult;
+
 
         //Assert (verificação)
-        _repositoryMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once); //Verifco se ele foi chamado apenas uma vez :)
-        _mapper.Verify(x => x.Map<CategoriaServicoDto>(It.IsAny<CategoriaServicoDto>()), Times.Never); //Verifco se ele nuncaa foi chamado:)
-        Assert.Null(result); //Verifico se é nulo
+        _serviceMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once); //Verifco se ele foi chamado apenas uma vez :)
+        Assert.NotNull(okResult); //Verifico se é nulo
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
 
     }
 
-    //[Fact]
-    //public async Task Deve_Cadastrar_Uma_Categoria_RetornarOk()
-    //{
-    //    //Arrange
-    //    CategoriaServico categoriaFake = RetornarCategoriaFake(Guid.NewGuid());
-    //    CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake(Guid.Empty);
-    //    _mapper.Setup(s => s.Map<CategoriaServicoDto>(categoriaFake)).Returns(categoriaDtoFake);
-    //    _repositoryMock.Setup(s => s.Create(It.IsAny<CategoriaServico>())).ReturnsAsync(categoriaFake);
-    //    CategoriaServicoController controllerCategoria = CreateFakeController(new List<CategoriaServico>() { categoriaFake });
-    //    //Act
-    //    var response = await controllerCategoria.AddAsync(new CategoriaServicoDto());
-    //    var okResult = response as OkObjectResult;
-    //    var result = okResult.Value as CategoriaServicoDto;
-    //    //Assert
-    //    _repositoryMock.Verify(x => x.Create(It.IsAny<CategoriaServico>()), Times.Once);
-    //    _mapper.Verify(x => x.Map<CategoriaServicoDto>(It.IsAny<CategoriaServico>()), Times.Once);
-    //    Assert.NotNull(result);
-    //    Equals(result.Id, categoriaFake.Id);
-    //    Equals(result.DataCadastro, categoriaFake.DataCadastro);
-    //    Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
-    //    Equals(result.Desc, categoriaFake.Desc);
-    //    Equals(result.Titulo, categoriaFake.Titulo);
-    //}
+    [Fact]
+    public async Task Deve_Retornar_BadRequest_MetodoGetAll()
+    {
+        //Arranger
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
 
-    //[Fact]
-    //public async Task Deve_Atualizar_Uma_Categoria_RetornarOk()
-    //{
-    //    //Arrange
-    //    CategoriaServico categoriaFake = RetornarCategoriaFake(Guid.NewGuid());
-    //    CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake(Guid.NewGuid());
-    //    _mapper.Setup(s => s.Map<CategoriaServicoDto>(categoriaFake)).Returns(categoriaDtoFake);
-    //    _repositoryMock.Setup(s => s.Update(It.IsAny<CategoriaServico>())).ReturnsAsync(categoriaFake);
-    //    CategoriaServicoController controllerCategoria = CreateFakeController(new List<CategoriaServico>() { categoriaFake });
-    //    //Act
-    //    var response = await controllerCategoria.AtualizarCategoria(categoriaDtoFake);
-    //    var okResult = response as OkObjectResult;
-    //    var result = okResult.Value as CategoriaServicoDto;
-    //    //Assert
-    //    _repositoryMock.Verify(x => x.Update(It.IsAny<CategoriaServico>()), Times.Once);
-    //    _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Once);
-    //    Assert.NotNull(result);
-    //    Equals(result.Id, categoriaFake.Id);
-    //    Equals(result.DataCadastro, categoriaFake.DataCadastro);
-    //    Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
-    //    Equals(result.Desc, categoriaFake.Desc);
-    //    Equals(result.Titulo, categoriaFake.Titulo);
-    //}
+        List<CategoriaServicoDto> categoriaServicoFake = null;
+        _serviceMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaServicoFake);
+        CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
 
-    //[Fact]
-    //public async Task NaoDeve_Atualizar_Uma_Categoria_RetornarStatusCodeQuatroCentos()
-    //{
-    //    //Arrange
-    //    CategoriaServico categoriaFake = RetornarCategoriaFake(Guid.NewGuid());
-    //    CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake(Guid.Empty);
-    //    _mapper.Setup(s => s.Map<CategoriaServico>(categoriaDtoFake)).Returns(categoriaFake);
-    //    _repositoryMock.Setup(s => s.Update(It.IsAny<CategoriaServico>())).ReturnsAsync(categoriaFake);
-    //    CategoriaServicoController controllerCategoria = CreateFakeController(new List<CategoriaServico>() { categoriaFake });
-    //    //Act
-    //    var response = await controllerCategoria.AtualizarCategoria(new CategoriaServicoDto() { Desc = "Teste", Titulo = "Teste" });
-    //    var okResult = response as BadRequestObjectResult;
-    //    var result = okResult.Value as CategoriaServico;
-    //    //Assert
-    //    _repositoryMock.Verify(x => x.Update(It.IsAny<CategoriaServico>()), Times.Never);
-    //    _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Never);
-    //    Assert.Null(result);
-
-    //}
-
-    //[Fact]
-    //public async Task Deve_Retornar_Uma_Categoria_RetornarOk()
-    //{
-    //    //Arrange
-    //    CategoriaServico categoriaFake = RetornarCategoriaFake(Guid.NewGuid());
-    //    CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake(categoriaFake.Id);
-    //    _mapper.Setup(s => s.Map<CategoriaServicoDto>(categoriaFake)).Returns(categoriaDtoFake);
-    //    _repositoryMock.Setup(s => s.FindById(It.IsAny<Guid>())).ReturnsAsync(categoriaFake);
-    //    CategoriaServicoController controllerCategoria = CreateFakeController(new List<CategoriaServico>() { categoriaFake });
-    //    //Act
-
-    //    var response = await controllerCategoria.GetId(categoriaDtoFake.Id.Value);
-    //    var okResult = response as OkObjectResult;
-    //    var result = okResult.Value as CategoriaServicoDto;
-    //    //Assert
-    //    _repositoryMock.Verify(x => x.FindById(It.IsAny<Guid>()), Times.Once);
-    //    _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Never);
-    //    Assert.NotNull(result);
-    //    Equals(result.Id, categoriaFake.Id);
-    //    Equals(result.DataCadastro, categoriaFake.DataCadastro);
-    //    Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
-    //    Equals(result.Desc, categoriaFake.Desc);
-    //    Equals(result.Titulo, categoriaFake.Titulo);
-
-    //}
-
-    //[Fact]
-    //public async Task Deve_Desativar_Uma_Categoria_RetornarOk()
-    //{
-    //    //Arrange
-    //    CategoriaServico categoriaFake = RetornarCategoriaFake(Guid.NewGuid());
-    //    CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake(categoriaFake.Id);
-    //    _mapper.Setup(s => s.Map<CategoriaServicoDto>(categoriaFake)).Returns(categoriaDtoFake);
-    //    _repositoryMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(categoriaFake);
-    //    CategoriaServicoController controllerCategoria = CreateFakeController(new List<CategoriaServico>() { categoriaFake });
-    //    //Act
-
-    //    var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value);
-    //    var okResult = response as OkObjectResult;
-    //    var result = okResult.Value as CategoriaServicoDto;
-    //    //Assert
-    //    _repositoryMock.Verify(x => x.Desabled(It.IsAny<Guid>()), Times.Once);
-    //    _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Never);
-    //    Assert.NotNull(result);
-    //    Equals(result.Id, categoriaFake.Id);
-    //    Equals(result.DataCadastro, categoriaFake.DataCadastro);
-    //    Equals(result.UsrCadastro, categoriaFake.UsrCadastro);
-    //    Equals(result.Desc, categoriaFake.Desc);
-    //    Equals(result.Titulo, categoriaFake.Titulo);
-
-    //}
-
-    //[Fact]
-    //public async Task Deve_Deletar_Uma_Categoria_RetornarOk()
-    //{
-    //    //Arrange
-    //    CategoriaServico categoriaFake = RetornarCategoriaFake(Guid.NewGuid());
-    //    CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake(categoriaFake.Id);
-    //    _mapper.Setup(s => s.Map<CategoriaServico>(categoriaDtoFake)).Returns(categoriaFake);
-    //    _repositoryMock.Setup(s => s.Delete(It.IsAny<Guid>()));
-    //    //Act
-    //    CategoriaServicoController controllerCategoria = new CategoriaServicoController(_repositoryMock.Object, _mapper.Object);
-    //    var response = await controllerCategoria.DeletarCategoria(categoriaDtoFake.Id.Value);
-
-    //    //Assert
-    //    _repositoryMock.Verify(x => x.Delete(It.IsAny<Guid>()), Times.Once);
-    //    _mapper.Verify(x => x.Map<CategoriaServico>(It.IsAny<CategoriaServicoDto>()), Times.Never);
-    //    Assert.NotNull(response);
+        //Act
+        categoriaServicoControler.ModelState.AddModelError("key", "error message");
+        var response = await categoriaServicoControler.GetAll(string.Empty, string.Empty);
+        var okResult = response as ObjectResult;
 
 
-    //}
+        //Assert (verificação)
+        _serviceMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Never);
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
 
-    //private static CategoriaServicoDto RetornarCategoriaDtoFake(Guid? Id)
-    //{
-    //    return new CategoriaServicoDto() { Desc = "Descricao teste", Titulo = "Titulo teste", Id = Id.HasValue ? Id.Value : Guid.Empty };
-    //}
-    //private static CategoriaServico RetornarCategoriaFake(Guid? Id)
-    //{
-    //    return new CategoriaServico() { Desc = "Descricao teste", Titulo = "Titulo teste", DataCadastro = DateTime.Now, Id = Id.HasValue ? Id.Value : Guid.Empty, UsrCadastro = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
-    //}
+    }
+
+    [Fact]
+    public async Task Deve_Cadastrar_Uma_Categoria_RetornarOk()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.CreateCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
+        //Act
+        var response = await categoriaServicoControler.AddAsync(new CategoriaServicoDto());
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as CategoriaServicoDto;
+        //Assert
+        _serviceMock.Verify(x => x.CreateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
+        Assert.NotNull(result);
+        Equals(result.Id, categoriaDtoFake.Id);
+        Equals(result.DataCadastro, categoriaDtoFake.DataCadastro);
+        Equals(result.UsrCadastro, categoriaDtoFake.UsrCadastro);
+        Equals(result.Desc, categoriaDtoFake.Desc);
+        Equals(result.Titulo, categoriaDtoFake.Titulo);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Cadastrar_Uma_Categoria_NoContent()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = null;
+        _serviceMock.Setup(s => s.CreateCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
+        //Act
+        var response = await categoriaServicoControler.AddAsync(new CategoriaServicoDto());
+        var okResult = response as NoContentResult;
+
+        //Assert (verificação)
+        _serviceMock.Verify(v => v.CreateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
+        Assert.NotNull(okResult); //Verifico se é nulo
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task Deve_Retornar_BadRequest_MetodoCreateCategoria()
+    {
+        //Arranger
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.CreateCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
+
+        //Act
+        categoriaServicoControler.ModelState.AddModelError("key", "error message");
+        var response = await categoriaServicoControler.AddAsync(new CategoriaServicoDto());
+        var okResult = response as ObjectResult;
+
+
+        //Assert (verificação)
+        _serviceMock.Verify(v => v.CreateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Never);
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
+    }
+
+    [Fact]
+    public async Task Deve_Atualizar_Uma_Categoria_RetornarOk()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.UpdateCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+        var response = await controllerCategoria.AtualizarCategoria(categoriaDtoFake);
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as CategoriaServicoDto;
+        //Assert
+        _serviceMock.Verify(s => s.UpdateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
+        Assert.NotNull(result);
+        Equals(result.Id, categoriaDtoFake.Id);
+        Equals(result.DataCadastro, categoriaDtoFake.DataCadastro);
+        Equals(result.UsrCadastro, categoriaDtoFake.UsrCadastro);
+        Equals(result.Desc, categoriaDtoFake.Desc);
+        Equals(result.Titulo, categoriaDtoFake.Titulo);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Atualizar_Uma_Categoria_RetornarStatusBadRequest()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.UpdateCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        controllerCategoria.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controllerCategoria.AtualizarCategoria(categoriaDtoFake);
+        var okResult = response as ObjectResult;
+        //Assert
+        _serviceMock.Verify(s => s.UpdateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Never);
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Atualizar_Uma_Categoria_RetornarStatusBadRequest_PassandoIdNullo()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        categoriaDtoFake.Id = null;
+        _serviceMock.Setup(s => s.UpdateCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+        var response = await controllerCategoria.AtualizarCategoria(categoriaDtoFake);
+        var okResult = response as ObjectResult;
+        //Assert
+        _serviceMock.Verify(s => s.UpdateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Never);
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Atualizar_Uma_Categoria_RetornarStatusNoContent()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = null;
+        _serviceMock.Setup(s => s.UpdateCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+        var response = await controllerCategoria.AtualizarCategoria(new CategoriaServicoDto() { Id = Guid.NewGuid() });
+        var okResult = response as NoContentResult;
+        //Assert
+        _serviceMock.Verify(s => s.UpdateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+
+    }
+
+    [Fact]
+    public async Task Deve_Retornar_Uma_Categoria_PassandoId()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.FindByIdCategoria(It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+
+        var response = await controllerCategoria.GetId(categoriaDtoFake.Id.Value);
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as CategoriaServicoDto;
+        //Assert
+        _serviceMock.Verify(x => x.FindByIdCategoria(It.IsAny<Guid>()), Times.Once);
+        Assert.NotNull(result);
+        Equals(result.Id, categoriaDtoFake.Id);
+        Equals(result.DataCadastro, categoriaDtoFake.DataCadastro);
+        Equals(result.UsrCadastro, categoriaDtoFake.UsrCadastro);
+        Equals(result.Desc, categoriaDtoFake.Desc);
+        Equals(result.Titulo, categoriaDtoFake.Titulo);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Retornar_Uma_Categoria_PassandoId()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = null;
+        _serviceMock.Setup(s => s.FindByIdCategoria(It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+
+        var response = await controllerCategoria.GetId(Guid.NewGuid());
+        var okResult = response as NoContentResult;
+        //Assert
+        _serviceMock.Verify(x => x.FindByIdCategoria(It.IsAny<Guid>()), Times.Once);
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+
+    }
+    [Fact]
+    public async Task NaoDeve_Retornar_Uma_Categoria_RetornoBadRequest()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = null;
+        _serviceMock.Setup(s => s.FindByIdCategoria(It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        controllerCategoria.ModelState.AddModelError("key", "error message");
+        //Act
+
+        var response = await controllerCategoria.GetId(Guid.NewGuid());
+        var okResult = response as ObjectResult;
+        //Assert
+        _serviceMock.Verify(x => x.FindByIdCategoria(It.IsAny<Guid>()), Times.Never);
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
+    }
+
+    [Fact]
+    public async Task Deve_Desativar_Uma_Categoria_RetornarOk()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+
+        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value);
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as CategoriaServicoDto;
+        //Assert
+        _serviceMock.Verify(x => x.Desabled(It.IsAny<Guid>()), Times.Once);
+        Assert.NotNull(result);
+        Equals(result.Id, categoriaDtoFake.Id);
+        Equals(result.DataCadastro, categoriaDtoFake.DataCadastro);
+        Equals(result.UsrCadastro, categoriaDtoFake.UsrCadastro);
+        Equals(result.Desc, categoriaDtoFake.Desc);
+        Equals(result.Titulo, categoriaDtoFake.Titulo);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Desativar_Uma_Categoria_RetornaBadRequest()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        controllerCategoria.ModelState.AddModelError("key", "error message");
+        //Act
+
+        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value);
+        var okResult = response as ObjectResult;
+
+        //Assert
+        _serviceMock.Verify(x => x.Desabled(It.IsAny<Guid>()), Times.Never);
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Desativar_Uma_Categoria_RetornaNoContet()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = null;
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+
+        var response = await controllerCategoria.DesativarCategoria(Guid.NewGuid());
+        var okResult = response as NoContentResult;
+        //Assert
+        _serviceMock.Verify(x => x.Desabled(It.IsAny<Guid>()), Times.Once);
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Deletar_Uma_Categoria_RetornarBadRequest()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = null;
+        _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>()));
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        controllerCategoria.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controllerCategoria.DeletarCategoria(Guid.NewGuid());
+        var okResult = response as ObjectResult;
+
+        //Assert
+        _serviceMock.Verify(x => x.Desabled(It.IsAny<Guid>()), Times.Never);
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Deletar_Uma_Categoria_RetornarBadRequest_DevidoErro()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = null;
+        _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>()));
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        controllerCategoria.ModelState.AddModelError("key", "error message");
+        //Act
+        var exp = Assert.ThrowsAsync<Exception>(() => controllerCategoria.DeletarCategoria(Guid.NewGuid()));
+        //Assert
+    }
+
+    [Fact]
+    public async Task Deve_Deletar_Uma_Categoria_RetornarOk()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+         CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>()));
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+        await controllerCategoria.DeletarCategoria(Guid.NewGuid());
+        //Assert
+        _serviceMock.Verify(x => x.Delete(It.IsAny<Guid>()), Times.Once);
+        
+    }
+
+    private static CategoriaServicoDto RetornarCategoriaDtoFake(string titulo, string desc)
+    {
+        return new CategoriaServicoDto() { Desc = titulo, Titulo = desc, Id = Guid.NewGuid() };
+    }
 
     private static ICollection<CategoriaServicoDto> RetornarListaCategoriasFake(string titulo, string descricao)
     {
         return new List<CategoriaServicoDto>() { new CategoriaServicoDto() { Titulo = "Titulo Categoria Fake", Desc = "Descricao Categoria Fake", PrestadorId = Guid.NewGuid() } };
     }
-
-    //private static ICollection<CategoriaServicoDto> RetornarListaCategoriasDtoFake()
-    //{
-    //    return new List<CategoriaServicoDto>() { new CategoriaServicoDto() { Titulo = "Titulo Categoria Fake", Desc = "Descricao Categoria Fake", PrestadorId = Guid.NewGuid() } };
-    //}
 }
