@@ -16,13 +16,11 @@ public class PrestadorController : MainController
 {
     private readonly IPrestadorService _prestadorService;
     private readonly IFuncionarioService _funcionarioSerive;
-    private readonly IMapper _mapper;
 
-    public PrestadorController(IPrestadorService prestadorService, IFuncionarioService funcionarioSerive, IMapper mapper)
+    public PrestadorController(IPrestadorService prestadorService, IFuncionarioService funcionarioSerive)
     {
         _prestadorService = prestadorService;
         _funcionarioSerive = funcionarioSerive;
-        _mapper = mapper;
     }
 
     #region Controller Prestador
@@ -35,15 +33,16 @@ public class PrestadorController : MainController
     public async Task<IActionResult> Add(PrestadorDto prestador)
     {
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         MapearLogin(prestador);
 
         var result = await _prestadorService.CreatePrestador(prestador);
 
-        return Ok(_mapper.Map<PrestadorDto>(result));
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
     private void MapearLogin(PrestadorDto prestador)
@@ -60,7 +59,9 @@ public class PrestadorController : MainController
     public async Task<IActionResult> GetAll()
     {
         var result = await _prestadorService.GetAllPrestador(new PrestadorDto() { PrestadorId = PrestadorId });
-        return Ok(_mapper.Map<ICollection<PrestadorDto>>(result));
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -71,17 +72,15 @@ public class PrestadorController : MainController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         var result = await _prestadorService.FindByIdPrestador(id);
 
-        return Ok(_mapper.Map<PrestadorDto>(result));
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
     /// <summary>
@@ -103,8 +102,9 @@ public class PrestadorController : MainController
         MapearLogin(prestador);
 
         var result = await _prestadorService.UpdatePrestador(prestador);
-
-        return Ok(_mapper.Map<PrestadorDto>(result));
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -115,17 +115,13 @@ public class PrestadorController : MainController
     [HttpPut("DesativarPrestador")]
     public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         var result = await _prestadorService.Desabled(id);
-
-        return Ok(_mapper.Map<PrestadorDto>(result));
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -138,13 +134,9 @@ public class PrestadorController : MainController
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
+
             await _prestadorService.Delete(id);
             return Ok("Deletado");
         }
@@ -184,9 +176,9 @@ public class PrestadorController : MainController
         var result = await _funcionarioSerive.CreateFuncionario(func);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -203,8 +195,8 @@ public class PrestadorController : MainController
 
         var result = await _funcionarioSerive.GetAllFuncionario(filter);
         if (result == null || !result.Any())
-            NoContent();
-        return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
+            return NoContent();
+        return Ok(result);
     }
 
     private static FuncionarioPrestadorDto MapperFilter(string? cpf, string? email, string? nome)
@@ -225,10 +217,10 @@ public class PrestadorController : MainController
     {
         FuncionarioPrestadorDto filter = new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = _cpf, Email = _email, Nome = _nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
 
-        var result = await _funcionarioSerive.GetAllFuncionario(filter); 
+        var result = await _funcionarioSerive.GetAllFuncionario(filter);
         if (result == null || !result.Any())
-            NoContent();
-        return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
+            return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -239,20 +231,16 @@ public class PrestadorController : MainController
     [HttpGet("Funcionario/{id}")]
     public async Task<IActionResult> GetIdFuncionario(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         var result = await _funcionarioSerive.FindByIdFuncionario(id);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -274,8 +262,8 @@ public class PrestadorController : MainController
 
         var result = await _funcionarioSerive.UpdateFuncionario(func);
         if (result == null)
-            NoContent();
-        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+            return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -287,17 +275,13 @@ public class PrestadorController : MainController
     public async Task<IActionResult> DesativarFuncionario(Guid id)
     {
         if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         var result = await _funcionarioSerive.Desabled(id);
         if (result == null)
-            NoContent();
-        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+            return NoContent();
+        return Ok(result);
 
     }
 
@@ -311,13 +295,9 @@ public class PrestadorController : MainController
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
+
 
             await _funcionarioSerive.Delete(id);
 

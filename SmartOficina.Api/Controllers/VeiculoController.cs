@@ -15,12 +15,10 @@ namespace SmartOficina.Api.Controllers;
 public class VeiculoController : MainController
 {
     private readonly IVeiculoService _veiculoService;
-    private readonly IMapper _mapper;
 
-    public VeiculoController(IVeiculoService veiculoService, IMapper mapper)
+    public VeiculoController(IVeiculoService veiculoService)
     {
         _veiculoService = veiculoService;
-        _mapper = mapper;
     }
 
     /// <summary>
@@ -40,8 +38,8 @@ public class VeiculoController : MainController
 
         var result = await _veiculoService.CreateVeiculos(veiculo);
         if (result == null)
-            NoContent();
-        return Ok(_mapper.Map<VeiculoDto>(result));
+            return NoContent();
+        return Ok(result);
 
 
     }
@@ -66,8 +64,8 @@ public class VeiculoController : MainController
 
         var result = await _veiculoService.GetAllVeiculos(filter);
         if (result == null || !result.Any())
-            NoContent();
-        return Ok(_mapper.Map<ICollection<VeiculoDto>>(result));
+            return NoContent();
+        return Ok(result);
 
     }
 
@@ -94,8 +92,8 @@ public class VeiculoController : MainController
 
         var result = await _veiculoService.FindByIdVeiculos(id);
         if (result == null)
-            NoContent();
-        return Ok(_mapper.Map<VeiculoDto>(result));
+            return NoContent();
+        return Ok(result);
 
     }
 
@@ -119,8 +117,8 @@ public class VeiculoController : MainController
 
         var result = await _veiculoService.CreateVeiculos(veiculo);
         if (result == null)
-            NoContent();
-        return Ok(_mapper.Map<VeiculoDto>(result));
+            return NoContent();
+        return Ok(result);
 
     }
 
@@ -133,17 +131,13 @@ public class VeiculoController : MainController
     public async Task<IActionResult> DesativarVeiculo(Guid id)
     {
         if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         var result = await _veiculoService.Desabled(id);
         if (result == null)
-            NoContent();
-        return Ok(_mapper.Map<VeiculoDto>(result));
+            return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -156,13 +150,9 @@ public class VeiculoController : MainController
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
+            
             await _veiculoService.Delete(id);
             return Ok("Deletado");
         }
