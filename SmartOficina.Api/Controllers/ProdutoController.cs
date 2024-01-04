@@ -14,12 +14,12 @@ namespace SmartOficina.Api.Controllers;
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class ProdutoController : MainController
 {
-    private readonly IMapper _mapper;
+    //private readonly IMapper _mapper;
     private readonly IProdutoService _produtoService;
 
-    public ProdutoController(IMapper mapper, IProdutoService produtoService)
+    public ProdutoController(IProdutoService produtoService)
     {
-        _mapper = mapper;
+        //_mapper = mapper;
         _produtoService = produtoService;
     }
 
@@ -43,7 +43,7 @@ public class ProdutoController : MainController
         if (result == null)
             NoContent();
 
-        return Ok(_mapper.Map<ProdutoDto>(result));
+        return Ok(result);
     }
 
     private void MapearLogin(ProdutoDto produto)
@@ -72,7 +72,7 @@ public class ProdutoController : MainController
         if (result == null || !result.Any())
             NoContent();
 
-        return Ok(_mapper.Map<ICollection<ProdutoDto>>(result));
+        return Ok(result);
     }
 
     private ProdutoDto MapperFilter(string? marca, string? nome, string? modelo)
@@ -101,7 +101,7 @@ public class ProdutoController : MainController
         if (result == null)
             NoContent();
 
-        return Ok(_mapper.Map<ProdutoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public class ProdutoController : MainController
         var result = await _produtoService.CreateProduto(produto);
         if (result == null)
             NoContent();
-        return Ok(_mapper.Map<ProdutoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -149,7 +149,7 @@ public class ProdutoController : MainController
         if (result == null)
             NoContent();
 
-        return Ok(_mapper.Map<ProdutoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
