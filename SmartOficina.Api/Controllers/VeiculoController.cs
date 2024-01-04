@@ -40,8 +40,6 @@ public class VeiculoController : MainController
         if (result == null)
             return NoContent();
         return Ok(result);
-
-
     }
 
     private void MapearLogin(VeiculoDto veiculo)
@@ -82,13 +80,8 @@ public class VeiculoController : MainController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         var result = await _veiculoService.FindByIdVeiculos(id);
         if (result == null)
@@ -115,7 +108,7 @@ public class VeiculoController : MainController
 
         MapearLogin(veiculo);
 
-        var result = await _veiculoService.CreateVeiculos(veiculo);
+        var result = await _veiculoService.UpdateVeiculos(veiculo);
         if (result == null)
             return NoContent();
         return Ok(result);
@@ -130,9 +123,9 @@ public class VeiculoController : MainController
     [HttpPut("DesativarVeiculo")]
     public async Task<IActionResult> DesativarVeiculo(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
 
         var result = await _veiculoService.Desabled(id);
         if (result == null)
@@ -152,7 +145,7 @@ public class VeiculoController : MainController
         {
             if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            
+
             await _veiculoService.Delete(id);
             return Ok("Deletado");
         }

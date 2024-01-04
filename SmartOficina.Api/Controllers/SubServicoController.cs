@@ -14,13 +14,10 @@ namespace SmartOficina.Api.Controllers;
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class SubServicoController : MainController
 {
-
-    private readonly IMapper _mapper;
     private readonly ISubCategoriaServicoService _subCategoriaServicoService;
-    public SubServicoController(IMapper mapper, ISubCategoriaServicoService subCategoriaServicoService)
+    public SubServicoController(ISubCategoriaServicoService subCategoriaServicoService)
     {
         _subCategoriaServicoService = subCategoriaServicoService;
-        _mapper = mapper;
     }
 
     /// <summary>
@@ -39,11 +36,11 @@ public class SubServicoController : MainController
         MapearLogin(subServico);
 
         var result = await _subCategoriaServicoService.CreateSubCategoria(subServico);
-
+         
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
+        return Ok(result);
     }
 
     private void MapearLogin(SubCategoriaServicoDto subServico)
@@ -67,8 +64,8 @@ public class SubServicoController : MainController
         SubCategoriaServicoDto filter = MapperFilter(titulo, desc);
         var result = await _subCategoriaServicoService.GetAllSubCategoria(filter);
         if (result == null || !result.Any())
-            NoContent();
-        return Ok(_mapper.Map<ICollection<SubCategoriaServicoDto>>(result));
+            return NoContent();
+        return Ok(result);
 
     }
 
@@ -85,18 +82,13 @@ public class SubServicoController : MainController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         var result = await _subCategoriaServicoService.FindByIdSubCategoria(id);
         if (result == null)
-            NoContent();
-        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
+            return NoContent();
+        return Ok(result);
 
     }
 
@@ -120,8 +112,8 @@ public class SubServicoController : MainController
 
         var result = await _subCategoriaServicoService.UpdateSubCategoria(subServico);
         if (result == null)
-            NoContent();
-        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
+            return NoContent();
+        return Ok(result);
 
     }
 
@@ -133,20 +125,16 @@ public class SubServicoController : MainController
     [HttpPut("DesativarSubServico")]
     public async Task<IActionResult> DesativarSubServico(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         var result = await _subCategoriaServicoService.Desabled(id);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
-        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
+        return Ok(result   );
 
     }
 
@@ -160,13 +148,9 @@ public class SubServicoController : MainController
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)                           
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
+            
             await _subCategoriaServicoService.Delete(id);
             return Ok("Deletado");
         }

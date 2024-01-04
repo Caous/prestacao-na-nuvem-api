@@ -78,9 +78,8 @@ public class CategoriaServicoControllerTest
         List<CategoriaServicoDto> categoriaServicoFake = null;
         _serviceMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaServicoFake);
         CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
-
-        //Act
         categoriaServicoControler.ModelState.AddModelError("key", "error message");
+        //Act
         var response = await categoriaServicoControler.GetAll(string.Empty, string.Empty);
         var okResult = response as ObjectResult;
 
