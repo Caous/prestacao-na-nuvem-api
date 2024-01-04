@@ -15,12 +15,10 @@ namespace SmartOficina.Api.Controllers;
 public class PrestacaoServicoController : MainController
 {
     private readonly IPrestacaoServicoService _repository;
-    private readonly IMapper _mapper;
 
-    public PrestacaoServicoController(IPrestacaoServicoService repository, IMapper mapper)
+    public PrestacaoServicoController(IPrestacaoServicoService repository)
     {
         _repository = repository;
-        _mapper = mapper;
     }
 
     /// <summary>
@@ -31,10 +29,9 @@ public class PrestacaoServicoController : MainController
     [HttpPost]
     public async Task<IActionResult> Add(PrestacaoServicoDto prestacaoServico)
     {
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid)        
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         if (!prestacaoServico.PrestadorId.HasValue)
             prestacaoServico.PrestadorId = PrestadorId;
@@ -95,7 +92,7 @@ public class PrestacaoServicoController : MainController
 
         var result = await _repository.CreatePrestacaoServico(prestacaoServico);
 
-        return Ok(_mapper.Map<PrestacaoServicoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -109,7 +106,7 @@ public class PrestacaoServicoController : MainController
 
         var result = await _repository.GetAllPrestacaoServico(filter);
 
-        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -130,7 +127,7 @@ public class PrestacaoServicoController : MainController
 
         var result = await _repository.FindByIdPrestacaoServico(id);
 
-        return Ok(_mapper.Map<PrestacaoServicoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -149,7 +146,7 @@ public class PrestacaoServicoController : MainController
         }
 
         List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Concluido, EPrestacaoServicoStatus.Rejeitado };
-        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status)));
+        return Ok(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status));
     }
 
     /// <summary>
@@ -168,7 +165,7 @@ public class PrestacaoServicoController : MainController
         }
 
         List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Aberto, EPrestacaoServicoStatus.Analise, EPrestacaoServicoStatus.Andamento, EPrestacaoServicoStatus.Aprovado, EPrestacaoServicoStatus.Teste };
-        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status)));
+        return Ok(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status));
     }
 
     /// <summary>
@@ -183,7 +180,7 @@ public class PrestacaoServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        return Ok(_mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestador(PrestadorId)));
+        return Ok(await _repository.GetByPrestador(PrestadorId));
     }
 
     /// <summary>
@@ -253,7 +250,7 @@ public class PrestacaoServicoController : MainController
 
         var result = await _repository.CreatePrestacaoServico(prestacaoServico);
 
-        return Ok(_mapper.Map<PrestacaoServicoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -272,7 +269,7 @@ public class PrestacaoServicoController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
         var result = await _repository.Desabled(id);
-        return Ok(_mapper.Map<PrestacaoServicoDto>(result));
+        return Ok(result);
     }
 
     /// <summary>
