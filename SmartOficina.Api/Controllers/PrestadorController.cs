@@ -166,10 +166,8 @@ public class PrestadorController : MainController
     [HttpPost("Funcionario")]
     public async Task<IActionResult> AddFuncionario(FuncionarioPrestadorDto func)
     {
-        if (!ModelState.IsValid)
-        {
-            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        if (!ModelState.IsValid)        
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);        
 
         MapearLoginFuncionario(func);
 
