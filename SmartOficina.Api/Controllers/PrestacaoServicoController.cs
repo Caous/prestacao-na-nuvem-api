@@ -32,64 +32,6 @@ public class PrestacaoServicoController : MainController
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-
-        if (!prestacaoServico.PrestadorId.HasValue)
-            prestacaoServico.PrestadorId = PrestadorId;
-
-        if (prestacaoServico.Produtos != null)
-        {
-            foreach (var item in prestacaoServico.Produtos)
-            {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value;
-                item.UsrCadastro = UserId;
-                item.UsrCadastroDesc = UserName;
-            }
-        }
-
-        if (prestacaoServico.Veiculo != null)
-        {
-            prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
-            prestacaoServico.UsrCadastro = UserId;
-            prestacaoServico.UsrCadastroDesc = UserName;
-        }
-
-        if (prestacaoServico.Cliente != null)
-        {
-            prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
-            prestacaoServico.UsrCadastro = UserId;
-            prestacaoServico.UsrCadastroDesc = UserName;
-        }
-
-        if (prestacaoServico.Servicos != null)
-        {
-            foreach (var item in prestacaoServico.Servicos)
-            {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value;
-                item.UsrCadastro = UserId;
-                item.UsrCadastroDesc = UserName;
-            }
-        }
-
-
-        prestacaoServico.UsrCadastroDesc = UserName;
-        prestacaoServico.UsrCadastro = UserId;
-
-
-        var produtos = new List<ProdutoDto>();
-
-        if (prestacaoServico.Produtos != null)
-        {
-            foreach (var prod in prestacaoServico.Produtos)
-            {
-                for (int i = 0; i < prod.Qtd; i++)
-                {
-                    produtos.Add(prod);
-                }
-            }
-        }
-
-        prestacaoServico.Produtos = produtos;
-
         var result = await _repository.CreatePrestacaoServico(prestacaoServico);
 
         if (result == null)
@@ -201,56 +143,7 @@ public class PrestacaoServicoController : MainController
                 ModelState.AddModelError("error", "Id invalid");
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
-
-        if (!prestacaoServico.PrestadorId.HasValue)
-            prestacaoServico.PrestadorId = PrestadorId;
-
-        if (prestacaoServico.Produtos != null)
-        {
-            foreach (var item in prestacaoServico.Produtos)
-            {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value;
-                item.UsrCadastro = UserId;
-                item.UsrCadastroDesc = UserName;
-            }
-        }
-
-        if (prestacaoServico.Servicos != null)
-        {
-
-            foreach (var item in prestacaoServico.Servicos)
-            {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value;
-                item.UsrCadastro = UserId;
-                item.UsrCadastroDesc = UserName;
-            }
-        }
-
-        if (prestacaoServico.Veiculo != null)
-            prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
-
-        if (prestacaoServico.Cliente != null)
-            prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
-
-
-        var produtos = new List<ProdutoDto>();
-
-        if (prestacaoServico.Produtos != null)
-        {
-            foreach (var prod in prestacaoServico.Produtos)
-            {
-                if (prod.Qtd == 0)
-                    produtos.Add(prod);
-
-                for (int i = 0; i < prod.Qtd; i++)
-                {
-                    produtos.Add(prod);
-                }
-            }
-        }
-
-        prestacaoServico.Produtos = produtos;
+        }     
 
         var result = await _repository.UpdatePrestacaoServico(prestacaoServico);
 
