@@ -29,9 +29,9 @@ public class PrestacaoServicoController : MainController
     [HttpPost]
     public async Task<IActionResult> Add(PrestacaoServicoDto prestacaoServico)
     {
-        if (!ModelState.IsValid)        
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
 
         if (!prestacaoServico.PrestadorId.HasValue)
             prestacaoServico.PrestadorId = PrestadorId;
@@ -92,6 +92,9 @@ public class PrestacaoServicoController : MainController
 
         var result = await _repository.CreatePrestacaoServico(prestacaoServico);
 
+        if (result == null)
+            return NoContent();
+
         return Ok(result);
     }
 
@@ -117,15 +120,13 @@ public class PrestacaoServicoController : MainController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         var result = await _repository.FindByIdPrestacaoServico(id);
+
+        if (result == null)
+            return NoContent();
 
         return Ok(result);
     }
@@ -138,15 +139,13 @@ public class PrestacaoServicoController : MainController
     public async Task<IActionResult> GetByPrestacaoServicoFechadosPrestador()
     {
         if (!ModelState.IsValid)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Concluido, EPrestacaoServicoStatus.Rejeitado };
-        return Ok(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status));
+        var result = await _repository.GetByPrestacoesServicosStatus(PrestadorId, status);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -157,15 +156,17 @@ public class PrestacaoServicoController : MainController
     public async Task<IActionResult> GetByPrestacaoServicoAbertosPrestador()
     {
         if (!ModelState.IsValid)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+
 
         List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Aberto, EPrestacaoServicoStatus.Analise, EPrestacaoServicoStatus.Andamento, EPrestacaoServicoStatus.Aprovado, EPrestacaoServicoStatus.Teste };
-        return Ok(await _repository.GetByPrestacoesServicosStatus(PrestadorId, status));
+
+        var result = await _repository.GetByPrestacoesServicosStatus(PrestadorId, status);
+
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
     /// <summary>
@@ -176,11 +177,14 @@ public class PrestacaoServicoController : MainController
     public async Task<IActionResult> GetByPrestacaoServicoEnriquecidoPrestador()
     {
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        return Ok(await _repository.GetByPrestador(PrestadorId));
+        var result = await _repository.GetByPrestador(PrestadorId);
+
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
     /// <summary>
@@ -248,7 +252,10 @@ public class PrestacaoServicoController : MainController
 
         prestacaoServico.Produtos = produtos;
 
-        var result = await _repository.CreatePrestacaoServico(prestacaoServico);
+        var result = await _repository.UpdatePrestacaoServico(prestacaoServico);
+
+        if (result == null)
+            return NoContent();
 
         return Ok(result);
     }
@@ -261,14 +268,14 @@ public class PrestacaoServicoController : MainController
     [HttpPut("DesativarPrestacao")]
     public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+
         var result = await _repository.Desabled(id);
+
+        if (result == null) 
+            return NoContent();
+
         return Ok(result);
     }
 
@@ -282,14 +289,11 @@ public class PrestacaoServicoController : MainController
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
+            
             await _repository.Delete(id);
+
             return Ok("Deletado");
         }
         catch (Exception ex)
@@ -307,13 +311,9 @@ public class PrestacaoServicoController : MainController
     [HttpPut("status/{id}/{status}")]
     public async Task<IActionResult> ChangeStatus(Guid id, EPrestacaoServicoStatus status)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
         await _repository.ChangeStatus(id, status);
         return Ok();
     }
