@@ -214,30 +214,40 @@ public class PrestadorController : MainController
     /// <param name="email"></param>
     /// <param name="nome"></param>
     /// <returns></returns>
-    //[HttpGet("Funcionario")]
-    //public async Task<IActionResult> GetAllFuncionario()
-    //{
-    //    var filter = new FuncionarioPrestadorDto();
-    //    MapearLoginFuncionario(filter); 
+    [HttpGet("Funcionario")]
+    public async Task<IActionResult> GetAllFuncionario(string? cpf, string? email, string? nome)
+    {
+        FuncionarioPrestadorDto filter = MapperFilter(cpf, email, nome);
 
-    //    var result = await _funcionarioSerive.GetAllFuncionario(filter);
-    //    return Ok(result);
-    //}
+        var result = await _funcionarioSerive.GetAllFuncionario(filter);
+        if (result == null || !result.Any())
+            return NoContent();
+        return Ok(result);
+    }
 
-    ///// <summary>
-    ///// Recuperar todos os funcionários por prestador
-    ///// </summary>
-    ///// <param name="id"></param>
-    ///// <param name="_cpf"></param>
-    ///// <param name="_email"></param>
-    ///// <param name="_nome"></param>
-    ///// <returns></returns>
-    //[HttpGet("Funcionario/Prestador/id")]
-    //public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id, [FromBody] string _cpf, string _email, string _nome)
-    //{
-    //    var result = await _funcionarioSerive.GetAllFuncionario(id);
-    //    return Ok(result);
-    //}
+    private static FuncionarioPrestadorDto MapperFilter(string? cpf, string? email, string? nome)
+    {
+        return new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = cpf, Email = email, Nome = nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
+    }
+
+    /// <summary>
+    /// Recuperar todos os funcionários por prestador
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="_cpf"></param>
+    /// <param name="_email"></param>
+    /// <param name="_nome"></param>
+    /// <returns></returns>
+    [HttpGet("Funcionario/Prestador/id")]
+    public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id, [FromBody] string _cpf, string _email, string _nome)
+    {
+        FuncionarioPrestadorDto filter = new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = _cpf, Email = _email, Nome = _nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
+
+        var result = await _funcionarioSerive.GetAllFuncionario(filter);
+        if (result == null || !result.Any())
+            return NoContent();
+        return Ok(result);
+    }
 
     /// <summary>
     /// Recuperar funcionário por Id
