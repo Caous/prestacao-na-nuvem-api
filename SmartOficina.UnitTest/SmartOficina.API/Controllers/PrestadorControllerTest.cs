@@ -1,4 +1,5 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
+﻿using FluentValidation;
+using SmartOficina.Api.Domain.Interfaces;
 using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
@@ -7,6 +8,7 @@ public class PrestadorControllerTest
 {
     private readonly Mock<IPrestadorService> _prestadorService = new();
     private readonly Mock<IFuncionarioService> _funcionarioService = new();
+    private readonly Mock<IValidator<PrestadorDto>> _validator = new();
 
     private static DefaultHttpContext CreateFakeClaims(ICollection<PrestadorDto> prestadores)
     {
@@ -24,7 +26,7 @@ public class PrestadorControllerTest
     }
     private PrestadorController GenerateControllerFake(List<PrestadorDto> prestadorDtos)
     {
-        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(prestadorDtos) } };
+        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(prestadorDtos) } };
     }
 
     #region Prestador 
@@ -376,7 +378,7 @@ public class PrestadorControllerTest
 
     private PrestadorController GenerateControllerFakeFuncionario(ICollection<FuncionarioPrestadorDto> funcionario)
     {
-        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaimsFuncionario(funcionario) } };
+        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaimsFuncionario(funcionario) } };
     }
 
     [Fact]

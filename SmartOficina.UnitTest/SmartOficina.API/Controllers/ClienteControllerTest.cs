@@ -1,4 +1,5 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
+﻿using FluentValidation;
+using SmartOficina.Api.Domain.Interfaces;
 using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
@@ -6,6 +7,7 @@ namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 public class ClienteControllerTest
 {
     private readonly Mock<IClienteService> _serviceMock = new();
+    private readonly Mock<IValidator<ClienteDto>> _validationMock = new();
 
     private static DefaultHttpContext CreateFakeClaims(ICollection<ClienteDto> clientes)
     {
@@ -24,7 +26,7 @@ public class ClienteControllerTest
 
     private ClienteController GenerateControllerFake(ICollection<ClienteDto> clientesFake)
     {
-        return new ClienteController(_serviceMock.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(clientesFake) } };
+        return new ClienteController(_serviceMock.Object, _validationMock.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(clientesFake) } };
     }
 
     [Fact]

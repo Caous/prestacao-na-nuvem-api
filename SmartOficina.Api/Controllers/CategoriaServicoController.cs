@@ -1,4 +1,5 @@
 ﻿using SmartOficina.Api.Domain.Interfaces;
+using SmartOficina.Api.Validators;
 
 namespace SmartOficina.Api.Controllers;
 
@@ -19,6 +20,7 @@ public class CategoriaServicoController : MainController
     public CategoriaServicoController(ICategoriaService categoriaService)
     {
         _categoriaService = categoriaService;
+      
     }
 
     private void MapearLogin(CategoriaServicoDto categoriaServico)
@@ -39,6 +41,7 @@ public class CategoriaServicoController : MainController
     [HttpPost]
     public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
     {
+
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);

@@ -16,11 +16,13 @@ public class PrestadorController : MainController
 {
     private readonly IPrestadorService _prestadorService;
     private readonly IFuncionarioService _funcionarioSerive;
+    private readonly IValidator<PrestadorDto> _validator;
 
-    public PrestadorController(IPrestadorService prestadorService, IFuncionarioService funcionarioSerive)
+    public PrestadorController(IPrestadorService prestadorService, IFuncionarioService funcionarioSerive, IValidator<PrestadorDto> validator)
     {
         _prestadorService = prestadorService;
         _funcionarioSerive = funcionarioSerive;
+        _validator = validator;
     }
 
     #region Controller Prestador
@@ -32,6 +34,18 @@ public class PrestadorController : MainController
     [HttpPost]
     public async Task<IActionResult> Add(PrestadorDto prestador)
     {
+        var resultValidator = await _validator.ValidateAsync(prestador);
+
+        if (!resultValidator.IsValid)
+        {
+            List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
+
+            foreach (var item in resultValidator.Errors)
+                errors.Add(new ErrosValidationsResponse() { ErrorMensagem = item.ErrorMessage });
+
+            return StatusCode(StatusCodes.Status400BadRequest, errors);
+        }
+
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
@@ -91,6 +105,19 @@ public class PrestadorController : MainController
     [HttpPut]
     public async Task<IActionResult> AtualizarPrestador(PrestadorDto prestador)
     {
+
+        var resultValidator = await _validator.ValidateAsync(prestador);
+
+        if (!resultValidator.IsValid)
+        {
+            List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
+
+            foreach (var item in resultValidator.Errors)
+                errors.Add(new ErrosValidationsResponse() { ErrorMensagem = item.ErrorMessage });
+
+            return StatusCode(StatusCodes.Status400BadRequest, errors);
+        }
+
         if (!ModelState.IsValid || !prestador.Id.HasValue)
         {
             if (ModelState.ErrorCount < 1)
@@ -166,8 +193,8 @@ public class PrestadorController : MainController
     [HttpPost("Funcionario")]
     public async Task<IActionResult> AddFuncionario(FuncionarioPrestadorDto func)
     {
-        if (!ModelState.IsValid)        
-            return StatusCode(StatusCodes.Status400BadRequest, ModelState);        
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
         MapearLoginFuncionario(func);
 
@@ -231,7 +258,7 @@ public class PrestadorController : MainController
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
 
         var result = await _funcionarioSerive.FindByIdFuncionario(id);
 
@@ -274,7 +301,7 @@ public class PrestadorController : MainController
     {
         if (!ModelState.IsValid || id == null)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
 
         var result = await _funcionarioSerive.Desabled(id, userDesabled);
         if (result == null)

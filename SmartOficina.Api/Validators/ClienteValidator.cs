@@ -27,7 +27,7 @@ public class ClienteValidator : AbstractValidator<ClienteDto>
         RuleFor(x => x.CPF)
            .Custom((cpf, context) =>
            {
-               if (CpfValidations.FormartValidation(cpf))
+               if (!CpfValidations.FormartValidation(cpf))
                    context.AddFailure(ClienteConst.CpfNaoValidado);
            })
            .NotEmpty()

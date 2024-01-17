@@ -16,10 +16,12 @@ namespace SmartOficina.Api.Controllers;
 public class ClienteController : MainController
 {
     private readonly IClienteService _clienteService;
+    private readonly IValidator<ClienteDto> _validator;
 
-    public ClienteController(IClienteService clienteService)
+    public ClienteController(IClienteService clienteService, IValidator<ClienteDto> validator)
     {
         _clienteService = clienteService;
+        _validator = validator;
     }
     private void TratarDto(ClienteDto cliente)
     {
@@ -36,6 +38,18 @@ public class ClienteController : MainController
     [HttpPost]
     public async Task<IActionResult> AddAsync(ClienteDto cliente)
     {
+        var resultValitor = await _validator.ValidateAsync(cliente);
+
+        if (!resultValitor.IsValid)
+        {
+            List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
+
+            foreach (var item in resultValitor.Errors)
+                errors.Add(new ErrosValidationsResponse() { ErrorMensagem = item.ErrorMessage });
+
+            return StatusCode(StatusCodes.Status400BadRequest, errors);
+        }
+
         if (!ModelState.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
@@ -119,6 +133,19 @@ public class ClienteController : MainController
     [HttpPut]
     public async Task<IActionResult> AtualizarCliente(ClienteDto cliente)
     {
+
+        var resultValitor = await _validator.ValidateAsync(cliente);
+
+        if (!resultValitor.IsValid)
+        {
+            List<ErrosValidationsResponse> errors = new();
+
+            foreach (var item in resultValitor.Errors)
+                errors.Add(new ErrosValidationsResponse() { ErrorMensagem = item.ErrorMessage });
+
+            return StatusCode(StatusCodes.Status400BadRequest, errors);
+        }
+
         if (!ModelState.IsValid || !cliente.Id.HasValue)
         {
             if (ModelState.ErrorCount < 1)
