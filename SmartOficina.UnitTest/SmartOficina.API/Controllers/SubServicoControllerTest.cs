@@ -222,8 +222,8 @@ public class SubServicoControllerTest
         SubCategoriaServicoDto subCategoriaServicoFake = RetornaSubCategoriaServico("Teste", "teste desc");
         SubCategoriaServicoDto subCategoriaServicoFakeNull = null;
         _serviceMock.Setup(s => s.UpdateSubCategoria(It.IsAny<SubCategoriaServicoDto>())).ReturnsAsync(subCategoriaServicoFakeNull);
-        //Act
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
+        //Act
         var response = await controllerSubCategoria.AtualizarSubServico(subCategoriaServicoFake);
         var okResult = response as NoContentResult;
 

@@ -343,12 +343,13 @@ public class CategoriaServicoControllerTest
     {
         //Arrange
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-        CategoriaServicoDto categoriaDtoFake = null;
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFake);
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste"); 
+        CategoriaServicoDto categoriaDtoFakeNull = null;
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFakeNull);
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         //Act
 
-        var response = await controllerCategoria.DesativarCategoria(Guid.NewGuid(),categoriaDtoFake.Id.Value);
+        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value, categoriaDtoFake.Id.Value);
         var okResult = response as NoContentResult;
         //Assert
         _serviceMock.Verify(x => x.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.Once);

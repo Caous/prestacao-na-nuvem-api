@@ -112,6 +112,10 @@ public class SubServicoController : MainController
         MapearLogin(subServico);
 
         var result = await _subCategoriaServicoService.UpdateSubCategoria(subServico);
+
+        if (result == null)
+            return NoContent();
+
         return Ok(result);
 
     }
