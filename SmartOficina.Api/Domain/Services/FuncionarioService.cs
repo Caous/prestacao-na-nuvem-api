@@ -25,9 +25,9 @@ public class FuncionarioService : IFuncionarioService
         await _repositoryFuncionario.Delete(id);
     }
 
-    public async Task<FuncionarioPrestadorDto> Desabled(Guid id)
+    public async Task<FuncionarioPrestadorDto> Desabled(Guid id, Guid userDesabled)
     {
-        var result = await _repositoryFuncionario.Desabled(id);
+        var result = await _repositoryFuncionario.Desabled(id, userDesabled);
         return _mapper.Map<FuncionarioPrestadorDto>(result);
     }
 

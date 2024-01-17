@@ -24,9 +24,9 @@ public class VeiculoService : IVeiculoService
         await _repository.Delete(id);
     }
 
-    public async Task<VeiculoDto> Desabled(Guid id)
+    public async Task<VeiculoDto> Desabled(Guid id, Guid userDesabled)
     {
-        var result = await _repository.Desabled(id);
+        var result = await _repository.Desabled(id, userDesabled);
 
         return _mapper.Map<VeiculoDto>(result);
     }

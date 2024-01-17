@@ -113,12 +113,12 @@ public class PrestadorController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarPrestador")]
-    public async Task<IActionResult> DesativarPrestadorServico(Guid id)
+    public async Task<IActionResult> DesativarPrestadorServico(Guid id, Guid userDesabled)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        var result = await _prestadorService.Desabled(id);
+        var result = await _prestadorService.Desabled(id, userDesabled);
         if (result == null)
             return NoContent();
         return Ok(result);
@@ -270,13 +270,13 @@ public class PrestadorController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarFuncionario")]
-    public async Task<IActionResult> DesativarFuncionario(Guid id)
+    public async Task<IActionResult> DesativarFuncionario(Guid id, Guid userDesabled)
     {
         if (!ModelState.IsValid || id == null)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         
 
-        var result = await _funcionarioSerive.Desabled(id);
+        var result = await _funcionarioSerive.Desabled(id, userDesabled);
         if (result == null)
             return NoContent();
         return Ok(result);

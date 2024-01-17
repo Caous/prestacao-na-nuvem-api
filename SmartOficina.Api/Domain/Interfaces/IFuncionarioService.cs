@@ -7,5 +7,5 @@ public interface IFuncionarioService
     Task<FuncionarioPrestadorDto> CreateFuncionario(FuncionarioPrestadorDto item);
     Task<FuncionarioPrestadorDto> UpdateFuncionario(FuncionarioPrestadorDto item);
     Task Delete(Guid Id);
-    Task<FuncionarioPrestadorDto> Desabled(Guid id);
+    Task<FuncionarioPrestadorDto> Desabled(Guid id, Guid userDesabled);
 }

@@ -7,5 +7,5 @@ public interface IProdutoService
     Task<ProdutoDto> CreateProduto(ProdutoDto item);
     Task<ProdutoDto> UpdateProduto(ProdutoDto item);
     Task Delete(Guid Id);
-    Task<ProdutoDto> Desabled(Guid id);
+    Task<ProdutoDto> Desabled(Guid id, Guid userDesabled);
 }

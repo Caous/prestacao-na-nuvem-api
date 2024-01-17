@@ -93,7 +93,7 @@ public class CategoriaServicoController : MainController
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState.First().Value);
-        
+
         var result = await _categoriaService.FindByIdCategoria(id);
         if (result == null)
             return NoContent();
@@ -137,9 +137,9 @@ public class CategoriaServicoController : MainController
     public async Task<IActionResult> DesativarCategoria(Guid id)
     {
         if (!ModelState.IsValid)
-            return StatusCode(StatusCodes.Status400BadRequest, ModelState);        
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        var result = await _categoriaService.Desabled(id);
+        var result = await _categoriaService.Desabled(id, PrestadorId);
 
         if (result == null)
             return NoContent();
@@ -164,6 +164,9 @@ public class CategoriaServicoController : MainController
         }
         catch (Exception ex)
         {
+            if (ex.Message == "Indice não encontrado")
+                return NoContent();
+
             return BadRequest(ex.Message);
         }
     }

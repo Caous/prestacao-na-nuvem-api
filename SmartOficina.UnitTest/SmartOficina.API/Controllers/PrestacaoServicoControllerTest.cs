@@ -932,14 +932,14 @@ public class PrestacaoServicoControllerTest
         //Arrange
         ICollection<PrestacaoServicoDto> prestacaoListaFake = RetornaListaPrestacaoServico();
         PrestacaoServicoDto prestacaoFake = RetornaPrestacaoServico();
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(prestacaoFake);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(prestacaoFake);
         PrestacaoServicoController controller = CreateFakeController(prestacaoListaFake);
         //Act
-        var response = await controller.DesativarPrestadorServico(prestacaoFake.Id.Value);
+        var response = await controller.DesativarPrestadorServico(prestacaoFake.Id.Value, prestacaoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as PrestacaoServicoDto;
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once());
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(result);
         Assert.Equal(result.Referencia, prestacaoFake.Referencia);
         Assert.Equal(result.FuncionarioPrestador, prestacaoFake.FuncionarioPrestador);
@@ -1002,14 +1002,14 @@ public class PrestacaoServicoControllerTest
         ICollection<PrestacaoServicoDto> prestacaoListaFake = RetornaListaPrestacaoServico();
         PrestacaoServicoDto prestacaoFake = RetornaPrestacaoServico();
         PrestacaoServicoDto prestacaoFakeNull = null;
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(prestacaoFakeNull);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(prestacaoFakeNull);
         PrestacaoServicoController controller = CreateFakeController(prestacaoListaFake);
         //Act
-        var response = await controller.DesativarPrestadorServico(prestacaoFake.Id.Value);
+        var response = await controller.DesativarPrestadorServico(prestacaoFake.Id.Value, prestacaoFake.Id.Value);
         var okResult = response as NoContentResult;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once());
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
     }
@@ -1020,14 +1020,14 @@ public class PrestacaoServicoControllerTest
         //Arrange
         ICollection<PrestacaoServicoDto> prestacaoListaFake = RetornaListaPrestacaoServico();
         PrestacaoServicoDto prestacaoFake = RetornaPrestacaoServico();
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(prestacaoFake);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(prestacaoFake);
         PrestacaoServicoController controller = CreateFakeController(prestacaoListaFake);
         controller.ModelState.AddModelError("key", "error message");
         //Act
-        var response = await controller.DesativarPrestadorServico(prestacaoFake.Id.Value);
+        var response = await controller.DesativarPrestadorServico(prestacaoFake.Id.Value,prestacaoFake.Id.Value);
         var okResult = response as ObjectResult;
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Never());
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Never());
         Assert.NotNull(okResult);
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
 

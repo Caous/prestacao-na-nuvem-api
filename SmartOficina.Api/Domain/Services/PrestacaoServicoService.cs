@@ -1,5 +1,4 @@
 ﻿using SmartOficina.Api.Domain.Interfaces;
-using SmartOficina.Api.Domain.Model;
 
 namespace SmartOficina.Api.Domain.Services;
 
@@ -87,10 +86,10 @@ public class PrestacaoServicoService : IPrestacaoServicoService
         await _repository.Delete(id);
     }
 
-    public async Task<PrestacaoServicoDto> Desabled(Guid id)
+    public async Task<PrestacaoServicoDto> Desabled(Guid id, Guid userDesabled)
     {
 
-        var result = await _repository.Desabled(id);
+        var result = await _repository.Desabled(id, userDesabled);
         return _mapper.Map<PrestacaoServicoDto>(result);
     }
 

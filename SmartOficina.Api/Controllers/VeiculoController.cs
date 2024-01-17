@@ -121,13 +121,13 @@ public class VeiculoController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarVeiculo")]
-    public async Task<IActionResult> DesativarVeiculo(Guid id)
+    public async Task<IActionResult> DesativarVeiculo(Guid id, Guid userDesabled)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
 
-        var result = await _veiculoService.Desabled(id);
+        var result = await _veiculoService.Desabled(id, userDesabled);
         if (result == null)
             return NoContent();
         return Ok(result);

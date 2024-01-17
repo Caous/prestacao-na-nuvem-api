@@ -7,5 +7,5 @@ public interface ISubCategoriaServicoService
     Task<SubCategoriaServicoDto> CreateSubCategoria(SubCategoriaServicoDto item);
     Task<SubCategoriaServicoDto> UpdateSubCategoria(SubCategoriaServicoDto item);
     Task Delete(Guid Id);
-    Task<SubCategoriaServicoDto> Desabled(Guid id);
+    Task<SubCategoriaServicoDto> Desabled(Guid id, Guid userDesabled);
 }

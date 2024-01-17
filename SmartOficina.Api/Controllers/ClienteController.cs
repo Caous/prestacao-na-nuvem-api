@@ -143,12 +143,12 @@ public class ClienteController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarCliente")]
-    public async Task<IActionResult> DesativarCliente(Guid id)
+    public async Task<IActionResult> DesativarCliente(Guid id, Guid userDesabled)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        var result = await _clienteService.Desabled(id);
+        var result = await _clienteService.Desabled(id, userDesabled);
 
         if (result == null)
             return NoContent();

@@ -7,5 +7,5 @@ public interface IClienteService
     Task<ClienteDto> CreateCliente(ClienteDto item);
     Task<ClienteDto> UpdateCliente(ClienteDto item);
     Task Delete(Guid Id);
-    Task<ClienteDto> Desabled(Guid id);
+    Task<ClienteDto> Desabled(Guid id, Guid userDesabled);
 }

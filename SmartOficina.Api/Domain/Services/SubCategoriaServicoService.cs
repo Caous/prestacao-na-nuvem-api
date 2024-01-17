@@ -24,9 +24,11 @@ public class SubCategoriaServicoService : ISubCategoriaServicoService
         await _repository.Delete(id);
     }
 
-    public async Task<SubCategoriaServicoDto> Desabled(Guid id)
+    public async Task<SubCategoriaServicoDto> Desabled(Guid id, Guid userDesabled)
     {
-        var result = await _repository.Desabled(id);
+        var resultFilter = await _repository.FindById(id);
+
+        var result = await _repository.Desabled(id, userDesabled);
         return _mapper.Map<SubCategoriaServicoDto>(result);
     }
 
@@ -46,6 +48,7 @@ public class SubCategoriaServicoService : ISubCategoriaServicoService
 
     public async Task<SubCategoriaServicoDto> UpdateSubCategoria(SubCategoriaServicoDto item)
     {
+
         var result = await _repository.Update(_mapper.Map<SubCategoriaServico>(item));
 
         return _mapper.Map<SubCategoriaServicoDto>(result);

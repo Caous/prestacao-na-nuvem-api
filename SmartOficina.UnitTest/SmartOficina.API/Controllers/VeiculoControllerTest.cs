@@ -247,15 +247,15 @@ public class VeiculoControllerTest
         //Arranger
         ICollection<VeiculoDto> veiculosFake = RetornaListaVeiculoFake("Hyundai", "i30", "ebv7898");
         VeiculoDto veiculoFake = RetornaVeiculoFake("Hyundai", "i30", "ebv7898");
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(veiculoFake);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(veiculoFake);
         //Act
         VeiculoController controllerVeiculo = CreateFakeController(veiculosFake);
-        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value);
+        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value, veiculoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as VeiculoDto;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once);
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once);
         Assert.NotNull(result);
         Assert.Equal(result.Marca, veiculoFake.Marca);
         Assert.Equal(result.Modelo, veiculoFake.Modelo);
@@ -269,14 +269,14 @@ public class VeiculoControllerTest
         ICollection<VeiculoDto> veiculosFake = RetornaListaVeiculoFake("Hyundai", "i30", "ebv7898");
         VeiculoDto veiculoFake = RetornaVeiculoFake("Hyundai", "i30", "ebv7898");
         VeiculoDto veiculoFakeNull = null;
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(veiculoFakeNull);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(veiculoFakeNull);
         //Act
         VeiculoController controllerVeiculo = CreateFakeController(veiculosFake);
-        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value);
+        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value, veiculoFake.Id.Value);
         var okResult = response as NoContentResult;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once);
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once);
         Assert.NotNull(okResult);
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
     }
@@ -287,15 +287,15 @@ public class VeiculoControllerTest
         //Arranger
         ICollection<VeiculoDto> veiculosFake = RetornaListaVeiculoFake("Hyundai", "i30", "ebv7898");
         VeiculoDto veiculoFake = RetornaVeiculoFake("Hyundai", "i30", "ebv7898");
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(veiculoFake);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(veiculoFake);
         VeiculoController controllerVeiculo = CreateFakeController(veiculosFake);
         controllerVeiculo.ModelState.AddModelError("key", "error message");
         //Act
-        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value);
+        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value, veiculoFake.Id.Value);
         var okResult = response as ObjectResult;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Never);
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Never);
         Assert.NotNull(okResult);
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
     }

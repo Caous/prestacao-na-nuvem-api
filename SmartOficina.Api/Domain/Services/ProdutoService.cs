@@ -25,10 +25,10 @@ public class ProdutoService : IProdutoService
         await _repository.Delete(id);
     }
 
-    public async Task<ProdutoDto> Desabled(Guid id)
+    public async Task<ProdutoDto> Desabled(Guid id, Guid userDesabled)
     {
 
-        var result = await _repository.Desabled(id);
+        var result = await _repository.Desabled(id, userDesabled);
 
         return _mapper.Map<ProdutoDto>(result);
     }

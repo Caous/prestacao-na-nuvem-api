@@ -159,12 +159,12 @@ public class PrestacaoServicoController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarPrestacao")]
-    public async Task<IActionResult> DesativarPrestadorServico(Guid id)
+    public async Task<IActionResult> DesativarPrestadorServico(Guid id, Guid userDesabled)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        var result = await _repository.Desabled(id);
+        var result = await _repository.Desabled(id, userDesabled);
 
         if (result == null) 
             return NoContent();

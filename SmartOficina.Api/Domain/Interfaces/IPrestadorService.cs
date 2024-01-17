@@ -7,5 +7,5 @@ public interface IPrestadorService
     Task<PrestadorDto> CreatePrestador(PrestadorDto item);
     Task<PrestadorDto> UpdatePrestador(PrestadorDto item);
     Task Delete(Guid Id);
-    Task<PrestadorDto> Desabled(Guid id);
+    Task<PrestadorDto> Desabled(Guid id, Guid userDesabled);
 }

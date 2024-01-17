@@ -24,9 +24,9 @@ public class PrestadorService : IPrestadorService
         await _repository.Delete(id);
     }
 
-    public async Task<PrestadorDto> Desabled(Guid id)
+    public async Task<PrestadorDto> Desabled(Guid id, Guid userDesabled)
     {
-        var result = await _repository.Desabled(id);
+        var result = await _repository.Desabled(id, userDesabled);
 
         return _mapper.Map<PrestadorDto>(result);
     }

@@ -23,9 +23,24 @@ public class CategoriaService : ICategoriaService
         await _repository.Delete(Id);
     }
 
-    public Task<CategoriaServicoDto> Desabled(Guid id)
+    public async Task<CategoriaServicoDto> Desabled(Guid id, Guid IdUserDesabled)
     {
-        throw new NotImplementedException();
+        var resultFind = await _repository.FindById(id);
+
+        if (resultFind == null)
+            return null;
+
+        InsertDesabled(IdUserDesabled, resultFind);
+
+        var result = await _repository.Update(resultFind);
+
+        return _mapper.Map<CategoriaServicoDto>(result);
+    }
+
+    private static void InsertDesabled(Guid IdUserDesabled, CategoriaServico resultFind)
+    {
+        resultFind.DataDesativacao = DateTime.Now;
+        resultFind.UsrDesativacao = IdUserDesabled;
     }
 
     public async Task<CategoriaServicoDto> FindByIdCategoria(Guid Id)

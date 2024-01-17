@@ -36,7 +36,7 @@ public class SubServicoController : MainController
         MapearLogin(subServico);
 
         var result = await _subCategoriaServicoService.CreateSubCategoria(subServico);
-         
+
         if (result == null)
             return NoContent();
 
@@ -62,6 +62,7 @@ public class SubServicoController : MainController
     public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
         SubCategoriaServicoDto filter = MapperFilter(titulo, desc);
+        MapearLogin(filter);
         var result = await _subCategoriaServicoService.GetAllSubCategoria(filter);
         if (result == null || !result.Any())
             return NoContent();
@@ -123,18 +124,18 @@ public class SubServicoController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarSubServico")]
-    public async Task<IActionResult> DesativarSubServico(Guid id)
+    public async Task<IActionResult> DesativarSubServico(Guid id, Guid userDesabled)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
 
-        var result = await _subCategoriaServicoService.Desabled(id);
+
+        var result = await _subCategoriaServicoService.Desabled(id, userDesabled);
 
         if (result == null)
             return NoContent();
 
-        return Ok(result   );
+        return Ok(result);
 
     }
 
@@ -148,9 +149,9 @@ public class SubServicoController : MainController
     {
         try
         {
-            if (!ModelState.IsValid)                           
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            
+
             await _subCategoriaServicoService.Delete(id);
             return Ok("Deletado");
         }

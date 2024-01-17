@@ -344,15 +344,15 @@ public class ClienteControllerTest
         //Arrange
         ICollection<ClienteDto> clientesDtoFake = CriaListaClienteDtoFake();
         ClienteDto clienteDtoFake = CriaClienteDtoFake(Guid.NewGuid());
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(clienteDtoFake);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(clienteDtoFake);
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         //Act
         controllerCliente.ModelState.AddModelError("key", "error message");
-        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value);
+        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value, clienteDtoFake.Id.Value);
         var okResult = response as ObjectResult;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Never());
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Never());
         Assert.NotNull(okResult);
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
 
@@ -366,14 +366,14 @@ public class ClienteControllerTest
         ClienteDto clienteDtoFake = CriaClienteDtoFake(Guid.NewGuid());
         ClienteDto clienteDtoFakeNull = null;
 
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(clienteDtoFakeNull);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(clienteDtoFakeNull);
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         //Act
-        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value);
+        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value, clienteDtoFake.Id.Value);
         var okResult = response as NoContentResult;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once());
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
 
@@ -386,14 +386,14 @@ public class ClienteControllerTest
         ICollection<ClienteDto> clientesDtoFake = CriaListaClienteDtoFake();
         ClienteDto clienteDtoFake = CriaClienteDtoFake(Guid.NewGuid());
 
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(clienteDtoFake);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(clienteDtoFake);
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         //Act
-        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value);
+        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value, clienteDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ClienteDto;
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once());
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(result);
 
     }

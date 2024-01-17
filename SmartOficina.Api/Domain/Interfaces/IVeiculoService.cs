@@ -7,5 +7,5 @@ public interface IVeiculoService
     Task<VeiculoDto> CreateVeiculos(VeiculoDto item);
     Task<VeiculoDto> UpdateVeiculos(VeiculoDto item);
     Task Delete(Guid Id);
-    Task<VeiculoDto> Desabled(Guid id);
+    Task<VeiculoDto> Desabled(Guid id, Guid userDesabled);
 }
