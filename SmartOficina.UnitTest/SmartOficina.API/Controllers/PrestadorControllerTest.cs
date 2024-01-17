@@ -381,49 +381,48 @@ public class PrestadorControllerTest
         return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaimsFuncionario(funcionario) } };
     }
 
-    //[Fact]
-    //public async Task Deve_Retornar_ListaDeFuncionarios_RetornoOk()
-    //{
-    //    //Arrange
-    //    ICollection<FuncionarioPrestador> funcionarioFake = CriarListaFuncionarioFake();
-    //    _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFake);
-    //    //Act
-    //    var response = await new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _mapper.Object).GetAllFuncionario(string.Empty, string.Empty, string.Empty);
-    //    var okResult = response as OkObjectResult;
-    //    var result = okResult.Value as ICollection<FuncionarioPrestadorDto>;
-    //    //Assert
-    //    _funcionarioService.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
-    //    _mapper.Verify(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>), Times.Once());
-    //    _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>), Times.Once());
-    //    Assert.NotNull(result);
-    //    Assert.Equal(result.First().Telefone, funcionarioFake.First().Telefone);
-    //    Assert.Equal(result.First().CPF, funcionarioFake.First().CPF);
-    //    Assert.Equal(result.First().DataCadastro, funcionarioFake.First().DataCadastro);
-    //    Assert.Equal(result.First().Id, funcionarioFake.First().Id);
-    //    Assert.Equal(result.First().Cargo, funcionarioFake.First().Cargo);
-    //    Assert.Equal(result.First().Email, funcionarioFake.First().Email);
-    //    Assert.Equal(result.First().Endereco, funcionarioFake.First().Endereco);
-    //    Assert.Equal(result.First().Nome, funcionarioFake.First().Nome);
+    [Fact]
+    public async Task Deve_Retornar_ListaDeFuncionarios_RetornoOk()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestadorDto> funcionarioFake = CriarListaFuncionarioFake();
+        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFake);
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFake);
+        //Act
+        var response = await controller.GetAllFuncionario(string.Empty, string.Empty, string.Empty);
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as ICollection<FuncionarioPrestadorDto>;
+        //Assert
+        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        Assert.NotNull(result);
+        Assert.Equal(result.First().Telefone, funcionarioFake.First().Telefone);
+        Assert.Equal(result.First().CPF, funcionarioFake.First().CPF);
+        Assert.Equal(result.First().DataCadastro, funcionarioFake.First().DataCadastro);
+        Assert.Equal(result.First().Id, funcionarioFake.First().Id);
+        Assert.Equal(result.First().Cargo, funcionarioFake.First().Cargo);
+        Assert.Equal(result.First().Email, funcionarioFake.First().Email);
+        Assert.Equal(result.First().Endereco, funcionarioFake.First().Endereco);
+        Assert.Equal(result.First().Nome, funcionarioFake.First().Nome);
 
-    //}
+    }
 
-    //[Fact]
-    //public async Task NaoDeve_Retornar_ListaDeFuncionarios_RetornoNoContent()
-    //{
-    //    //Arrange
-    //    ICollection<FuncionarioPrestadorDto> funcionarioFake = CriarListaFuncionarioFake();
-    //    ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = null;
-    //    _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFakeLista);
-    //    PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFake);
-    //    //Act
-    //    var response = await controller.GetAllFuncionario(string.Empty, string.Empty, string.Empty);
-    //    var okResult = response as NoContentResult;
-    //    //Assert
-    //    _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
-    //    Assert.NotNull(okResult);
-    //    Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+    [Fact]
+    public async Task NaoDeve_Retornar_ListaDeFuncionarios_RetornoNoContent()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestadorDto> funcionarioFake = CriarListaFuncionarioFake();
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = null;
+        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFakeLista);
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFake);
+        //Act
+        var response = await controller.GetAllFuncionario(string.Empty, string.Empty, string.Empty);
+        var okResult = response as NoContentResult;
+        //Assert
+        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
 
-    //}
+    }
 
     [Fact]
     public async Task Deve_Cadastrar_Um_FuncionarioPrestador_RetornarSucesso()
