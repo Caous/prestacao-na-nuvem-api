@@ -90,6 +90,7 @@ public class ClienteController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
         ClienteDto clienteDto = MapearDto(cpf, nome, email);
 
         var result = await _clienteService.GetAllCliente(clienteDto);
