@@ -1,29 +1,13 @@
-﻿namespace SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
+﻿using SmartOficina.Api.Domain.Interfaces;
+using SmartOficina.Api.Domain.Services;
+
+namespace SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
 
 public static class DependecyInjectionConfig
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        #region Version
-
-        //services.AddApiVersioning(opt =>
-        //{
-
-        //    opt.ReportApiVersions = true;
-        //    opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
-        //    opt.AssumeDefaultVersionWhenUnspecified = true;
-
-        //});
-
-        //services.AddVersionedApiExplorer(opt =>
-        //{
-
-        //    opt.GroupNameFormat = "'v'VVV";
-        //    opt.SubstituteApiVersionInUrl = true;
-
-        //});
-        #endregion
-
+       
         #region Injection Repository
         services.AddScoped<IClienteRepository, ClienteRepository>();
         services.AddScoped<IPrestadorRepository, PrestadorRepository>();
@@ -36,6 +20,16 @@ public static class DependecyInjectionConfig
         services.AddScoped<IFuncionarioPrestadorRepository, FuncionarioPrestadorServiceRepository>();
         #endregion
 
+        #region Injection Services
+        services.AddScoped<IClienteService, ClienteService>();
+        services.AddScoped<ICategoriaService, CategoriaService>();
+        services.AddScoped<IFuncionarioService, FuncionarioService>();
+        services.AddScoped<IPrestacaoServicoService, PrestacaoServicoService>();
+        services.AddScoped<IPrestadorService, PrestadorService>();
+        services.AddScoped<IProdutoService, ProdutoService>();
+        services.AddScoped<ISubCategoriaServicoService, SubCategoriaServicoService>();
+        services.AddScoped<IVeiculoService, VeiculoService>();
+        #endregion
 
         #region Cors
         services.AddCors(options =>

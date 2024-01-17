@@ -1,18 +1,31 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
 
+namespace SmartOficina.Api.Controllers;
+
+/// <summary>
+/// Controller de veículo
+/// </summary>
 [Route("api/[controller]")]
 [ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class VeiculoController : MainController
 {
-    private readonly IVeiculoRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly IVeiculoService _veiculoService;
 
-    public VeiculoController(IVeiculoRepository repository, IMapper mapper)
+    public VeiculoController(IVeiculoService veiculoService)
     {
-        _repository = repository;
-        _mapper = mapper;
+        _veiculoService = veiculoService;
     }
 
+    /// <summary>
+    /// Adicionar um veículo
+    /// </summary>
+    /// <param name="veiculo"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Add(VeiculoDto veiculo)
     {
@@ -23,10 +36,10 @@ public class VeiculoController : MainController
 
         MapearLogin(veiculo);
 
-        var result = await _repository.Create(_mapper.Map<Veiculo>(veiculo));
-        return Ok(_mapper.Map<VeiculoDto>(result));
-
-
+        var result = await _veiculoService.CreateVeiculos(veiculo);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
     private void MapearLogin(VeiculoDto veiculo)
@@ -38,30 +51,50 @@ public class VeiculoController : MainController
         veiculo.UsrCadastro = UserId;
     }
 
+    /// <summary>
+    /// Recuperar todos os veículos
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId, new Veiculo() { Marca = string.Empty, Modelo = string.Empty, Placa = string.Empty});
-        return Ok(_mapper.Map<ICollection<VeiculoDto>>(result));
+        VeiculoDto filter = MapperFilter();
+
+        var result = await _veiculoService.GetAllVeiculos(filter);
+        if (result == null || !result.Any())
+            return NoContent();
+        return Ok(result);
 
     }
 
+    private static VeiculoDto MapperFilter()
+    {
+        return new VeiculoDto() { Marca = string.Empty, Modelo = string.Empty, Placa = string.Empty };
+    }
+
+    /// <summary>
+    /// Recuperar um veículo por Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        var result = await _repository.FindById(id);
-        return Ok(_mapper.Map<VeiculoDto>(result));
+        var result = await _veiculoService.FindByIdVeiculos(id);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
 
     }
 
+    /// <summary>
+    /// Atualizar um veículo
+    /// </summary>
+    /// <param name="veiculo"></param>
+    /// <returns></returns>
     [HttpPut]
     public async Task<IActionResult> AtualizarVeiculo(VeiculoDto veiculo)
     {
@@ -75,39 +108,45 @@ public class VeiculoController : MainController
 
         MapearLogin(veiculo);
 
-        var result = await _repository.Update(_mapper.Map<Veiculo>(veiculo));
-        return Ok(_mapper.Map<VeiculoDto>(result));
+        var result = await _veiculoService.UpdateVeiculos(veiculo);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
 
     }
 
+    /// <summary>
+    /// Desativar um veículo
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarVeiculo")]
-    public async Task<IActionResult> DesativarVeiculo(Guid id)
+    public async Task<IActionResult> DesativarVeiculo(Guid id, Guid userDesabled)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        var result = await _repository.Desabled(id);
-        return Ok(_mapper.Map<VeiculoDto>(result));
+
+        var result = await _veiculoService.Desabled(id, userDesabled);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Deletar um veículo
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     public async Task<IActionResult> DeletarVeiculo(Guid id)
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
-            await _repository.Delete(id);
+
+            await _veiculoService.Delete(id);
             return Ok("Deletado");
         }
         catch (Exception ex)

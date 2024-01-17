@@ -2,7 +2,7 @@
 
 public class ServicoDto : Base
 {
-    public required string Descricao { get; set; }
+    public required string Descricao { get; set; } //obgd
     public float Valor { get; set; }
     public Guid SubServicoId { get; set; }
     public SubCategoriaServicoDto? SubCategoriaServico { get; set; }

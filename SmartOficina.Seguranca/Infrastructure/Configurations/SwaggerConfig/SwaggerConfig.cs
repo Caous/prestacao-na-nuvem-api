@@ -27,6 +27,7 @@ public static class SwaggerConfig
             c.OperationFilter<AuthResponsesOperationFilter>();
 
             c.AddSecurityDefinition(scheme.Reference.Id, scheme);
+
         });
     }
 }

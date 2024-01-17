@@ -2,5 +2,5 @@
 
 public class ClienteConst : BaseConstEntidades
 {
-
+    public const string CpfNaoValidado = "Cpf não é válido";
 }

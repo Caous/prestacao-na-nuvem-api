@@ -1,178 +1,398 @@
-﻿namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
+﻿using FluentValidation;
+using SmartOficina.Api.Domain.Interfaces;
+using System.Net;
+
+namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
 public class PrestadorControllerTest
 {
-    private readonly Mock<IPrestadorRepository> _repository = new();
-    private readonly Mock<IMapper> _mapper = new();
-    private readonly Mock<IFuncionarioPrestadorRepository> _funcionarioRepository = new();
+    private readonly Mock<IPrestadorService> _prestadorService = new();
+    private readonly Mock<IFuncionarioService> _funcionarioService = new();
+    private readonly Mock<IValidator<PrestadorDto>> _validator = new();
+
+    private static DefaultHttpContext CreateFakeClaims(ICollection<PrestadorDto> prestadores)
+    {
+        var fakeHttpContext = new DefaultHttpContext();
+        ClaimsIdentity identity = new(
+            new[] {
+                        new Claim("PrestadorId", prestadores.First().PrestadorId.ToString()),
+                        new Claim("UserName", "Teste"),
+                        new Claim("IdUserLogin", prestadores.First().PrestadorId.ToString())
+
+            }
+        );
+        fakeHttpContext.User = new System.Security.Claims.ClaimsPrincipal(identity);
+        return fakeHttpContext;
+    }
+    private PrestadorController GenerateControllerFake(List<PrestadorDto> prestadorDtos)
+    {
+        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(prestadorDtos) } };
+    }
 
     #region Prestador 
 
     [Fact]
-    public async Task Deve_Retornar_ListaDePrestador()
+    public async Task Deve_Retornar_ListaDePrestador_RetornoOk()
     {
         //Arrange
-        ICollection<Prestador> PrestadorsFake = CriaListaFornecedoresFake();
-        _repository.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Prestador>())).ReturnsAsync(PrestadorsFake);
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.GetAllPrestador(It.IsAny<PrestadorDto>())).ReturnsAsync(prestadoresFake);
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAll();
+        var response = await controller.GetAll();
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as ICollection<Prestador>;
+        var result = okResult.Value as ICollection<PrestadorDto>;
         //Assert
-        _repository.Verify(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<Prestador>()), Times.Once());
-        _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>), Times.Never());
+        _prestadorService.Verify(s => s.GetAllPrestador(It.IsAny<PrestadorDto>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.First().Telefone, PrestadorsFake.First().Telefone);
-        Assert.Equal(result.First().CPF, PrestadorsFake.First().CPF);
-        Assert.Equal(result.First().DataCadastro, PrestadorsFake.First().DataCadastro);
-        Assert.Equal(result.First().Id, PrestadorsFake.First().Id);
-        Assert.Equal(result.First().EmailEmpresa, PrestadorsFake.First().EmailEmpresa);
-        Assert.Equal(result.First().Endereco, PrestadorsFake.First().Endereco);
-        Assert.Equal(result.First().Nome, PrestadorsFake.First().Nome);
+        Assert.Equal(result.First().Telefone, prestadoresFake.First().Telefone);
+        Assert.Equal(result.First().CPF, prestadoresFake.First().CPF);
+        Assert.Equal(result.First().DataCadastro, prestadoresFake.First().DataCadastro);
+        Assert.Equal(result.First().Id, prestadoresFake.First().Id);
+        Assert.Equal(result.First().EmailEmpresa, prestadoresFake.First().EmailEmpresa);
+        Assert.Equal(result.First().Endereco, prestadoresFake.First().Endereco);
+        Assert.Equal(result.First().Nome, prestadoresFake.First().Nome);
+
+    }
+    [Fact]
+    public async Task NaoDeve_Retornar_ListaDePrestadorNoContent()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = null;
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.GetAllPrestador(It.IsAny<PrestadorDto>())).ReturnsAsync(prestadoresFake);
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        //Act
+        var response = await controller.GetAll();
+        var okResult = response as NoContentResult;
+
+        //Assert
+        _prestadorService.Verify(s => s.GetAllPrestador(It.IsAny<PrestadorDto>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task Deve_Cadastrar_Um_Prestador_RetornarOk()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.CreatePrestador(It.IsAny<PrestadorDto>())).ReturnsAsync(prestadoresFake.First());
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        //Act
+        var response = await controller.Add(prestadorDtoFake);
+        var okResult = response as OkObjectResult;
+        var result = okResult.Value as PrestadorDto;
+        //Assert
+        _prestadorService.Verify(s => s.CreatePrestador(It.IsAny<PrestadorDto>()), Times.Once());
+        Assert.NotNull(result);
+        Assert.Equal(result.Telefone, prestadoresFake.First().Telefone);
+        Assert.Equal(result.CPF, prestadoresFake.First().CPF);
+        Assert.Equal(result.DataCadastro, prestadoresFake.First().DataCadastro);
+        Assert.Equal(result.Id, prestadoresFake.First().Id);
+        Assert.Equal(result.EmailEmpresa, prestadoresFake.First().EmailEmpresa);
+        Assert.Equal(result.Endereco, prestadoresFake.First().Endereco);
+        Assert.Equal(result.Nome, prestadoresFake.First().Nome);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Cadastrar_Um_Prestador_RetornarNoContent()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoNull = null;
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.CreatePrestador(It.IsAny<PrestadorDto>())).ReturnsAsync(prestadorDtoNull);
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        //Act
+        var response = await controller.Add(prestadorDtoFake);
+        var okResult = response as NoContentResult;
+        //Assert
+        _prestadorService.Verify(s => s.CreatePrestador(It.IsAny<PrestadorDto>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
 
     }
 
     [Fact]
-    public async Task Deve_Cadastrar_Um_Prestador_RetornarSucesso()
+    public async Task NaoDeve_Cadastrar_Um_Prestador_RetornarBadRequest()
     {
         //Arrange
-        Guid? id = null;
-        Prestador PrestadorFake = CriaFornecedorFake(Guid.NewGuid());
-        PrestadorDto PrestadorDtoFake = CriaFornecedorDtoFake(id);
-
-        _repository.Setup(s => s.Create(It.IsAny<Prestador>())).ReturnsAsync(PrestadorFake);
-        _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.CreatePrestador(It.IsAny<PrestadorDto>())).ReturnsAsync(prestadoresFake.FirstOrDefault());
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        controller.ModelState.AddModelError("key", "error message");
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).Add(PrestadorDtoFake);
-        var okResult = response as OkObjectResult;
-        var result = okResult.Value as Prestador;
+        var response = await controller.Add(prestadorDtoFake);
+        var okResult = response as ObjectResult;
         //Assert
-        _repository.Verify(s => s.Create(It.IsAny<Prestador>()), Times.Once());
-        _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>()), Times.Once());
-        Assert.NotNull(result);
-        Assert.Equal(result.Telefone, PrestadorFake.Telefone);
-        Assert.Equal(result.CPF, PrestadorFake.CPF);
-        Assert.Equal(result.DataCadastro, PrestadorFake.DataCadastro);
-        Assert.Equal(result.Id, PrestadorFake.Id);
-        Assert.Equal(result.EmailEmpresa, PrestadorFake.EmailEmpresa);
-        Assert.Equal(result.Endereco, PrestadorFake.Endereco);
-        Assert.Equal(result.Nome, PrestadorFake.Nome);
+        _prestadorService.Verify(s => s.CreatePrestador(It.IsAny<PrestadorDto>()), Times.Never());
+        Assert.NotNull(okResult);
+        Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
     }
 
     [Fact]
-    public async Task Deve_Retornarar_Um_Prestador_RetornarSucesso()
+    public async Task Deve_Retornarar_Um_Prestador_RetornarOk()
     {
         //Arrange
-        Prestador PrestadorFake = CriaFornecedorFake(Guid.NewGuid());
-        PrestadorDto PrestadorDtoFake = CriaFornecedorDtoFake(PrestadorFake.Id);
-
-        _repository.Setup(s => s.FindById(It.IsAny<Guid>())).ReturnsAsync(PrestadorFake);
-        _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.FindByIdPrestador(It.IsAny<Guid>())).ReturnsAsync(prestadoresFake.First());
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetId(PrestadorDtoFake.Id.Value);
+        var response = await controller.GetId(prestadorDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as Prestador;
+        var result = okResult.Value as PrestadorDto;
         //Assert
-        _repository.Verify(s => s.FindById(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>()), Times.Never());
+        _prestadorService.Verify(s => s.FindByIdPrestador(It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, PrestadorFake.Telefone);
-        Assert.Equal(result.CPF, PrestadorFake.CPF);
-        Assert.Equal(result.DataCadastro, PrestadorFake.DataCadastro);
-        Assert.Equal(result.Id, PrestadorFake.Id);
-        Assert.Equal(result.EmailEmpresa, PrestadorFake.EmailEmpresa);
-        Assert.Equal(result.Endereco, PrestadorFake.Endereco);
-        Assert.Equal(result.Nome, PrestadorFake.Nome);
+        Assert.Equal(result.Telefone, prestadoresFake.First().Telefone);
+        Assert.Equal(result.CPF, prestadoresFake.First().CPF);
+        Assert.Equal(result.DataCadastro, prestadoresFake.First().DataCadastro);
+        Assert.Equal(result.Id, prestadoresFake.First().Id);
+        Assert.Equal(result.EmailEmpresa, prestadoresFake.First().EmailEmpresa);
+        Assert.Equal(result.Endereco, prestadoresFake.First().Endereco);
+        Assert.Equal(result.Nome, prestadoresFake.First().Nome);
+    }
+
+
+    [Fact]
+    public async Task Deve_Retornarar_Um_Prestador_RetornarNoContent()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorFake = null;
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.FindByIdPrestador(It.IsAny<Guid>())).ReturnsAsync(prestadorFake);
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        //Act
+        var response = await controller.GetId(prestadorDtoFake.Id.Value);
+        var okResult = response as NoContentResult;
+        //Assert
+        _prestadorService.Verify(s => s.FindByIdPrestador(It.IsAny<Guid>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Retornarar_Um_Prestador_RetornaBadRequest()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.FindByIdPrestador(It.IsAny<Guid>())).ReturnsAsync(prestadoresFake.First());
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.GetId(prestadorDtoFake.Id.Value);
+        var okResult = response as ObjectResult;
+        //Assert
+        _prestadorService.Verify(s => s.FindByIdPrestador(It.IsAny<Guid>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
     }
 
     [Fact]
     public async Task Deve_Atualizar_Um_Prestador_RetornarSucesso()
     {
         //Arrange
-        Prestador PrestadorFake = CriaFornecedorFake(Guid.NewGuid());
-        PrestadorDto PrestadorDtoFake = CriaFornecedorDtoFake(Guid.NewGuid());
-
-        _repository.Setup(s => s.Update(It.IsAny<Prestador>())).ReturnsAsync(PrestadorFake);
-        _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.UpdatePrestador(It.IsAny<PrestadorDto>())).ReturnsAsync(prestadoresFake.First());
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).AtualizarPrestador(PrestadorDtoFake);
+        var response = await controller.AtualizarPrestador(prestadorDtoFake);
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as Prestador;
+        var result = okResult.Value as PrestadorDto;
         //Assert
-        _repository.Verify(s => s.Update(It.IsAny<Prestador>()), Times.Once());
-        _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>()), Times.Once());
+        _prestadorService.Verify(s => s.UpdatePrestador(It.IsAny<PrestadorDto>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, PrestadorFake.Telefone);
-        Assert.Equal(result.CPF, PrestadorFake.CPF);
-        Assert.Equal(result.DataCadastro, PrestadorFake.DataCadastro);
-        Assert.Equal(result.Id, PrestadorFake.Id);
-        Assert.Equal(result.EmailEmpresa, PrestadorFake.EmailEmpresa);
-        Assert.Equal(result.Endereco, PrestadorFake.Endereco);
-        Assert.Equal(result.Nome, PrestadorFake.Nome);
+        Assert.Equal(result.Telefone, prestadoresFake.First().Telefone);
+        Assert.Equal(result.CPF, prestadoresFake.First().CPF);
+        Assert.Equal(result.DataCadastro, prestadoresFake.First().DataCadastro);
+        Assert.Equal(result.Id, prestadoresFake.First().Id);
+        Assert.Equal(result.EmailEmpresa, prestadoresFake.First().EmailEmpresa);
+        Assert.Equal(result.Endereco, prestadoresFake.First().Endereco);
+        Assert.Equal(result.Nome, prestadoresFake.First().Nome);
     }
 
+    [Fact]
+    public async Task NaoDeve_Atualizar_Um_Prestador_RetornarNoContent()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFakeNull = null;
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.UpdatePrestador(It.IsAny<PrestadorDto>())).ReturnsAsync(prestadorDtoFakeNull);
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        //Act
+        var response = await controller.AtualizarPrestador(prestadorDtoFake);
+        var okResult = response as NoContentResult;
+        //Assert
+        _prestadorService.Verify(s => s.UpdatePrestador(It.IsAny<PrestadorDto>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Atualizar_Um_Prestador_RetornarBadRequest()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.UpdatePrestador(It.IsAny<PrestadorDto>())).ReturnsAsync(prestadoresFake.First());
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.AtualizarPrestador(prestadorDtoFake);
+        var okResult = response as ObjectResult;
+        //Assert
+        _prestadorService.Verify(s => s.UpdatePrestador(It.IsAny<PrestadorDto>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+    }
 
     [Fact]
     public async Task Deve_Desativar_Um_Prestador_RetornarSucesso()
     {
         //Arrange
-        Prestador PrestadorFake = CriaFornecedorFake(Guid.NewGuid());
-        PrestadorDto PrestadorDtoFake = CriaFornecedorDtoFake(PrestadorFake.Id);
-
-        _repository.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(PrestadorFake);
-        _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(prestadoresFake.First());
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).DesativarPrestadorServico(PrestadorDtoFake.Id.Value);
+        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value, prestadorDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as Prestador;
+        var result = okResult.Value as PrestadorDto;
         //Assert
-        _repository.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>()), Times.Never());
+        _prestadorService.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, PrestadorFake.Telefone);
-        Assert.Equal(result.CPF, PrestadorFake.CPF);
-        Assert.Equal(result.DataCadastro, PrestadorFake.DataCadastro);
-        Assert.Equal(result.Id, PrestadorFake.Id);
-        Assert.Equal(result.EmailEmpresa, PrestadorFake.EmailEmpresa);
-        Assert.Equal(result.Endereco, PrestadorFake.Endereco);
-        Assert.Equal(result.Nome, PrestadorFake.Nome);
+        Assert.Equal(result.Telefone, prestadoresFake.First().Telefone);
+        Assert.Equal(result.CPF, prestadoresFake.First().CPF);
+        Assert.Equal(result.DataCadastro, prestadoresFake.First().DataCadastro);
+        Assert.Equal(result.Id, prestadoresFake.First().Id);
+        Assert.Equal(result.EmailEmpresa, prestadoresFake.First().EmailEmpresa);
+        Assert.Equal(result.Endereco, prestadoresFake.First().Endereco);
+        Assert.Equal(result.Nome, prestadoresFake.First().Nome);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Desativar_Um_Prestador_RetornarNoContent()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorFakeNull = null;
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(prestadorFakeNull);
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        //Act
+        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value, prestadorDtoFake.Id.Value);
+        var okResult = response as NoContentResult;
+
+        //Assert
+        _prestadorService.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Desativar_Um_Prestador_RetornarBadRequest()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorFakeNull = null;
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(prestadorFakeNull);
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value, prestadorDtoFake.Id.Value);
+        var okResult = response as ObjectResult;
+
+        //Assert
+        _prestadorService.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
     }
 
     [Fact]
     public async Task Deve_Deletar_Um_Prestador_RetornarSucesso()
     {
         //Arrange
-        Prestador PrestadorFake = CriaFornecedorFake(Guid.NewGuid());
-        PrestadorDto PrestadorDtoFake = CriaFornecedorDtoFake(PrestadorFake.Id);
-
-        _repository.Setup(s => s.Delete(It.IsAny<Guid>()));
-        _mapper.Setup(s => s.Map<Prestador>(It.IsAny<PrestadorDto>())).Returns(PrestadorFake);
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.Delete(It.IsAny<Guid>()));
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).DeletarPrestador(PrestadorDtoFake.Id.Value);
+        var response = await controller.DeletarPrestador(prestadorDtoFake.Id.Value);
 
         //Assert
-        _repository.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>()), Times.Never());
+        _prestadorService.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(response);
 
     }
+
+    [Fact]
+    public async Task NaoDeve_Deletar_Um_Prestador_RetornarBadRequest()
+    {
+        //Arrange
+        ICollection<PrestadorDto> prestadoresFake = CriaListaFornecedoresFake();
+        PrestadorDto prestadorDtoFake = new PrestadorDto() { Id = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        _prestadorService.Setup(s => s.Delete(It.IsAny<Guid>()));
+        PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.DeletarPrestador(prestadorDtoFake.Id.Value);
+        var okResult = response as ObjectResult;
+        //Assert
+        _prestadorService.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
+    }
+
     #endregion
 
 
     #region Funcionários
 
+    private static DefaultHttpContext CreateFakeClaimsFuncionario(ICollection<FuncionarioPrestadorDto> funcionario)
+    {
+        var fakeHttpContext = new DefaultHttpContext();
+        ClaimsIdentity identity = new(
+            new[] {
+                        new Claim("PrestadorId", funcionario.First().PrestadorId.ToString()),
+                        new Claim("UserName", "Teste"),
+                        new Claim("IdUserLogin", funcionario.First().PrestadorId.ToString())
+
+            }
+        );
+        fakeHttpContext.User = new System.Security.Claims.ClaimsPrincipal(identity);
+        return fakeHttpContext;
+    }
+
+    private PrestadorController GenerateControllerFakeFuncionario(ICollection<FuncionarioPrestadorDto> funcionario)
+    {
+        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaimsFuncionario(funcionario) } };
+    }
+
     [Fact]
-    public async Task Deve_Retornar_ListaDeFuncionarios()
+    public async Task Deve_Retornar_ListaDeFuncionarios_RetornoOk()
     {
         //Arrange
         ICollection<FuncionarioPrestador> funcionarioFake = CriarListaFuncionarioFake();
-        _funcionarioRepository.Setup(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<FuncionarioPrestador>())).ReturnsAsync(funcionarioFake);
+        _funcionarioRepository.Setup(s => s.GetAll(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario(string.Empty, string.Empty, string.Empty);
+        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetAllFuncionario();
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as ICollection<FuncionarioPrestador>;
+        var result = okResult.Value as ICollection<FuncionarioPrestadorDto>;
         //Assert
-        _funcionarioRepository.Verify(s => s.GetAll(It.IsAny<Guid>(), It.IsAny<FuncionarioPrestador>()), Times.Once());
+        _funcionarioRepository.Verify(s => s.GetAll(It.IsAny<Guid>()), Times.Once());
         _mapper.Verify(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>), Times.Once());
         _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>), Times.Once());
         Assert.NotNull(result);
@@ -184,8 +404,24 @@ public class PrestadorControllerTest
         Assert.Equal(result.First().Email, funcionarioFake.First().Email);
         Assert.Equal(result.First().Endereco, funcionarioFake.First().Endereco);
         Assert.Equal(result.First().Nome, funcionarioFake.First().Nome);
-        Assert.Equal(result.First().Prestador.CPF, funcionarioFake.First().Prestador.CPF);
-        Assert.Equal(result.First().Prestador.Nome, funcionarioFake.First().Prestador.Nome);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Retornar_ListaDeFuncionarios_RetornoNoContent()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestadorDto> funcionarioFake = CriarListaFuncionarioFake();
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = null;
+        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFakeLista);
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFake);
+        //Act
+        var response = await controller.GetAllFuncionario(string.Empty, string.Empty, string.Empty);
+        var okResult = response as NoContentResult;
+        //Assert
+        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
 
     }
 
@@ -193,86 +429,193 @@ public class PrestadorControllerTest
     public async Task Deve_Cadastrar_Um_FuncionarioPrestador_RetornarSucesso()
     {
         //Arrange
-        Guid? id = null;
-        FuncionarioPrestador funcionarioFake = CriarFuncionarioFake(Guid.NewGuid());
-        FuncionarioPrestadorDto funcionarioDtoFake = CriarFuncionarioDtoFake(id);
-
-        _funcionarioRepository.Setup(s => s.Create(It.IsAny<FuncionarioPrestador>())).ReturnsAsync(funcionarioFake);
-        _mapper.Setup(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>())).Returns(funcionarioDtoFake);
-        _mapper.Setup(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>())).Returns(funcionarioFake);
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        _funcionarioService.Setup(s => s.CreateFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFake);
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).AddFuncionario(funcionarioDtoFake);
+        var response = await controller.AddFuncionario(funcionarioFake);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as FuncionarioPrestadorDto;
         //Assert
-        _funcionarioRepository.Verify(s => s.Create(It.IsAny<FuncionarioPrestador>()), Times.Once());
-        _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>()), Times.Once());
-        _mapper.Verify(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        _funcionarioService.Verify(s => s.CreateFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
 
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, funcionarioDtoFake.Telefone);
-        Assert.Equal(result.CPF, funcionarioDtoFake.CPF);
-        Assert.Equal(result.DataCadastro, funcionarioDtoFake.DataCadastro);
-        Assert.Equal(result.Id, funcionarioDtoFake.Id);
-        Assert.Equal(result.Email, funcionarioDtoFake.Email);
-        Assert.Equal(result.Endereco, funcionarioDtoFake.Endereco);
-        Assert.Equal(result.Nome, funcionarioDtoFake.Nome);
+        Assert.Equal(result.Telefone, funcionarioFake.Telefone);
+        Assert.Equal(result.CPF, funcionarioFake.CPF);
+        Assert.Equal(result.DataCadastro, funcionarioFake.DataCadastro);
+        Assert.Equal(result.Id, funcionarioFake.Id);
+        Assert.Equal(result.Email, funcionarioFake.Email);
+        Assert.Equal(result.Endereco, funcionarioFake.Endereco);
+        Assert.Equal(result.Nome, funcionarioFake.Nome);
     }
+
+    [Fact]
+    public async Task NaoDeve_Cadastrar_Um_FuncionarioPrestador_RetornarNoContent()
+    {
+        //Arrange
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        FuncionarioPrestadorDto funcionarioFakeNull = null;
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        _funcionarioService.Setup(s => s.CreateFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFakeNull);
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        //Act
+        var response = await controller.AddFuncionario(funcionarioFake);
+        var okResult = response as NoContentResult;
+        //Assert
+        _funcionarioService.Verify(s => s.CreateFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+
+    }
+
+    [Fact]
+    public async Task NaoDeve_Cadastrar_Um_FuncionarioPrestador_RetornarBadRequest()
+    {
+        //Arrange
+        FuncionarioPrestadorDto funcionarioFake = null;
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        _funcionarioService.Setup(s => s.CreateFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFake);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.AddFuncionario(funcionarioFake);
+        var okResult = response as ObjectResult;
+        //Assert
+        _funcionarioService.Verify(s => s.CreateFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Never());
+
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
+    }
+
 
     [Fact]
     public async Task Deve_Retornarar_Um_FuncionarioPrestador_RetornarSucesso()
     {
         //Arrange
-        Guid? id = null;
-        FuncionarioPrestador funcionarioFake = CriarFuncionarioFake(Guid.NewGuid());
-        FuncionarioPrestadorDto funcionarioDtoFake = CriarFuncionarioDtoFake(id);
-
-        _funcionarioRepository.Setup(s => s.FindById(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
-        _mapper.Setup(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>())).Returns(funcionarioDtoFake);
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        _funcionarioService.Setup(s => s.FindByIdFuncionario(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).GetIdFuncionario(funcionarioFake.Id);
+        var response = await controller.GetIdFuncionario(funcionarioFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as FuncionarioPrestadorDto;
         //Assert
-        _funcionarioRepository.Verify(s => s.FindById(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>()), Times.Never());
+        _funcionarioService.Verify(s => s.FindByIdFuncionario(It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, funcionarioDtoFake.Telefone);
-        Assert.Equal(result.CPF, funcionarioDtoFake.CPF);
-        Assert.Equal(result.DataCadastro, funcionarioDtoFake.DataCadastro);
-        Assert.Equal(result.Id, funcionarioDtoFake.Id);
-        Assert.Equal(result.Email, funcionarioDtoFake.Email);
-        Assert.Equal(result.Endereco, funcionarioDtoFake.Endereco);
-        Assert.Equal(result.Nome, funcionarioDtoFake.Nome);
+        Assert.Equal(result.Telefone, funcionarioFake.Telefone);
+        Assert.Equal(result.CPF, funcionarioFake.CPF);
+        Assert.Equal(result.DataCadastro, funcionarioFake.DataCadastro);
+        Assert.Equal(result.Id, funcionarioFake.Id);
+        Assert.Equal(result.Email, funcionarioFake.Email);
+        Assert.Equal(result.Endereco, funcionarioFake.Endereco);
+        Assert.Equal(result.Nome, funcionarioFake.Nome);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Retornarar_Um_FuncionarioPrestador_RetornarNoContent()
+    {
+        //Arrange
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        FuncionarioPrestadorDto funcionarioFakeNull = null;
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        _funcionarioService.Setup(s => s.FindByIdFuncionario(It.IsAny<Guid>())).ReturnsAsync(funcionarioFakeNull);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        //Act
+        var response = await controller.GetIdFuncionario(funcionarioFake.Id.Value);
+        var okResult = response as NoContentResult;
+        //Assert
+        _funcionarioService.Verify(s => s.FindByIdFuncionario(It.IsAny<Guid>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Retornarar_Um_FuncionarioPrestador_RetornarBadRequest()
+    {
+        //Arrange
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        _funcionarioService.Setup(s => s.FindByIdFuncionario(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.GetIdFuncionario(funcionarioFake.Id.Value);
+        var okResult = response as ObjectResult;
+        //Assert
+        _funcionarioService.Verify(s => s.FindByIdFuncionario(It.IsAny<Guid>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
     }
 
     [Fact]
     public async Task Deve_Atualizar_Um_Funcionario_RetornarSucesso()
     {
         //Arrange
-        Guid? id = null;
-        FuncionarioPrestador funcionarioFake = CriarFuncionarioFake(Guid.NewGuid());
-        FuncionarioPrestadorDto funcionarioDtoFake = CriarFuncionarioDtoFake(id);
-
-        _funcionarioRepository.Setup(s => s.Update(It.IsAny<FuncionarioPrestador>())).ReturnsAsync(funcionarioFake);
-        _mapper.Setup(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>())).Returns(funcionarioFake);
-        _mapper.Setup(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>())).Returns(funcionarioDtoFake);
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        _funcionarioService.Setup(s => s.UpdateFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFake);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).AtualizarFuncionario(funcionarioDtoFake);
+        var response = await controller.AtualizarFuncionario(funcionarioFake);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as FuncionarioPrestadorDto;
         //Assert
-        _funcionarioRepository.Verify(s => s.Update(It.IsAny<FuncionarioPrestador>()), Times.Once());
-        _mapper.Verify(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
-        _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>()), Times.Once());
+        _funcionarioService.Verify(s => s.UpdateFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, funcionarioDtoFake.Telefone);
-        Assert.Equal(result.CPF, funcionarioDtoFake.CPF);
-        Assert.Equal(result.DataCadastro, funcionarioDtoFake.DataCadastro);
-        Assert.Equal(result.Id, funcionarioDtoFake.Id);
-        Assert.Equal(result.Email, funcionarioDtoFake.Email);
-        Assert.Equal(result.Endereco, funcionarioDtoFake.Endereco);
-        Assert.Equal(result.Nome, funcionarioDtoFake.Nome);
+        Assert.Equal(result.Telefone, funcionarioFake.Telefone);
+        Assert.Equal(result.CPF, funcionarioFake.CPF);
+        Assert.Equal(result.DataCadastro, funcionarioFake.DataCadastro);
+        Assert.Equal(result.Id, funcionarioFake.Id);
+        Assert.Equal(result.Email, funcionarioFake.Email);
+        Assert.Equal(result.Endereco, funcionarioFake.Endereco);
+        Assert.Equal(result.Nome, funcionarioFake.Nome);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Atualizar_Um_Funcionario_RetornaNoContent()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        FuncionarioPrestadorDto funcionarioFakeNull = null;
+        _funcionarioService.Setup(s => s.UpdateFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFakeNull);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        //Act
+        var response = await controller.AtualizarFuncionario(funcionarioFake);
+        var okResult = response as NoContentResult;
+        //Assert
+        _funcionarioService.Verify(s => s.UpdateFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Atualizar_Um_Funcionario_RetornaBadRequest()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        _funcionarioService.Setup(s => s.UpdateFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFake);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.AtualizarFuncionario(funcionarioFake);
+        var okResult = response as ObjectResult;
+        //Assert
+        _funcionarioService.Verify(s => s.UpdateFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
     }
 
 
@@ -280,46 +623,102 @@ public class PrestadorControllerTest
     public async Task Deve_Desativar_Um_Funcionario_RetornarSucesso()
     {
         //Arrange
-        Guid? id = null;
-        FuncionarioPrestador funcionarioFake = CriarFuncionarioFake(Guid.NewGuid());
-        FuncionarioPrestadorDto funcionarioDtoFake = CriarFuncionarioDtoFake(id);
-
-        _funcionarioRepository.Setup(s => s.Desabled(It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
-        _mapper.Setup(s => s.Map<FuncionarioPrestador>(It.IsAny<FuncionarioPrestadorDto>())).Returns(funcionarioFake);
-        _mapper.Setup(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>())).Returns(funcionarioDtoFake);
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        _funcionarioService.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).DesativarFuncionario(funcionarioFake.Id);
+        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value, funcionarioFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as FuncionarioPrestadorDto;
         //Assert
-        _funcionarioRepository.Verify(s => s.Desabled(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<Prestador>(It.IsAny<PrestadorDto>()), Times.Never());
+        _funcionarioService.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(result);
-        Assert.Equal(result.Telefone, funcionarioDtoFake.Telefone);
-        Assert.Equal(result.CPF, funcionarioDtoFake.CPF);
-        Assert.Equal(result.DataCadastro, funcionarioDtoFake.DataCadastro);
-        Assert.Equal(result.Id, funcionarioDtoFake.Id);
-        Assert.Equal(result.Email, funcionarioDtoFake.Email);
-        Assert.Equal(result.Endereco, funcionarioDtoFake.Endereco);
-        Assert.Equal(result.Nome, funcionarioDtoFake.Nome);
+        Assert.Equal(result.Telefone, funcionarioFake.Telefone);
+        Assert.Equal(result.CPF, funcionarioFake.CPF);
+        Assert.Equal(result.DataCadastro, funcionarioFake.DataCadastro);
+        Assert.Equal(result.Id, funcionarioFake.Id);
+        Assert.Equal(result.Email, funcionarioFake.Email);
+        Assert.Equal(result.Endereco, funcionarioFake.Endereco);
+        Assert.Equal(result.Nome, funcionarioFake.Nome);
     }
+
+
+    [Fact]
+    public async Task NaoDeve_Desativar_Um_Funcionario_RetornarNoContent()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        FuncionarioPrestadorDto funcionarioFakeNull = null;
+        _funcionarioService.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(funcionarioFakeNull);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        //Act
+        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value, funcionarioFake.Id.Value);
+        var okResult = response as NoContentResult;
+        
+        //Assert
+        _funcionarioService.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task NaoDeve_Desativar_Um_Funcionario_RetornarBadRequest()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        _funcionarioService.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value, funcionarioFake.Id.Value);
+        var okResult = response as ObjectResult;
+
+        //Assert
+        _funcionarioService.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+    }
+
 
     [Fact]
     public async Task Deve_Deletar_Um_Funcionario_RetornarSucesso()
     {
         //Arrange
-        Guid? id = null;
-        FuncionarioPrestador funcionarioFake = CriarFuncionarioFake(Guid.NewGuid());
-        FuncionarioPrestadorDto funcionarioDtoFake = CriarFuncionarioDtoFake(id);
-
-        _funcionarioRepository.Setup(s => s.Delete(It.IsAny<Guid>()));
-        _mapper.Setup(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>())).Returns(funcionarioDtoFake);
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        _funcionarioService.Setup(s => s.Delete(It.IsAny<Guid>()));
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         //Act
-        var response = await new PrestadorController(_repository.Object, _funcionarioRepository.Object, _mapper.Object).DeletarFuncionario(funcionarioDtoFake.Id.Value);
+        var response = await controller.DeletarFuncionario(funcionarioFake.Id.Value);
 
         //Assert
-        _funcionarioRepository.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Once());
-        _mapper.Verify(s => s.Map<FuncionarioPrestadorDto>(It.IsAny<FuncionarioPrestador>()), Times.Never());
+        _funcionarioService.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Once());        
+        Assert.NotNull(response);
+
+    }
+
+
+    [Fact]
+    public async Task NaoDeve_Deletar_Um_Funcionario_RetornarBadRequest()
+    {
+        //Arrange
+        ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
+        FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
+        _funcionarioService.Setup(s => s.Delete(It.IsAny<Guid>()));
+        List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
+        PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
+        controller.ModelState.AddModelError("key", "error message");
+        //Act
+        var response = await controller.DeletarFuncionario(funcionarioFake.Id.Value);
+
+        //Assert
+        _funcionarioService.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Never());
         Assert.NotNull(response);
 
     }
@@ -328,32 +727,17 @@ public class PrestadorControllerTest
 
     private FuncionarioPrestadorDto CriarFuncionarioDtoFake(Guid? id)
     {
-        return new FuncionarioPrestadorDto() { Cargo = "teste", CPF = "123456789", Email = "teste@teste.com.br", Nome = "teste func", RG = "52453", Telefone = "1234556", DataCadastro = DateTime.Now, Endereco = "rua teste", Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid() };
+        return new FuncionarioPrestadorDto() { Cargo = "teste", CPF = "123456789", Email = "teste@teste.com.br", Nome = "teste func", RG = "52453", Telefone = "1234556", DataCadastro = DateTime.Now, Endereco = "rua teste", Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
     }
 
-    private FuncionarioPrestador CriarFuncionarioFake(Guid guid)
+    private ICollection<FuncionarioPrestadorDto> CriarListaFuncionarioFake()
     {
-        return new FuncionarioPrestador() { Cargo = "teste", CPF = "123456789", Email = "teste@teste.com.br", Nome = "teste func", RG = "52453", Telefone = "1234556", DataCadastro = DateTime.Now, Endereco = "rua teste", Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid(), Prestador = CriaFornecedorFake(Guid.NewGuid()), PrestadorId = Guid.NewGuid() };
+        return new List<FuncionarioPrestadorDto>() { new FuncionarioPrestadorDto() { Cargo = "teste", CPF = "123456789", Email = "teste@teste.com.br", Nome = "teste func", RG = "52453", Telefone = "1234556", DataCadastro = DateTime.Now, Endereco = "rua teste", Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid(), PrestadorId = Guid.NewGuid() } };
     }
 
-    private ICollection<FuncionarioPrestador> CriarListaFuncionarioFake()
+    private static ICollection<PrestadorDto> CriaListaFornecedoresFake()
     {
-        return new List<FuncionarioPrestador>() { new FuncionarioPrestador() { Cargo = "teste", CPF = "123456789", Email = "teste@teste.com.br", Nome = "teste func", RG = "52453", Telefone = "1234556", DataCadastro = DateTime.Now, Endereco = "rua teste", Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid(), Prestador = CriaFornecedorFake(Guid.NewGuid()), PrestadorId = Guid.NewGuid() } };
+        return new List<PrestadorDto>() { new PrestadorDto() { CPF = "123456789", EmailEmpresa = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Guid.NewGuid() } };
     }
 
-    private static ICollection<Prestador> CriaListaFornecedoresFake()
-    {
-        return new List<Prestador>() { new Prestador() { CPF = "123456789", EmailEmpresa = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Guid.NewGuid() } };
-    }
-
-
-    private static Prestador CriaFornecedorFake(Guid? Id)
-    {
-        return new Prestador() { CPF = "123456789", EmailEmpresa = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Id.HasValue ? Id.Value : Guid.Empty };
-    }
-
-    private static PrestadorDto CriaFornecedorDtoFake(Guid? Id)
-    {
-        return new PrestadorDto() { CPF = "123456789", EmailEmpresa = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Id.HasValue ? Id.Value : Guid.Empty };
-    }
 }

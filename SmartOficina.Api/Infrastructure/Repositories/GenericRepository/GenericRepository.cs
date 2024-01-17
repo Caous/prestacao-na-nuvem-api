@@ -29,16 +29,18 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     }
 
-    public async Task<T> Desabled(Guid id)
+    public async Task<T> Desabled(Guid id, Guid userDesabled)
     {
         T item = await _context.Set<T>().FindAsync(id);
 
         if (item is null)
             throw new Exception("Indice não encontrado");
 
-        //item.GetType().GetProperty("Ativo").SetValue(Boolean,true);
-        //item.GetType().GetProperty("Dt_Desativação").SetValue(DateTime, DateTime.Now);
+        PropertyInfo nameprop = typeof(T).GetProperty("DataDesativacao");
 
+        if (nameprop != null)        
+            nameprop.SetValue(item, DateTime.Now);
+        
 
         _context.Set<T>().Update(item);
         await _context.SaveChangesAsync();
@@ -48,7 +50,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     }
 
-    public async Task<T> FindById(Guid Id) =>  await _context.Set<T>().FindAsync(Id);   
+    public async Task<T> FindById(Guid Id) => await _context.Set<T>().FindAsync(Id);
 
 
     public virtual async Task<ICollection<T>> GetAll(Guid id, T filter)

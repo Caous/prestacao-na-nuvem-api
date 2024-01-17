@@ -1,34 +1,62 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
 
+namespace SmartOficina.Api.Controllers;
+
+/// <summary>
+/// Controller de prestador de serviço e funcionário
+/// </summary>
 [Route("api/[controller]")]
 [ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class PrestadorController : MainController
 {
-    private readonly IPrestadorRepository _repository;
-    private readonly IFuncionarioPrestadorRepository _repositoryFuncionario;
-    private readonly IMapper _mapper;
+    private readonly IPrestadorService _prestadorService;
+    private readonly IFuncionarioService _funcionarioSerive;
+    private readonly IValidator<PrestadorDto> _validator;
 
-    public PrestadorController(IPrestadorRepository repository, IFuncionarioPrestadorRepository repositoryFuncionario, IMapper mapper)
+    public PrestadorController(IPrestadorService prestadorService, IFuncionarioService funcionarioSerive, IValidator<PrestadorDto> validator)
     {
-        _repository = repository;
-        _repositoryFuncionario = repositoryFuncionario;
-        _mapper = mapper;
+        _prestadorService = prestadorService;
+        _funcionarioSerive = funcionarioSerive;
+        _validator = validator;
     }
 
     #region Controller Prestador
+    /// <summary>
+    /// Adicionar um prestador de serviço
+    /// </summary>
+    /// <param name="prestador"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Add(PrestadorDto prestador)
     {
-        if (!ModelState.IsValid)
+        var resultValidator = await _validator.ValidateAsync(prestador);
+
+        if (!resultValidator.IsValid)
         {
-            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
+
+            foreach (var item in resultValidator.Errors)
+                errors.Add(new ErrosValidationsResponse() { ErrorMensagem = item.ErrorMessage });
+
+            return StatusCode(StatusCodes.Status400BadRequest, errors);
         }
+
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
         MapearLogin(prestador);
 
-        var result = await _repository.Create(_mapper.Map<Prestador>(prestador));
+        var result = await _prestadorService.CreatePrestador(prestador);
 
-        return Ok(_mapper.Map<PrestadorDto>(result));
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
     private void MapearLogin(PrestadorDto prestador)
@@ -37,32 +65,59 @@ public class PrestadorController : MainController
         prestador.UsrCadastroDesc = UserName;
     }
 
+    /// <summary>
+    /// Recuperar uma lista de prestadores
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _repository.GetAll(PrestadorId, new Prestador());
-        return Ok(_mapper.Map<ICollection<PrestadorDto>>(result));
+        var result = await _prestadorService.GetAllPrestador(new PrestadorDto() { PrestadorId = PrestadorId });
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Recuperar prestador de serviço id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        var result = await _repository.FindById(id);
+        var result = await _prestadorService.FindByIdPrestador(id);
 
-        return Ok(_mapper.Map<PrestadorDto>(result));
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Atualizar prestador de serviço
+    /// </summary>
+    /// <param name="prestador"></param>
+    /// <returns></returns>
     [HttpPut]
     public async Task<IActionResult> AtualizarPrestador(PrestadorDto prestador)
     {
+
+        var resultValidator = await _validator.ValidateAsync(prestador);
+
+        if (!resultValidator.IsValid)
+        {
+            List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
+
+            foreach (var item in resultValidator.Errors)
+                errors.Add(new ErrosValidationsResponse() { ErrorMensagem = item.ErrorMessage });
+
+            return StatusCode(StatusCodes.Status400BadRequest, errors);
+        }
+
         if (!ModelState.IsValid || !prestador.Id.HasValue)
         {
             if (ModelState.ErrorCount < 1)
@@ -73,40 +128,43 @@ public class PrestadorController : MainController
 
         MapearLogin(prestador);
 
-        var result = await _repository.Update(_mapper.Map<Prestador>(prestador));
-
-        return Ok(_mapper.Map<PrestadorDto>(result));
+        var result = await _prestadorService.UpdatePrestador(prestador);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Desativa um prestador
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarPrestador")]
-    public async Task<IActionResult> DesativarPrestadorServico(Guid id)
+    public async Task<IActionResult> DesativarPrestadorServico(Guid id, Guid userDesabled)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        var result = await _repository.Desabled(id);
-
-        return Ok(_mapper.Map<PrestadorDto>(result));
+        var result = await _prestadorService.Desabled(id, userDesabled);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Deletar um prestador
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     public async Task<IActionResult> DeletarPrestador(Guid id)
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
-            await _repository.Delete(id);
+
+            await _prestadorService.Delete(id);
             return Ok("Deletado");
         }
         catch (Exception ex)
@@ -127,51 +185,81 @@ public class PrestadorController : MainController
         func.UsrCadastro = UserId;
     }
 
+    /// <summary>
+    /// Adicionar um funcionário
+    /// </summary>
+    /// <param name="func"></param>
+    /// <returns></returns>
     [HttpPost("Funcionario")]
     public async Task<IActionResult> AddFuncionario(FuncionarioPrestadorDto func)
     {
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         MapearLoginFuncionario(func);
 
-        var result = await _repositoryFuncionario.Create(_mapper.Map<FuncionarioPrestador>(func));
+        var result = await _funcionarioSerive.CreateFuncionario(func);
 
-        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Recuperar todos os funcionários
+    /// </summary>
+    /// <param name="cpf"></param>
+    /// <param name="email"></param>
+    /// <param name="nome"></param>
+    /// <returns></returns>
     [HttpGet("Funcionario")]
-    public async Task<IActionResult> GetAllFuncionario(string? cpf, string? email, string? nome)
+    public async Task<IActionResult> GetAllFuncionario()
     {
-        var result = await _repositoryFuncionario.GetAll(PrestadorId, new FuncionarioPrestador() { Cargo = string.Empty, CPF = cpf, Email = email, Nome = nome, RG = string.Empty, Telefone = string.Empty });
+        var result = await _repositoryFuncionario.GetAll(PrestadorId);
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
     }
 
+    /// <summary>
+    /// Recuperar todos os funcionários por prestador
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="_cpf"></param>
+    /// <param name="_email"></param>
+    /// <param name="_nome"></param>
+    /// <returns></returns>
     [HttpGet("Funcionario/Prestador/id")]
     public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id, [FromBody] string _cpf, string _email, string _nome)
     {
-        var result = await _repositoryFuncionario.GetListaFuncionarioPrestadorAsync(id, new FuncionarioPrestador() { Cargo = string.Empty, CPF = _cpf, Email = _email, Nome = _nome, RG = string.Empty, Telefone = string.Empty });
+        var result = await _repositoryFuncionario.GetListaFuncionarioPrestadorAsync(id);
         return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
     }
 
+    /// <summary>
+    /// Recuperar funcionário por Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("Funcionario/{id}")]
     public async Task<IActionResult> GetIdFuncionario(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        var result = await _repositoryFuncionario.FindById(id);
 
-        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+        var result = await _funcionarioSerive.FindByIdFuncionario(id);
+
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Atualizar funcionario
+    /// </summary>
+    /// <param name="func"></param>
+    /// <returns></returns>
     [HttpPut("Funcionario")]
     public async Task<IActionResult> AtualizarFuncionario(FuncionarioPrestadorDto func)
     {
@@ -184,42 +272,46 @@ public class PrestadorController : MainController
         }
         MapearLoginFuncionario(func);
 
-        var result = await _repositoryFuncionario.Update(_mapper.Map<FuncionarioPrestador>(func));
-
-        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+        var result = await _funcionarioSerive.UpdateFuncionario(func);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Desativar um funcionário
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPut("DesativarFuncionario")]
-    public async Task<IActionResult> DesativarFuncionario(Guid id)
+    public async Task<IActionResult> DesativarFuncionario(Guid id, Guid userDesabled)
     {
         if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        var result = await _repositoryFuncionario.Desabled(id);
 
-        return Ok(_mapper.Map<FuncionarioPrestadorDto>(result));
+        var result = await _funcionarioSerive.Desabled(id, userDesabled);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
 
     }
 
+    /// <summary>
+    /// Deletar um funcionário
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("Funcionario")]
     public async Task<IActionResult> DeletarFuncionario(Guid id)
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
 
-            await _repositoryFuncionario.Delete(id);
+
+            await _funcionarioSerive.Delete(id);
 
             return Ok("Deletado");
         }
