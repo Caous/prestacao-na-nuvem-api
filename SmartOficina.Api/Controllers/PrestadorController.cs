@@ -1,4 +1,5 @@
 ﻿using SmartOficina.Api.Domain.Interfaces;
+using System;
 
 namespace SmartOficina.Api.Controllers;
 
@@ -196,7 +197,7 @@ public class PrestadorController : MainController
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        MapearLoginFuncionario(func);
+        
 
         var result = await _funcionarioSerive.CreateFuncionario(func);
 
@@ -213,27 +214,30 @@ public class PrestadorController : MainController
     /// <param name="email"></param>
     /// <param name="nome"></param>
     /// <returns></returns>
-    [HttpGet("Funcionario")]
-    public async Task<IActionResult> GetAllFuncionario()
-    {
-        var result = await _repositoryFuncionario.GetAll(PrestadorId);
-        return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
-    }
+    //[HttpGet("Funcionario")]
+    //public async Task<IActionResult> GetAllFuncionario()
+    //{
+    //    var filter = new FuncionarioPrestadorDto();
+    //    MapearLoginFuncionario(filter); 
 
-    /// <summary>
-    /// Recuperar todos os funcionários por prestador
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="_cpf"></param>
-    /// <param name="_email"></param>
-    /// <param name="_nome"></param>
-    /// <returns></returns>
-    [HttpGet("Funcionario/Prestador/id")]
-    public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id, [FromBody] string _cpf, string _email, string _nome)
-    {
-        var result = await _repositoryFuncionario.GetListaFuncionarioPrestadorAsync(id);
-        return Ok(_mapper.Map<ICollection<FuncionarioPrestadorDto>>(result));
-    }
+    //    var result = await _funcionarioSerive.GetAllFuncionario(filter);
+    //    return Ok(result);
+    //}
+
+    ///// <summary>
+    ///// Recuperar todos os funcionários por prestador
+    ///// </summary>
+    ///// <param name="id"></param>
+    ///// <param name="_cpf"></param>
+    ///// <param name="_email"></param>
+    ///// <param name="_nome"></param>
+    ///// <returns></returns>
+    //[HttpGet("Funcionario/Prestador/id")]
+    //public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id, [FromBody] string _cpf, string _email, string _nome)
+    //{
+    //    var result = await _funcionarioSerive.GetAllFuncionario(id);
+    //    return Ok(result);
+    //}
 
     /// <summary>
     /// Recuperar funcionário por Id

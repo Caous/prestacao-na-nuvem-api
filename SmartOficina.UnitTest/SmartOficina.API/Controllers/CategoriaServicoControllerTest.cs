@@ -303,7 +303,7 @@ public class CategoriaServicoControllerTest
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         //Act
 
-        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value);
+        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value, categoriaDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as CategoriaServicoDto;
         //Assert
@@ -328,7 +328,7 @@ public class CategoriaServicoControllerTest
         controllerCategoria.ModelState.AddModelError("key", "error message");
         //Act
 
-        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value);
+        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value, categoriaDtoFake.Id.Value);
         var okResult = response as ObjectResult;
 
         //Assert
@@ -348,7 +348,7 @@ public class CategoriaServicoControllerTest
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         //Act
 
-        var response = await controllerCategoria.DesativarCategoria(Guid.NewGuid());
+        var response = await controllerCategoria.DesativarCategoria(Guid.NewGuid(),categoriaDtoFake.Id.Value);
         var okResult = response as NoContentResult;
         //Assert
         _serviceMock.Verify(x => x.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.Once);

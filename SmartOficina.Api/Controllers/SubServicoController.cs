@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using SmartOficina.Api.Domain.Interfaces;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de sub serviço
@@ -109,9 +111,9 @@ public class SubServicoController : MainController
 
         MapearLogin(subServico);
 
-        var result = await _repository.Update(_mapper.Map<SubCategoriaServico>(subServico));
-        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
-        
+        var result = await _subCategoriaServicoService.UpdateSubCategoria(subServico);
+        return Ok(result);
+
     }
 
     /// <summary>
@@ -131,9 +133,8 @@ public class SubServicoController : MainController
         if (result == null)
             return NoContent();
 
-        var result = await _repository.Desabled(id);
-        return Ok(_mapper.Map<SubCategoriaServicoDto>(result));
-        
+        return Ok(result);
+
     }
 
     /// <summary>

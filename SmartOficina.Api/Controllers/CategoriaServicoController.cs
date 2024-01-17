@@ -1,5 +1,4 @@
 ﻿using SmartOficina.Api.Domain.Interfaces;
-using SmartOficina.Api.Validators;
 
 namespace SmartOficina.Api.Controllers;
 
@@ -20,7 +19,7 @@ public class CategoriaServicoController : MainController
     public CategoriaServicoController(ICategoriaService categoriaService)
     {
         _categoriaService = categoriaService;
-      
+
     }
 
     private void MapearLogin(CategoriaServicoDto categoriaServico)
@@ -137,13 +136,13 @@ public class CategoriaServicoController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarCategoria")]
-    public async Task<IActionResult> DesativarCategoria(Guid id)
+    public async Task<IActionResult> DesativarCategoria(Guid id, Guid userDesabled)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
-                
-        var result = await _repository.Desabled(id);
+
+
+        var result = await _categoriaService.Desabled(id, userDesabled);
 
         if (result == null)
             return NoContent();
