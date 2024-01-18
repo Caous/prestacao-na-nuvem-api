@@ -1,4 +1,5 @@
 ﻿using SmartOficina.Api.Domain.Interfaces;
+using SmartOficina.Api.Domain.Model;
 
 namespace SmartOficina.Api.Controllers;
 
@@ -59,7 +60,7 @@ public class VeiculoController : MainController
     public async Task<IActionResult> GetAll()
     {
         VeiculoDto filter = MapperFilter();
-
+        MapearLogin(filter);
         var result = await _veiculoService.GetAllVeiculos(filter);
         if (result == null || !result.Any())
             return NoContent();

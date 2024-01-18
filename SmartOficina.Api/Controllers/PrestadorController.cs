@@ -197,7 +197,7 @@ public class PrestadorController : MainController
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        
+
 
         var result = await _funcionarioSerive.CreateFuncionario(func);
 
@@ -218,7 +218,7 @@ public class PrestadorController : MainController
     public async Task<IActionResult> GetAllFuncionario(string? cpf, string? email, string? nome)
     {
         FuncionarioPrestadorDto filter = MapperFilter(cpf, email, nome);
-
+        MapearLoginFuncionario(filter);
         var result = await _funcionarioSerive.GetAllFuncionario(filter);
         if (result == null || !result.Any())
             return NoContent();
