@@ -36,7 +36,7 @@ public class PrestadorController : MainController
     {
         var resultValidator = await _validator.ValidateAsync(prestador);
 
-        if (!resultValidator.IsValid)
+        if (resultValidator != null && !resultValidator.IsValid)
         {
             List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
 
@@ -108,7 +108,7 @@ public class PrestadorController : MainController
 
         var resultValidator = await _validator.ValidateAsync(prestador);
 
-        if (!resultValidator.IsValid)
+        if (resultValidator != null && !resultValidator.IsValid)
         {
             List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
 

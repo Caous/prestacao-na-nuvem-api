@@ -40,7 +40,7 @@ public class ClienteController : MainController
     {
         var resultValitor = await _validator.ValidateAsync(cliente);
 
-        if (!resultValitor.IsValid)
+        if (resultValitor != null && !resultValitor.IsValid)
         {
             List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
 
@@ -137,7 +137,7 @@ public class ClienteController : MainController
 
         var resultValitor = await _validator.ValidateAsync(cliente);
 
-        if (!resultValitor.IsValid)
+        if (resultValitor != null && !resultValitor.IsValid)
         {
             List<ErrosValidationsResponse> errors = new();
 
