@@ -726,7 +726,7 @@ public class PrestadorControllerTest
 
     private FuncionarioPrestadorDto CriarFuncionarioDtoFake(Guid? id)
     {
-        return new FuncionarioPrestadorDto() { Cargo = "teste", CPF = "123456789", Email = "teste@teste.com.br", Nome = "teste func", RG = "52453", Telefone = "1234556", DataCadastro = DateTime.Now, Endereco = "rua teste", Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
+        return new FuncionarioPrestadorDto() { Cargo = "teste", CPF = "40608550817", Email = "teste@teste.com.br", Nome = "teste func", RG = "52453", Telefone = "1234556", DataCadastro = DateTime.Now, Endereco = "rua teste", Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid(), PrestadorId = Guid.NewGuid() };
     }
 
     private ICollection<FuncionarioPrestadorDto> CriarListaFuncionarioFake()
@@ -736,7 +736,7 @@ public class PrestadorControllerTest
 
     private static ICollection<PrestadorDto> CriaListaFornecedoresFake()
     {
-        return new List<PrestadorDto>() { new PrestadorDto() { CPF = "123456789", EmailEmpresa = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Guid.NewGuid() } };
+        return new List<PrestadorDto>() { new PrestadorDto() { CPF = "40608550817", EmailEmpresa = "teste@test.com.br", Nome = "Teste", Telefone = "11999999999", Id = Guid.NewGuid() } };
     }
 
 }
