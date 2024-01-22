@@ -3,6 +3,7 @@ using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
+#pragma warning disable 8604, 8602, 8629, 8600, 8620
 public class VeiculoControllerTest
 {
     Mock<IVeiculoService> _serviceMock = new();
@@ -63,7 +64,7 @@ public class VeiculoControllerTest
         //Assert
         _serviceMock.Verify(s => s.GetAllVeiculos(It.IsAny<VeiculoDto>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
     [Fact]
     public async Task NaoDeve_Retornar_Um_Veiculo_RetornoNoContent()
@@ -81,7 +82,7 @@ public class VeiculoControllerTest
         //Assert
         _serviceMock.Verify(s => s.FindByIdVeiculos(It.IsAny<Guid>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -160,7 +161,7 @@ public class VeiculoControllerTest
         //Assert
         _serviceMock.Verify(s => s.CreateVeiculos(It.IsAny<VeiculoDto>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -219,7 +220,7 @@ public class VeiculoControllerTest
         //Assert
         _serviceMock.Verify(s => s.UpdateVeiculos(It.IsAny<VeiculoDto>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -278,7 +279,7 @@ public class VeiculoControllerTest
         //Assert
         _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -297,7 +298,7 @@ public class VeiculoControllerTest
         //Assert
         _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Never);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
     }
 
 
@@ -334,7 +335,7 @@ public class VeiculoControllerTest
         //Assert
         _serviceMock.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Never);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
     }
 
     private VeiculoDto RetornaVeiculoFake(string marca, string modelo, string placa)

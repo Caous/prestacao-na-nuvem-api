@@ -30,13 +30,13 @@ public class AutenticacaoController : MainController
     [HttpPost("RegistrarPrestador")]
     public async Task<IActionResult> Post(PrestadorCadastroDto prestadorDto)
     {
-        if (prestadorDto.UsrCadastro == null || prestadorDto.UsrCadastro == Guid.Empty || prestadorDto.UsrDescricaoCadastro.IsNullOrEmpty())
+        if (prestadorDto.UsrCadastro == Guid.Empty || prestadorDto.UsrDescricaoCadastro.IsNullOrEmpty())
         {
-            UserModel user = await _acessoManager.GetUserPorEmail(prestadorDto.Email);
+            UserModel? user = await _acessoManager.GetUserPorEmail(prestadorDto.Email);
 
             if (user != null)
             {
-                prestadorDto.UsrDescricaoCadastro = user.UserName;
+                prestadorDto.UsrDescricaoCadastro = user.UserName ?? string.Empty;
                 prestadorDto.UsrCadastro = new Guid(user.Id);
             }
         }

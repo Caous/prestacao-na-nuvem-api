@@ -53,14 +53,14 @@ public class AcessoManager : IAcessoManager
         else return false;
     }
 
-    public async Task<UserModel> GetUserPorEmail(string email)
+    public async Task<UserModel?> GetUserPorEmail(string email)
     {
         return await _userManager.FindByEmailAsync(email);
     }
 
     public async Task<Token> ValidarCredenciais(UserModelDto user)
     {
-        UserModel usuario;
+        UserModel? usuario;
 
         if (!string.IsNullOrEmpty(user.UserName))
             usuario = await _userManager.FindByNameAsync(user.UserName.ToUpper());

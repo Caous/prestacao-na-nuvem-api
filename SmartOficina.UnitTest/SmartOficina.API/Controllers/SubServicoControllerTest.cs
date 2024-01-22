@@ -3,6 +3,7 @@ using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
+#pragma warning disable 8604, 8602, 8629, 8600, 8620
 public class SubServicoControllerTest
 {
     Mock<ISubCategoriaServicoService> _serviceMock = new();
@@ -73,7 +74,7 @@ public class SubServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -92,7 +93,7 @@ public class SubServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.FindByIdSubCategoria(It.IsAny<Guid>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
 
@@ -133,7 +134,7 @@ public class SubServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.FindByIdSubCategoria(It.IsAny<Guid>()), Times.Never);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
     }
     [Fact]
     public async Task Deve_Cadastrar_SubCategoria_RetornoOk()
@@ -172,7 +173,7 @@ public class SubServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.CreateSubCategoria(It.IsAny<SubCategoriaServicoDto>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -230,7 +231,7 @@ public class SubServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.UpdateSubCategoria(It.IsAny<SubCategoriaServicoDto>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -258,7 +259,7 @@ public class SubServicoControllerTest
         //Arranger
         ICollection<SubCategoriaServicoDto> subCategoriaServicosListaFake = RetornaListaSubCategoriaServico("Teste", "teste desc");
         SubCategoriaServicoDto subCategoriaServicoFake = RetornaSubCategoriaServico("Teste", "teste desc");
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(subCategoriaServicoFake);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(subCategoriaServicoFake);
         //Act
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
         var response = await controllerSubCategoria.DesativarSubServico(subCategoriaServicoFake.Id.Value, subCategoriaServicoFake.Id.Value);
@@ -266,8 +267,8 @@ public class SubServicoControllerTest
         var result = okResult.Value as SubCategoriaServicoDto;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once);
-        Assert.NotNull(result); 
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.Once);
+        Assert.NotNull(result);
         Assert.Equal(result.Titulo, subCategoriaServicoFake.Titulo);
         Assert.Equal(result.Desc, subCategoriaServicoFake.Desc);
 
@@ -280,16 +281,16 @@ public class SubServicoControllerTest
         ICollection<SubCategoriaServicoDto> subCategoriaServicosListaFake = RetornaListaSubCategoriaServico("Teste", "teste desc");
         SubCategoriaServicoDto subCategoriaServicoFake = RetornaSubCategoriaServico("Teste", "teste desc");
         SubCategoriaServicoDto veiculoFakeNull = null;
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(veiculoFakeNull);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(veiculoFakeNull);
         //Act
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
         var response = await controllerSubCategoria.DesativarSubServico(subCategoriaServicoFake.Id.Value, subCategoriaServicoFake.Id.Value);
         var okResult = response as NoContentResult;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once);
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.Once);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -298,7 +299,7 @@ public class SubServicoControllerTest
         //Arranger
         ICollection<SubCategoriaServicoDto> subCategoriaServicosListaFake = RetornaListaSubCategoriaServico("Teste", "teste desc");
         SubCategoriaServicoDto subCategoriaServicoFake = RetornaSubCategoriaServico("Teste", "teste desc");
-        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(subCategoriaServicoFake);
+        _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(subCategoriaServicoFake);
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
         controllerSubCategoria.ModelState.AddModelError("key", "error message");
         //Act
@@ -306,7 +307,7 @@ public class SubServicoControllerTest
         var okResult = response as ObjectResult;
 
         //Assert
-        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Never);
+        _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.Never);
         Assert.NotNull(okResult);
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
     }
