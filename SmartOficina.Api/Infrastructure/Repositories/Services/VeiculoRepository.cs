@@ -10,7 +10,7 @@ public class VeiculoRepository : GenericRepository<Veiculo>, IVeiculoRepository
 
     public override async Task<ICollection<Veiculo>> GetAll(Guid id, Veiculo filter)
     {
-        var result = await _context.Veiculo.Where(x => x.PrestadorId == id).ToArrayAsync();
+        var result = await _context.Veiculo.Where(x => x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
         await _context.DisposeAsync();
         return result;
     }

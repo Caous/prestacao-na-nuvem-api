@@ -9,7 +9,7 @@ public class ProdutoRepository : GenericRepository<Produto>, IProdutoRepository
 
     public override async Task<ICollection<Produto>> GetAll(Guid id, Produto filter)
     {
-        var result = await _context.Produto.Where(x => x.PrestacaoServicoId == null && x.PrestadorId == id).ToArrayAsync();
+        var result = await _context.Produto.Where(x => x.PrestacaoServicoId == null && x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
         await _context.DisposeAsync();
 
         if (filter != null && result.Any())

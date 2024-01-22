@@ -107,8 +107,7 @@ public class PrestacaoServicoService : IPrestacaoServicoService
 
     public async Task<ICollection<PrestacaoServicoDto>> GetByPrestacoesServicosStatus(Guid prestadorId, ICollection<EPrestacaoServicoStatus> statusPrestacao)
     {
-        List<EPrestacaoServicoStatus> status = new List<EPrestacaoServicoStatus>() { EPrestacaoServicoStatus.Concluido, EPrestacaoServicoStatus.Rejeitado };
-        return _mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(prestadorId, status));
+        return _mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(prestadorId, statusPrestacao));
     }
 
     public async Task<ICollection<PrestacaoServicoDto>> GetByPrestador(Guid prestadorId)

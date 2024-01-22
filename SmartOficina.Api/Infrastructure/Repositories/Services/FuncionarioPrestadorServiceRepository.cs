@@ -11,7 +11,7 @@ public class FuncionarioPrestadorServiceRepository : GenericRepository<Funcionar
     public async Task<ICollection<FuncionarioPrestador>> GetListaFuncionarioPrestadorAsync(Guid id, FuncionarioPrestador filter)
     {
         var result = _context.FuncionarioPrestador
-             .Where(f => f.PrestadorId == id)
+             .Where(f => f.PrestadorId == id && f.DataDesativacao == null)
              .Include(i => i.Prestador)
              .ToList();
         await _context.DisposeAsync();

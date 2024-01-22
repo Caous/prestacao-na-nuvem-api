@@ -39,7 +39,7 @@ public class FuncionarioService : IFuncionarioService
     public async Task<ICollection<FuncionarioPrestadorDto>> GetAllFuncionario(FuncionarioPrestadorDto item)
     {
         var result = await _repositoryFuncionario.GetAll(item.PrestadorId.Value, _mapper.Map<FuncionarioPrestador>(item));
-        result = result.Where(x => x.PrestadorId == item.PrestadorId).ToList();
+        result = result.Where(x => x.PrestadorId == item.PrestadorId && x.DataDesativacao == null).ToList();
         return _mapper.Map<ICollection<FuncionarioPrestadorDto>>(result);
     }
 
