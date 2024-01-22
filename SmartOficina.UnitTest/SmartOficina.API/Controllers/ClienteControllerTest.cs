@@ -4,6 +4,7 @@ using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
+#pragma warning disable 8604, 8602, 8629, 8600, 8620
 public class ClienteControllerTest
 {
     private readonly Mock<IClienteService> _serviceMock = new();
@@ -68,7 +69,7 @@ public class ClienteControllerTest
         //Assert
         _serviceMock.Verify(s => s.GetAllCliente(It.IsAny<ClienteDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -132,7 +133,7 @@ public class ClienteControllerTest
         //Assert
         _serviceMock.Verify(s => s.CreateCliente(It.IsAny<ClienteDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -194,7 +195,7 @@ public class ClienteControllerTest
         //Assert
         _serviceMock.Verify(s => s.FindByIdCliente(It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -213,7 +214,7 @@ public class ClienteControllerTest
         //Assert
         _serviceMock.Verify(s => s.CreateCliente(It.IsAny<ClienteDto>()), Times.Never());
         Assert.NotNull(okResult);
-        Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Equals((int)HttpStatusCode.BadRequest, okResult.StatusCode);
     }
 
     [Fact]
@@ -257,7 +258,7 @@ public class ClienteControllerTest
         //Assert
         _serviceMock.Verify(s => s.UpdateCliente(It.IsAny<ClienteDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -377,7 +378,7 @@ public class ClienteControllerTest
         //Assert
         _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 

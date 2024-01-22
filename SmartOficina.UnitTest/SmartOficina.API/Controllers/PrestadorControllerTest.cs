@@ -4,6 +4,7 @@ using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
+#pragma warning disable 8604, 8602, 8629, 8600, 8620
 public class PrestadorControllerTest
 {
     private readonly Mock<IPrestadorService> _prestadorService = new();
@@ -71,7 +72,7 @@ public class PrestadorControllerTest
         //Assert
         _prestadorService.Verify(s => s.GetAllPrestador(It.IsAny<PrestadorDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -113,7 +114,7 @@ public class PrestadorControllerTest
         //Assert
         _prestadorService.Verify(s => s.CreatePrestador(It.IsAny<PrestadorDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -176,7 +177,7 @@ public class PrestadorControllerTest
         //Assert
         _prestadorService.Verify(s => s.FindByIdPrestador(It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -237,7 +238,7 @@ public class PrestadorControllerTest
         //Assert
         _prestadorService.Verify(s => s.UpdatePrestador(It.IsAny<PrestadorDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -298,7 +299,7 @@ public class PrestadorControllerTest
         //Assert
         _prestadorService.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -421,7 +422,7 @@ public class PrestadorControllerTest
         //Assert
         _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -466,7 +467,7 @@ public class PrestadorControllerTest
         _funcionarioService.Verify(s => s.CreateFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
 
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -533,7 +534,7 @@ public class PrestadorControllerTest
         //Assert
         _funcionarioService.Verify(s => s.FindByIdFuncionario(It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -596,7 +597,7 @@ public class PrestadorControllerTest
         //Assert
         _funcionarioService.Verify(s => s.UpdateFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -661,7 +662,7 @@ public class PrestadorControllerTest
         //Assert
         _funcionarioService.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]

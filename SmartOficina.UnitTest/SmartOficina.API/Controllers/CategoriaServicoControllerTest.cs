@@ -3,6 +3,7 @@ using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
+#pragma warning disable 8604, 8602, 8629, 8600, 8620
 public class CategoriaServicoControllerTest
 {
     private readonly Mock<ICategoriaService> _serviceMock = new();
@@ -65,7 +66,7 @@ public class CategoriaServicoControllerTest
         //Assert (verificação)
         _serviceMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once); //Verifco se ele foi chamado apenas uma vez :)
         Assert.NotNull(okResult); //Verifico se é nulo
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -128,7 +129,7 @@ public class CategoriaServicoControllerTest
         //Assert (verificação)
         _serviceMock.Verify(v => v.CreateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
         Assert.NotNull(okResult); //Verifico se é nulo
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -149,7 +150,7 @@ public class CategoriaServicoControllerTest
         //Assert (verificação)
         _serviceMock.Verify(v => v.CreateCategoria(It.IsAny<CategoriaServicoDto>()), Times.Never);
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
 
     }
 
@@ -354,7 +355,7 @@ public class CategoriaServicoControllerTest
         //Assert
         _serviceMock.Verify(x => x.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.Once);
         Assert.NotNull(okResult);
-        Equals(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Equals((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -363,7 +364,6 @@ public class CategoriaServicoControllerTest
     {
         //Arrange
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-        CategoriaServicoDto categoriaDtoFake = null;
         _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>()));
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         controllerCategoria.ModelState.AddModelError("key", "error message");
@@ -374,15 +374,14 @@ public class CategoriaServicoControllerTest
         //Assert
         _serviceMock.Verify(x => x.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.Never);
         Assert.NotNull(okResult);
-        Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Equals((int)HttpStatusCode.BadRequest, okResult.StatusCode);
     }
 
     [Fact]
-    public async Task NaoDeve_Deletar_Uma_Categoria_RetornarBadRequest_DevidoErro()
+    public void NaoDeve_Deletar_Uma_Categoria_RetornarBadRequest_DevidoErro()
     {
         //Arrange
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-        CategoriaServicoDto categoriaDtoFake = null;
         _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>()));
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         controllerCategoria.ModelState.AddModelError("key", "error message");

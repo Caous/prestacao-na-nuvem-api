@@ -61,7 +61,7 @@ public class CategoriaServicoController : MainController
     /// <param name="desc"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<IActionResult> GetAll(string? titulo, string? desc)
+    public async Task<IActionResult> GetAll([FromQuery]string titulo, [FromQuery] string desc)
     {
         if (!ModelState.IsValid)
         {
@@ -78,7 +78,7 @@ public class CategoriaServicoController : MainController
         return Ok(result);
     }
 
-    private CategoriaServicoDto MapperFilter(string? titulo, string? desc)
+    private CategoriaServicoDto MapperFilter(string titulo, string desc)
     {
         return new CategoriaServicoDto() { Desc = desc, Titulo = titulo, PrestadorId = PrestadorId };
     }

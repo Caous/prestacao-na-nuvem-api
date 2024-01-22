@@ -1,8 +1,8 @@
 ﻿using SmartOficina.Api.Domain.Interfaces;
-using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
+#pragma warning disable 8604, 8602, 8629, 8600, 8620
 public class ProdutoControllerTest
 {
     private readonly Mock<IProdutoService> _produtoMock = new();
@@ -18,7 +18,7 @@ public class ProdutoControllerTest
 
             }
         );
-        fakeHttpContext.User = new System.Security.Claims.ClaimsPrincipal(identity);
+        fakeHttpContext.User = new ClaimsPrincipal(identity);
         return fakeHttpContext;
     }
     private ProdutoController CreateFakeController(ProdutoDto produtosFake)

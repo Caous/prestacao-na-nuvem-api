@@ -3,6 +3,7 @@ using System.Net;
 
 namespace SmartOficina.UnitTest.SmartOficina.API.Controllers;
 
+#pragma warning disable 8604, 8602, 8629, 8600, 8620
 public class PrestacaoServicoControllerTest
 {
     readonly Mock<IPrestacaoServicoService> _serviceMock = new();
@@ -11,9 +12,9 @@ public class PrestacaoServicoControllerTest
         var fakeHttpContext = new DefaultHttpContext();
         ClaimsIdentity identity = new(
             new[] {
-                        new Claim("PrestadorId", prestacaoServico.First().PrestadorId.ToString()),
+                        new Claim("PrestadorId", prestacaoServico.First().PrestadorId.ToString() ?? string.Empty),
                         new Claim("UserName", "Teste"),
-                        new Claim("IdUserLogin", prestacaoServico.First().PrestadorId.ToString())
+                        new Claim("IdUserLogin", prestacaoServico.First().PrestadorId.ToString() ?? string.Empty)
 
             }
         );
@@ -221,7 +222,7 @@ public class PrestacaoServicoControllerTest
         PrestacaoServicoController controller = CreateFakeController(prestacaoListaFake);
         //Act
         var response = await controller.GetAll();
-        var okResult = response as OkObjectResult;
+        var okResult = (OkObjectResult)response;
         var result = okResult.Value as ICollection<PrestacaoServicoDto>;
         //Assert
         _serviceMock.Verify(s => s.GetAllPrestacaoServico(It.IsAny<PrestacaoServicoDto>()), Times.Once());
@@ -234,7 +235,7 @@ public class PrestacaoServicoControllerTest
         Assert.Equal(result.First().FuncionarioPrestadorId, prestacaoListaFake.First().FuncionarioPrestadorId);
         Assert.Equal(result.First().Cliente, prestacaoListaFake.First().Cliente);
         Assert.Equal(result.First().Cliente.Telefone, prestacaoListaFake.First().Cliente.Telefone);
-        Assert.Equal(result.First().Cliente.CPF, prestacaoListaFake.First().Cliente.CPF);
+        Assert.Equal(prestacaoListaFake?.First()?.Cliente?.CPF, result.First()?.Cliente?.CPF);
         Assert.Equal(result.First().Cliente.DataCadastro, prestacaoListaFake.First().Cliente.DataCadastro);
         Assert.Equal(result.First().Cliente.Id, prestacaoListaFake.First().Cliente.Id);
         Assert.Equal(result.First().Cliente.Email, prestacaoListaFake.First().Cliente.Email);
@@ -365,7 +366,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.FindByIdPrestacaoServico(It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -385,7 +386,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.GetAllPrestacaoServico(It.IsAny<PrestacaoServicoDto>()), Times.Never());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
 
     }
 
@@ -473,7 +474,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.CreatePrestacaoServico(It.IsAny<PrestacaoServicoDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
       
     }
 
@@ -492,7 +493,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.CreatePrestacaoServico(It.IsAny<PrestacaoServicoDto>()), Times.Never());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
 
     }
 
@@ -579,7 +580,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.GetByPrestacoesServicosStatus(It.IsAny<Guid>(), It.IsAny<ICollection<EPrestacaoServicoStatus>>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -686,7 +687,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.GetByPrestacoesServicosStatus(It.IsAny<Guid>(), It.IsAny<ICollection<EPrestacaoServicoStatus>>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -795,7 +796,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.GetByPrestador(It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
     }
 
@@ -815,7 +816,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.GetByPrestador(It.IsAny<Guid>()), Times.Never());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
 
     }
 
@@ -904,7 +905,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.UpdatePrestacaoServico(It.IsAny<PrestacaoServicoDto>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -1011,7 +1012,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Once());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.NoContent);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }
 
     [Fact]
@@ -1029,7 +1030,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>()), Times.Never());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
 
     }
 
@@ -1066,7 +1067,7 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Never());
         Assert.NotNull(okResult);
-        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
 
     }
 

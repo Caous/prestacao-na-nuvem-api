@@ -6,6 +6,7 @@ using SmartOficina.Seguranca.Infrastructure.Constants;
 
 namespace SmartOficina.UnitTest.SmartOficina.Seguranca.Controllers;
 
+#pragma warning disable 8604, 8602, 8629, 8600, 8620
 public class AutenticacaoControllerTest
 {
     private readonly Mock<IAcessoManager> _acessoManager = new();
@@ -95,7 +96,7 @@ public class AutenticacaoControllerTest
         _acessoManager.Verify(x => x.ValidarCredenciais(It.IsAny<UserModelDto>()), Times.Never);
         _mapper.Verify(x => x.Map<UserModel>(It.IsAny<PrestadorLoginDto>()), Times.Never);
         Assert.NotNull(result);
-        Assert.Equal(result, $"{PrestadorConst.PrestadorEmailVazio} ou {PrestadorConst.PrestadorNomeUsarioVazio}");
+        Assert.Equal( $"{PrestadorConst.PrestadorEmailVazio} ou {PrestadorConst.PrestadorNomeUsarioVazio}", result);
 
     }
 
