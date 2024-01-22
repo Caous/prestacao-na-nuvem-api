@@ -261,7 +261,7 @@ public class SubServicoControllerTest
         _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(subCategoriaServicoFake);
         //Act
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
-        var response = await controllerSubCategoria.DesativarSubServico(subCategoriaServicoFake.Id.Value, subCategoriaServicoFake.Id.Value);
+        var response = await controllerSubCategoria.DesativarSubServico(subCategoriaServicoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as SubCategoriaServicoDto;
 
@@ -283,7 +283,7 @@ public class SubServicoControllerTest
         _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(veiculoFakeNull);
         //Act
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
-        var response = await controllerSubCategoria.DesativarSubServico(subCategoriaServicoFake.Id.Value, subCategoriaServicoFake.Id.Value);
+        var response = await controllerSubCategoria.DesativarSubServico(subCategoriaServicoFake.Id.Value);
         var okResult = response as NoContentResult;
 
         //Assert
@@ -302,7 +302,7 @@ public class SubServicoControllerTest
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
         controllerSubCategoria.ModelState.AddModelError("key", "error message");
         //Act
-        var response = await controllerSubCategoria.DesativarSubServico(subCategoriaServicoFake.Id.Value, subCategoriaServicoFake.Id.Value);
+        var response = await controllerSubCategoria.DesativarSubServico(subCategoriaServicoFake.Id.Value);
         var okResult = response as ObjectResult;
 
         //Assert

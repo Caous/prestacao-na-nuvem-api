@@ -1,7 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-using SmartOficina.Api.Domain.Model;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de veículo
@@ -122,13 +119,13 @@ public class VeiculoController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarVeiculo")]
-    public async Task<IActionResult> DesativarVeiculo(Guid id, Guid userDesabled)
+    public async Task<IActionResult> DesativarVeiculo(Guid id)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
 
-        var result = await _veiculoService.Desabled(id, userDesabled);
+        var result = await _veiculoService.Desabled(id, PrestadorId);
         if (result == null)
             return NoContent();
         return Ok(result);

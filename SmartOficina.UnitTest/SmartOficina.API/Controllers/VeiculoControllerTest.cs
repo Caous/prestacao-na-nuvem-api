@@ -250,7 +250,7 @@ public class VeiculoControllerTest
         _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(veiculoFake);
         //Act
         VeiculoController controllerVeiculo = CreateFakeController(veiculosFake);
-        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value, veiculoFake.Id.Value);
+        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as VeiculoDto;
 
@@ -272,7 +272,7 @@ public class VeiculoControllerTest
         _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(veiculoFakeNull);
         //Act
         VeiculoController controllerVeiculo = CreateFakeController(veiculosFake);
-        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value, veiculoFake.Id.Value);
+        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value);
         var okResult = response as NoContentResult;
 
         //Assert
@@ -291,7 +291,7 @@ public class VeiculoControllerTest
         VeiculoController controllerVeiculo = CreateFakeController(veiculosFake);
         controllerVeiculo.ModelState.AddModelError("key", "error message");
         //Act
-        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value, veiculoFake.Id.Value);
+        var response = await controllerVeiculo.DesativarVeiculo(veiculoFake.Id.Value);
         var okResult = response as ObjectResult;
 
         //Assert

@@ -1,7 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-using SmartOficina.Api.Util;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de cliente
@@ -171,12 +168,12 @@ public class ClienteController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarCliente")]
-    public async Task<IActionResult> DesativarCliente(Guid id, Guid userDesabled)
+    public async Task<IActionResult> DesativarCliente(Guid id)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        var result = await _clienteService.Desabled(id, userDesabled);
+        var result = await _clienteService.Desabled(id, PrestadorId);
 
         if (result == null)
             return NoContent();

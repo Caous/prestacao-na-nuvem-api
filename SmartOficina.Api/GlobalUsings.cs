@@ -26,9 +26,13 @@ global using System.IdentityModel.Tokens.Jwt;
 //API
 global using SmartOficina.Api.Dto;
 global using SmartOficina.Api.Converters;
+global using SmartOficina.Api.Util;
 
 //Domain
 global using SmartOficina.Api.Domain.Model;
+global using SmartOficina.Api.Domain.Interfaces;
+global using SmartOficina.Api.Domain.Services;
+
 
 //Infrastructure
 global using SmartOficina.Api.Infrastructure.Context;

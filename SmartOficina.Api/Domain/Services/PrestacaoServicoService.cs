@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-
-namespace SmartOficina.Api.Domain.Services;
+﻿namespace SmartOficina.Api.Domain.Services;
 
 public class PrestacaoServicoService : IPrestacaoServicoService
 {
@@ -116,62 +114,6 @@ public class PrestacaoServicoService : IPrestacaoServicoService
     public async Task<ICollection<PrestacaoServicoDto>> GetByPrestador(Guid prestadorId)
     {
         return _mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestador(prestadorId));
-    }
-
-    public async Task<PrestacaoServicoDto> Update(PrestacaoServicoDto prestacaoServico)
-    {
-        if (!prestacaoServico.PrestadorId.HasValue)
-            prestacaoServico.PrestadorId = prestacaoServico.PrestadorId;
-
-        if (prestacaoServico.Produtos != null)
-        {
-            foreach (var item in prestacaoServico.Produtos)
-            {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value;
-                item.UsrCadastro = prestacaoServico.UsrCadastro;
-                item.UsrCadastroDesc = prestacaoServico.UsrCadastroDesc;
-            }
-        }
-
-        if (prestacaoServico.Servicos != null)
-        {
-
-            foreach (var item in prestacaoServico.Servicos)
-            {
-                item.PrestadorId = prestacaoServico.PrestadorId.Value;
-                item.UsrCadastro = prestacaoServico.UsrCadastro;
-                item.UsrCadastroDesc = prestacaoServico.UsrCadastroDesc;
-            }
-        }
-
-        if (prestacaoServico.Veiculo != null)
-            prestacaoServico.Veiculo.PrestadorId = prestacaoServico.PrestadorId.Value;
-
-        if (prestacaoServico.Cliente != null)
-            prestacaoServico.Cliente.PrestadorId = prestacaoServico.PrestadorId.Value;
-
-
-        var produtos = new List<ProdutoDto>();
-
-        if (prestacaoServico.Produtos != null)
-        {
-            foreach (var prod in prestacaoServico.Produtos)
-            {
-                if (prod.Qtd == 0)
-                    produtos.Add(prod);
-
-                for (int i = 0; i < prod.Qtd; i++)
-                {
-                    produtos.Add(prod);
-                }
-            }
-        }
-
-        prestacaoServico.Produtos = produtos;
-
-        var result = await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico));
-
-        return _mapper.Map<PrestacaoServicoDto>(result);
     }
 
     public async Task<PrestacaoServicoDto> UpdatePrestacaoServico(PrestacaoServicoDto prestacaoServico)

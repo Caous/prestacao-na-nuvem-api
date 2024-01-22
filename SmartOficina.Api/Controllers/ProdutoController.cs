@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de produto
@@ -14,12 +12,10 @@ namespace SmartOficina.Api.Controllers;
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class ProdutoController : MainController
 {
-    //private readonly IMapper _mapper;
     private readonly IProdutoService _produtoService;
 
     public ProdutoController(IProdutoService produtoService)
     {
-        //_mapper = mapper;
         _produtoService = produtoService;
     }
 
@@ -88,13 +84,8 @@ public class ProdutoController : MainController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         var result = await _produtoService.FindByIdProduto(id);
 
@@ -133,18 +124,14 @@ public class ProdutoController : MainController
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpPut("DesativarPrestador")]
-    public async Task<IActionResult> DesativarProduto(Guid id, Guid userDesabled)
+    [HttpPut("DesativarProduto")]
+    public async Task<IActionResult> DesativarProduto(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
-        {
-            if (ModelState.ErrorCount < 1)
-                ModelState.AddModelError("error", "Id invalid");
-
+        if (!ModelState.IsValid)        
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
-        var result = await _produtoService.Desabled(id, userDesabled);
+        var result = await _produtoService.Desabled(id, PrestadorId);
 
         if (result == null)
             NoContent();
@@ -162,13 +149,9 @@ public class ProdutoController : MainController
     {
         try
         {
-            if (!ModelState.IsValid || id == null)
-            {
-                if (ModelState.ErrorCount < 1)
-                    ModelState.AddModelError("error", "Id invalid");
-
+            if (!ModelState.IsValid)           
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
+
             await _produtoService.Delete(id);
             return Ok("Deletado");
         }

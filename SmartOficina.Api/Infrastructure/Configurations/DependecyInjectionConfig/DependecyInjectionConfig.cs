@@ -1,7 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-using SmartOficina.Api.Domain.Services;
-
-namespace SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
+﻿namespace SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
 
 public static class DependecyInjectionConfig
 {

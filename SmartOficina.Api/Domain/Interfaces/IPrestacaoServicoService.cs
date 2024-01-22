@@ -10,6 +10,5 @@ public interface IPrestacaoServicoService
     Task<PrestacaoServicoDto> Desabled(Guid id, Guid userDesabled); 
     Task ChangeStatus(Guid id, EPrestacaoServicoStatus status);
     Task<ICollection<PrestacaoServicoDto>> GetByPrestador(Guid prestadorId);
-    Task<PrestacaoServicoDto> Update(PrestacaoServicoDto item);
     Task<ICollection<PrestacaoServicoDto>> GetByPrestacoesServicosStatus(Guid prestadorId, ICollection<EPrestacaoServicoStatus> statusPrestacao);
 }

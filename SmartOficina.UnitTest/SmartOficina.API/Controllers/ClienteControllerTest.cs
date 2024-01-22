@@ -350,7 +350,7 @@ public class ClienteControllerTest
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         //Act
         controllerCliente.ModelState.AddModelError("key", "error message");
-        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value, clienteDtoFake.Id.Value);
+        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value);
         var okResult = response as ObjectResult;
 
         //Assert
@@ -371,7 +371,7 @@ public class ClienteControllerTest
         _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(clienteDtoFakeNull);
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         //Act
-        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value, clienteDtoFake.Id.Value);
+        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value);
         var okResult = response as NoContentResult;
 
         //Assert
@@ -391,7 +391,7 @@ public class ClienteControllerTest
         _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(clienteDtoFake);
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         //Act
-        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value, clienteDtoFake.Id.Value);
+        var response = await controllerCliente.DesativarCliente(clienteDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ClienteDto;
         //Assert

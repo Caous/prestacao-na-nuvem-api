@@ -1,7 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-using System;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de prestador de serviço e funcionário
@@ -18,12 +15,14 @@ public class PrestadorController : MainController
     private readonly IPrestadorService _prestadorService;
     private readonly IFuncionarioService _funcionarioSerive;
     private readonly IValidator<PrestadorDto> _validator;
+    private readonly IValidator<FuncionarioPrestadorDto> _validatorFuncionario;
 
-    public PrestadorController(IPrestadorService prestadorService, IFuncionarioService funcionarioSerive, IValidator<PrestadorDto> validator)
+    public PrestadorController(IPrestadorService prestadorService, IFuncionarioService funcionarioSerive, IValidator<PrestadorDto> validator, IValidator<FuncionarioPrestadorDto> validatorFuncionario)
     {
         _prestadorService = prestadorService;
         _funcionarioSerive = funcionarioSerive;
         _validator = validator;
+        _validatorFuncionario = validatorFuncionario;
     }
 
     #region Controller Prestador
@@ -194,10 +193,22 @@ public class PrestadorController : MainController
     [HttpPost("Funcionario")]
     public async Task<IActionResult> AddFuncionario(FuncionarioPrestadorDto func)
     {
+        var resultValidator = await _validatorFuncionario.ValidateAsync(func);
+
+        if (resultValidator != null && !resultValidator.IsValid)
+        {
+            List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
+
+            foreach (var item in resultValidator.Errors)
+                errors.Add(new ErrosValidationsResponse() { ErrorMensagem = item.ErrorMessage });
+
+            return StatusCode(StatusCodes.Status400BadRequest, errors);
+        }
+
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-
+        MapearLoginFuncionario(func);
 
         var result = await _funcionarioSerive.CreateFuncionario(func);
 
@@ -298,13 +309,13 @@ public class PrestadorController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarFuncionario")]
-    public async Task<IActionResult> DesativarFuncionario(Guid id, Guid userDesabled)
+    public async Task<IActionResult> DesativarFuncionario(Guid id)
     {
         if (!ModelState.IsValid || id == null)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
 
-        var result = await _funcionarioSerive.Desabled(id, userDesabled);
+        var result = await _funcionarioSerive.Desabled(id, PrestadorId);
         if (result == null)
             return NoContent();
         return Ok(result);

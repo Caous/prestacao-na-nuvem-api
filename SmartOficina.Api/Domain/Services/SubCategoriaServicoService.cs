@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-
-namespace SmartOficina.Api.Domain.Services;
+﻿namespace SmartOficina.Api.Domain.Services;
 
 public class SubCategoriaServicoService : ISubCategoriaServicoService
 {

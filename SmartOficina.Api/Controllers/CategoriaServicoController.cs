@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller Categoria Serviço
@@ -136,13 +134,13 @@ public class CategoriaServicoController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarCategoria")]
-    public async Task<IActionResult> DesativarCategoria(Guid id, Guid userDesabled)
+    public async Task<IActionResult> DesativarCategoria(Guid id)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
 
-        var result = await _categoriaService.Desabled(id, userDesabled);
+        var result = await _categoriaService.Desabled(id, PrestadorId);
 
         if (result == null)
             return NoContent();

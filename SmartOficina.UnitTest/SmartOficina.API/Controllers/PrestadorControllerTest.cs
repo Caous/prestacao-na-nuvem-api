@@ -9,6 +9,7 @@ public class PrestadorControllerTest
     private readonly Mock<IPrestadorService> _prestadorService = new();
     private readonly Mock<IFuncionarioService> _funcionarioService = new();
     private readonly Mock<IValidator<PrestadorDto>> _validator = new();
+    private readonly Mock<IValidator<FuncionarioPrestadorDto>> _validatorFuncionario = new();
 
     private static DefaultHttpContext CreateFakeClaims(ICollection<PrestadorDto> prestadores)
     {
@@ -26,7 +27,7 @@ public class PrestadorControllerTest
     }
     private PrestadorController GenerateControllerFake(List<PrestadorDto> prestadorDtos)
     {
-        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(prestadorDtos) } };
+        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object, _validatorFuncionario.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaims(prestadorDtos) } };
     }
 
     #region Prestador 
@@ -378,7 +379,7 @@ public class PrestadorControllerTest
 
     private PrestadorController GenerateControllerFakeFuncionario(ICollection<FuncionarioPrestadorDto> funcionario)
     {
-        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaimsFuncionario(funcionario) } };
+        return new PrestadorController(_prestadorService.Object, _funcionarioService.Object, _validator.Object, _validatorFuncionario.Object) { ControllerContext = new ControllerContext() { HttpContext = CreateFakeClaimsFuncionario(funcionario) } };
     }
 
     [Fact]
@@ -627,7 +628,7 @@ public class PrestadorControllerTest
         _funcionarioService.Setup(s => s.Desabled(It.IsAny<Guid>(),It.IsAny<Guid>())).ReturnsAsync(funcionarioFake);
         PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         //Act
-        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value, funcionarioFake.Id.Value);
+        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as FuncionarioPrestadorDto;
         //Assert
@@ -654,7 +655,7 @@ public class PrestadorControllerTest
         List<FuncionarioPrestadorDto> prestadorDtoFakeList = new List<FuncionarioPrestadorDto>();
         PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         //Act
-        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value, funcionarioFake.Id.Value);
+        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value);
         var okResult = response as NoContentResult;
         
         //Assert
@@ -674,7 +675,7 @@ public class PrestadorControllerTest
         PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         controller.ModelState.AddModelError("key", "error message");
         //Act
-        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value, funcionarioFake.Id.Value);
+        var response = await controller.DesativarFuncionario(funcionarioFake.Id.Value);
         var okResult = response as ObjectResult;
 
         //Assert

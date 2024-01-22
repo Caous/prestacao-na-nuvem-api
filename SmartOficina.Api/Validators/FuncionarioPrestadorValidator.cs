@@ -24,21 +24,21 @@ public class FuncionarioPrestadorValidator : AbstractValidator<FuncionarioPresta
             .NotNull()
             .WithMessage(FuncionarioPrestadorConst.EmailValidation);
 
-        RuleFor(x => x.RG)
-            .Custom((cpf, context) =>
-            {
-                if (RgValidations.ValidarRG(cpf))
-                    context.AddFailure(FuncionarioPrestadorConst.RgValitation);
-            })
-           .NotEmpty()
-           .WithMessage(FuncionarioPrestadorConst.RGValidation)
-           .NotNull()
-           .WithMessage(FuncionarioPrestadorConst.RGValidation);
+        //RuleFor(x => x.RG)
+        //    .Custom((rg, context) =>
+        //    {
+        //        if (!RgValidations.ValidarRG(rg))
+        //            context.AddFailure(FuncionarioPrestadorConst.RgValitation);
+        //    })
+        //   .NotEmpty()
+        //   .WithMessage(FuncionarioPrestadorConst.RGValidation)
+        //   .NotNull()
+        //   .WithMessage(FuncionarioPrestadorConst.RGValidation);
 
         RuleFor(x => x.CPF)
             .Custom((cpf, context) =>
             {
-            if (CpfValidations.FormartValidation(cpf))
+            if (!CpfValidations.FormartValidation(cpf))
                 context.AddFailure(ClienteConst.CpfNaoValidado);
             })
            .NotEmpty()

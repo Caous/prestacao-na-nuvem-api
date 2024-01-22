@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de sub serviço
@@ -126,13 +124,13 @@ public class SubServicoController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarSubServico")]
-    public async Task<IActionResult> DesativarSubServico(Guid id, Guid userDesabled)
+    public async Task<IActionResult> DesativarSubServico(Guid id)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
 
-        var result = await _subCategoriaServicoService.Desabled(id, userDesabled);
+        var result = await _subCategoriaServicoService.Desabled(id, PrestadorId);
 
         if (result == null)
             return NoContent();

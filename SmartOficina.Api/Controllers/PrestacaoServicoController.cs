@@ -1,6 +1,4 @@
-﻿using SmartOficina.Api.Domain.Interfaces;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de prestação de serviço
@@ -31,13 +29,22 @@ public class PrestacaoServicoController : MainController
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-
+        MapearLogin(prestacaoServico);
         var result = await _repository.CreatePrestacaoServico(prestacaoServico);
 
         if (result == null)
             return NoContent();
 
         return Ok(result);
+    }
+
+    private void MapearLogin(PrestacaoServicoDto prestacao)
+    {
+        if (!prestacao.PrestadorId.HasValue)
+            prestacao.PrestadorId = PrestadorId;
+
+        prestacao.UsrCadastroDesc = UserName;
+        prestacao.UsrCadastro = UserId;
     }
 
     /// <summary>
@@ -143,7 +150,7 @@ public class PrestacaoServicoController : MainController
                 ModelState.AddModelError("error", "Id invalid");
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }     
+        }
 
         var result = await _repository.UpdatePrestacaoServico(prestacaoServico);
 
@@ -159,14 +166,14 @@ public class PrestacaoServicoController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarPrestacao")]
-    public async Task<IActionResult> DesativarPrestadorServico(Guid id, Guid userDesabled)
+    public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        var result = await _repository.Desabled(id, userDesabled);
+        var result = await _repository.Desabled(id, PrestadorId);
 
-        if (result == null) 
+        if (result == null)
             return NoContent();
 
         return Ok(result);
@@ -184,7 +191,7 @@ public class PrestacaoServicoController : MainController
         {
             if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            
+
             await _repository.Delete(id);
 
             return Ok("Deletado");
@@ -206,7 +213,7 @@ public class PrestacaoServicoController : MainController
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
         await _repository.ChangeStatus(id, status);
         return Ok();
     }
