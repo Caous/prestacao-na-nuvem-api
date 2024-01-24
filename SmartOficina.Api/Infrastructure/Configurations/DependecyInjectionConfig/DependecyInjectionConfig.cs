@@ -15,6 +15,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IServicoRepository, ServicoRepository>();
         services.AddScoped<IProdutoRepository, ProdutoRepository>();
         services.AddScoped<IFuncionarioPrestadorRepository, FuncionarioPrestadorServiceRepository>();
+        services.AddScoped<IDashboardRepository, DashboardRepository>();
         #endregion
 
         #region Injection Services
@@ -26,6 +27,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IProdutoService, ProdutoService>();
         services.AddScoped<ISubCategoriaServicoService, SubCategoriaServicoService>();
         services.AddScoped<IVeiculoService, VeiculoService>();
+        services.AddScoped<IDashboardService, DashboardService>();
         #endregion
 
         #region Cors
