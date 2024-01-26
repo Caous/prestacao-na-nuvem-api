@@ -1,4 +1,5 @@
 ﻿using static SmartOficina.Api.Domain.Model.Dashboards;
+using static SmartOficina.Api.Dto.DashboardDto;
 
 namespace SmartOficina.Api.ResolveMapper;
 

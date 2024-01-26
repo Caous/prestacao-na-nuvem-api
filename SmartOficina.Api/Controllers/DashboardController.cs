@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using static SmartOficina.Api.Dto.DashboardDto;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de Dashboard

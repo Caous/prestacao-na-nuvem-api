@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Domain.Interfaces;
+﻿using static SmartOficina.Api.Dto.DashboardDto;
+
+namespace SmartOficina.Api.Domain.Interfaces;
 
 public interface IDashboardService
 {
