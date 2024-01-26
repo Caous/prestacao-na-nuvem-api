@@ -2,5 +2,5 @@
 
 public class DashboardProdutosNovos
 {
-    public long valor  { get; set; }
+    public long Valor  { get; set; }
 }

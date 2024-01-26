@@ -1,6 +1,6 @@
 ﻿namespace SmartOficina.Api.Dto;
 
-public class DashboardClientesNovos
+public class DashboardOSMes
 {
     public long Valor { get; set; }
 }

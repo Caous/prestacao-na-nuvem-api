@@ -2,5 +2,5 @@
 
 public class DashboardReceitaMesDto
 {
-    public decimal valor { get; set; }
+    public decimal Valor { get; set; }
 }

@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace SmartOficina.Api.Controllers;
+﻿namespace SmartOficina.Api.Controllers;
 
 /// <summary>
-/// Controller de cliente
+/// Controller de Dashboard
 /// </summary>
 [Route("api/[controller]")]
 [ApiController, Authorize]
@@ -20,74 +18,84 @@ public class DashboardController : MainController
         _dashboardService = dashboardService;
     }
 
-    private void MapearLogin(CategoriaServicoDto categoriaServico)
+    /// <summary>
+    /// Recuperar faturamento diário
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("DashboardFaturamentoDiario")]
+    public async Task<IActionResult> GetDashboardFaturamentoDiario()
     {
-        if (!categoriaServico.PrestadorId.HasValue)
-            categoriaServico.PrestadorId = PrestadorId;
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        categoriaServico.UsrCadastroDesc = UserName;
-        categoriaServico.UsrCadastro = UserId;
+        var resultDash = await _dashboardService.GetDailySales(PrestadorId);
 
+        if (resultDash == null || !resultDash.Any())
+            return NoContent();
+
+        object[] result = ResultMapperDiario(resultDash);
+
+        return Ok(result);
+    }
+
+    private static object[] ResultMapperDiario(ICollection<DashboardReceitaDiariaDto> resultDash)
+    {
+        return resultDash.GroupBy(x => x.DateRef).Select(grupo => new { Key = grupo.Key, Count = grupo.Sum(x => x.Valor) }).ToArray();
     }
 
     /// <summary>
-    /// Recupera as categorias agrupadas
+    /// Recuperar Faturamento Mês Por Categoria de Serviço
     /// </summary>
-    /// <param name="titulo"></param>
-    /// <param name="desc"></param>
     /// <returns></returns>
     [HttpGet("DashboardCategoriaAgrupado")]
     public async Task<IActionResult> GetDashboardCategoriaAgrupado()
     {
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        //var resultadoxpto = _dashboardService.ListarServicosAgrupados(PrestadorId);
+        var resultDash = await _dashboardService.GetServicesGroupByCategoryService(PrestadorId);
 
-        Random random = new Random();
-        
-        var listaxpto = new List<CategoriaServicoDto>() { new CategoriaServicoDto() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 1" }, new CategoriaServicoDto() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 2" }, new CategoriaServicoDto() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 3" }, new CategoriaServicoDto() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 1" }, }.GroupBy(x => x.Titulo);
-        var resultadoArray = listaxpto.Select(grupo => new { Key = grupo.Key, Count = grupo.Count().ToString() }).ToArray();
-
-        if (resultadoArray == null || !resultadoArray.Any())
+        if (resultDash == null || !resultDash.Any())
             return NoContent();
 
-        return Ok(resultadoArray);
+        object[] result = ResultMapperCategoriaServico(resultDash);
+
+        return Ok(result);
+    }
+
+    private static object[] ResultMapperCategoriaServico(ICollection<DashboardReceitaCategoriaDto>? resultDash)
+    {
+        return resultDash.GroupBy(x => x.Categoria).Select(grupo => new { Key = grupo.Key, Count = grupo.Sum(x => x.Valor).ToString() }).ToArray();
     }
 
     /// <summary>
-    /// Recupera as categorias agrupadas
+    /// Recuperar Faturamento Mês Sub Categoria Agrupado
     /// </summary>
-    /// <param name="titulo"></param>
-    /// <param name="desc"></param>
     /// <returns></returns>
     [HttpGet("DashboardSubCategoriaAgrupado")]
     public async Task<IActionResult> GetDashboardSubCategoriaAgrupado()
     {
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
-        Random random = new Random();
 
-        //var resultadoxpto = _dashboardService.ListarServicosAgrupados(PrestadorId);
+        var resultDash = await _dashboardService.GetServicesGroupBySubCategoryService(PrestadorId);
 
-        var listaxpto = new List<SubCategoriaServico>() { new SubCategoriaServico() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 1" }, new SubCategoriaServico() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 2" }, new SubCategoriaServico() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 3" }, new SubCategoriaServico() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 1" }, }.GroupBy(x => x.Titulo);
-        var resultadoArray = listaxpto.Select(grupo => new { Key = grupo.Key, Count = grupo.Count().ToString() }).ToArray();
-
-        if (resultadoArray == null || !resultadoArray.Any())
+        if (resultDash == null || !resultDash.Any())
             return NoContent();
+
+        object[] resultadoArray = ResultMapperSubCategoriaServico(resultDash);
 
         return Ok(resultadoArray);
     }
 
+    private static object[] ResultMapperSubCategoriaServico(ICollection<DashboardReceitaSubCaterogiaDto>? resultDash)
+    {
+        return resultDash.GroupBy(x => x.Titulo).Select(grupo => new { Key = grupo.Key, Count = grupo.Sum(x => x.Valor) }).ToArray();
+    }
+
     /// <summary>
-    /// Recupera as categorias agrupadas
+    /// Recuperar Faturamento Mês
     /// </summary>
-    /// <param name="titulo"></param>
-    /// <param name="desc"></param>
     /// <returns></returns>
     [HttpGet("DashboardReceitaMes")]
     public async Task<IActionResult> GetDashboardReceitaMes()
@@ -97,92 +105,67 @@ public class DashboardController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
 
-        //var resultadoxpto = _dashboardService.ListarServicosAgrupados(PrestadorId);
-        Random random = new Random();
-        decimal valorMinimo = 1000.0m;
-        decimal valorMaximo = 8000.0m;
+        var result = await _dashboardService.GetSalesMonth(PrestadorId);
 
-        // Gera um valor decimal aleatório entre 1000.00 e 8000.00
-        decimal resultado = (decimal)(random.NextDouble() * (double)(valorMaximo - valorMinimo) + (double)valorMinimo);
-
-        if (resultado == null)
+        if (result == null)
             return NoContent();
 
-        return Ok(new DashboardReceitaMesDto() { valor = resultado });
+        return Ok(result);
     }
 
     /// <summary>
-    /// Recupera as categorias agrupadas
+    /// Recuperar Clientes Mês
     /// </summary>
-    /// <param name="titulo"></param>
-    /// <param name="desc"></param>
     /// <returns></returns>
     [HttpGet("DashboardClientesNovosMes")]
     public async Task<IActionResult> GetDashboardClientesNovosMes()
     {
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        //var resultadoxpto = _dashboardService.ListarServicosAgrupados(PrestadorId);
-        Random random = new Random();
 
-        var resultado = random.NextInt64(5000);
-
-        if (resultado == null)
+        var result = await _dashboardService.GetNewCustomerMonth(PrestadorId);
+      
+        if (result == null)
             return NoContent();
 
-        return Ok(new DashboardClientesNovos() { valor = resultado });
+        return Ok(result);
     }
 
     /// <summary>
     /// Recupera as categorias agrupadas
     /// </summary>
-    /// <param name="titulo"></param>
-    /// <param name="desc"></param>
     /// <returns></returns>
     [HttpGet("DashboardProdutosVendidosMes")]
     public async Task<IActionResult> GetDashboardProdutosVendidosMes()
     {
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
-        //var resultadoxpto = _dashboardService.ListarServicosAgrupados(PrestadorId);
-        Random random = new Random();
+        var result = await _dashboardService.GetSalesProductMonth(PrestadorId);
 
-        var resultado = random.NextInt64(300);
-
-        if (resultado == null)
+        if (result == null)
             return NoContent();
 
-        return Ok(new DashboardProdutosNovos() { valor = resultado });
+        return Ok(result);
     }
 
     /// <summary>
     /// Recupera as categorias agrupadas
     /// </summary>
-    /// <param name="titulo"></param>
-    /// <param name="desc"></param>
     /// <returns></returns>
-    [HttpGet("DashboardServicosMes")]
+    [HttpGet("DashboardOSMes")]
     public async Task<IActionResult> GetDashboardServicosMes()
     {
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid)        
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
-        //var resultadoxpto = _dashboardService.ListarServicosAgrupados(PrestadorId);
-        Random random = new Random();
-
-        var resultado = random.NextInt64(4000);
-
-        if (resultado == null)
+        var result = await _dashboardService.GetOSMonth(PrestadorId);
+       
+        if (result == null)
             return NoContent();
 
-        return Ok(new DashboardServicosMes() { valor = resultado });
+        return Ok(result);
     }
 }

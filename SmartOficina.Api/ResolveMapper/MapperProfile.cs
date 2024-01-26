@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.ResolveMapper;
+﻿using static SmartOficina.Api.Domain.Model.Dashboards;
+
+namespace SmartOficina.Api.ResolveMapper;
 
 public class MapperProfile : Profile
 {
@@ -13,6 +15,9 @@ public class MapperProfile : Profile
         CreateMap<ServicoDto, Servico>().ReverseMap();
         CreateMap<ProdutoDto, Produto>().ReverseMap();
         CreateMap<FuncionarioPrestadorDto, FuncionarioPrestador>().ReverseMap();
+        CreateMap<DashboardReceitaCategoriaDto, CategoriaAgrupado>().ReverseMap();
+        CreateMap<DashboardReceitaDiariaDto, FaturamentoDiario>().ReverseMap();
+        CreateMap<DashboardReceitaSubCaterogiaDto, SubCategoriaAgrupado>().ReverseMap();
 
     }
 }
