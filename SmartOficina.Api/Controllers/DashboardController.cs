@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Controllers;
+﻿using System;
+
+namespace SmartOficina.Api.Controllers;
 
 /// <summary>
 /// Controller de cliente
@@ -44,22 +46,15 @@ public class DashboardController : MainController
 
         //var resultadoxpto = _dashboardService.ListarServicosAgrupados(PrestadorId);
 
-        var listaxpto = new List<CategoriaServicoDto>() { new CategoriaServicoDto() { Desc = "1", Titulo = "Categoria 1" }, new CategoriaServicoDto() { Desc = "2", Titulo = "Categoria 2" }, new CategoriaServicoDto() { Desc = "3", Titulo = "Categoria 3" }, new CategoriaServicoDto() { Desc = "1", Titulo = "Categoria 1" }, }.GroupBy(x => x.Titulo);
+        Random random = new Random();
+        
+        var listaxpto = new List<CategoriaServicoDto>() { new CategoriaServicoDto() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 1" }, new CategoriaServicoDto() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 2" }, new CategoriaServicoDto() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 3" }, new CategoriaServicoDto() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 1" }, }.GroupBy(x => x.Titulo);
+        var resultadoArray = listaxpto.Select(grupo => new { Key = grupo.Key, Count = grupo.Count().ToString() }).ToArray();
 
-        // Crie um dicionário para armazenar os resultados
-        var resultado = new Dictionary<string, string>();
-
-        // Preencha o dicionário com os dados da lista agrupada
-        foreach (var grupo in listaxpto)
-        {
-            resultado[grupo.Key] = grupo.Count().ToString();
-        }
-
-
-        if (resultado == null || !resultado.Any())
+        if (resultadoArray == null || !resultadoArray.Any())
             return NoContent();
 
-        return Ok(resultado);
+        return Ok(resultadoArray);
     }
 
     /// <summary>
@@ -75,25 +70,17 @@ public class DashboardController : MainController
         {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+        Random random = new Random();
 
         //var resultadoxpto = _dashboardService.ListarServicosAgrupados(PrestadorId);
 
-        var listaxpto = new List<SubCategoriaServico>() { new SubCategoriaServico() { Desc = "1", Titulo = "Categoria 1" }, new SubCategoriaServico() { Desc = "2", Titulo = "Categoria 2" }, new SubCategoriaServico() { Desc = "3", Titulo = "Categoria 3" }, new SubCategoriaServico() { Desc = "1", Titulo = "Categoria 1" }, }.GroupBy(x => x.Titulo);
+        var listaxpto = new List<SubCategoriaServico>() { new SubCategoriaServico() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 1" }, new SubCategoriaServico() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 2" }, new SubCategoriaServico() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 3" }, new SubCategoriaServico() { Desc = random.NextInt64(1, 10).ToString(), Titulo = "Categoria 1" }, }.GroupBy(x => x.Titulo);
+        var resultadoArray = listaxpto.Select(grupo => new { Key = grupo.Key, Count = grupo.Count().ToString() }).ToArray();
 
-        // Crie um dicionário para armazenar os resultados
-        var resultado = new Dictionary<string, string>();
-
-        // Preencha o dicionário com os dados da lista agrupada
-        foreach (var grupo in listaxpto)
-        {
-            resultado[grupo.Key] = grupo.Count().ToString();
-        }
-
-
-        if (resultado == null || !resultado.Any())
+        if (resultadoArray == null || !resultadoArray.Any())
             return NoContent();
 
-        return Ok(resultado);
+        return Ok(resultadoArray);
     }
 
     /// <summary>
