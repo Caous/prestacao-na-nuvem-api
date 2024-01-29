@@ -21,7 +21,7 @@ public class DashboardService : IDashboardService
         if (resultDailySales == null)
             return null;
 
-        var result = resultDailySales.GroupBy(x => x.DataConclusaoServico).ToList();
+        var result = resultDailySales.GroupBy(x => x.DataConclusaoServico.Value.ToString("dd/MM/yyyy")).ToList();
 
         List<FaturamentoDiario> sales = new();
 
@@ -31,13 +31,13 @@ public class DashboardService : IDashboardService
             {
                 sales.Add(new FaturamentoDiario()
                 {
-                    DateRef = item.Key.Value,
+                    DateRef = DateOnly.Parse(item.Key),
                     Valor = (double)item.Sum(x => x.Servicos.Sum(y => y.Valor))
                 });
             }
         }
 
-        return MappearFaturamentoDiario(sales);
+        return MappearFaturamentoDiario(sales.OrderBy(x => x.DateRef).ToList());
     }
 
     private ICollection<DashboardReceitaDiariaDto> MappearFaturamentoDiario(ICollection<FaturamentoDiario> result)

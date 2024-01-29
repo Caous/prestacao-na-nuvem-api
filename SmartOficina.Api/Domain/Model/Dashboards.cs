@@ -16,7 +16,7 @@ public class Dashboards
 
     public class FaturamentoDiario {
 
-        public DateTime DateRef { get; set; }
+        public DateOnly DateRef { get; set; }
         public double Valor { get; set; }
     }
 }
