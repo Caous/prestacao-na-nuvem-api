@@ -17,7 +17,7 @@ public class DashboardDto
     }
     public class DashboardReceitaDiariaDto
     {
-        public DateOnly DateRef { get; set; }
+        public string DateRef { get; set; }
         public double Valor { get; set; }
     }
     public class DashboardReceitaMesDto
