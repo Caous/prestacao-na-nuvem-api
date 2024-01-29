@@ -3,13 +3,19 @@
 public class IdentityInitializer
 {
     private readonly SegurancaContext _context;
+    private readonly UserManager<UserModel> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IConfiguration _configuration;
 
     public IdentityInitializer(SegurancaContext context,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            UserManager<UserModel> userManager,
+            IConfiguration configuration)
     {
         _context = context;
         _roleManager = roleManager;
+        _userManager = userManager;
+        _configuration = configuration;
     }
     public void Initialize()
     {
@@ -60,9 +66,30 @@ public class IdentityInitializer
                 }
             }
 
-            
+            string userName = _configuration["Admin:UserName"] ?? string.Empty;
+
+            if (_userManager.FindByNameAsync(userName).Result == null)
+            {
+                string email = _configuration["Admin:Email"] ?? string.Empty;
+                string password = _configuration["Admin:Password"] ?? string.Empty;
+                var model = new UserModel
+                {
+                    UserName = userName,
+                    Email = email,
+                    NormalizedEmail = email,
+                    UsrCadastro = Guid.NewGuid(),
+                    UsrDescricaoCadastro = "Usuário adm",
+                    EmailConfirmed = true
+                };
+                var resultado = _userManager
+                    .CreateAsync(model, password).Result;
+
+                if (resultado.Succeeded)
+                    _userManager.AddToRoleAsync(model, Roles.Administrador).Wait();
+            }
+
         }
     }
 
-    
+
 }
