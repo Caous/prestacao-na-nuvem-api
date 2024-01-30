@@ -15,6 +15,7 @@ public class PrestadorDto : Base
     public string? EmailEmpresa { get; set; }
     public string? Endereco { get; set; }
     public string? EmailRepresentante { get; set; }
+    public string? Logo {get; set; }
     public int SituacaoCadastral { get; set; }
     public DateTime? DataAbertura { get; set; }
     public DateTime? DataSituacaoCadastral { get; set; }

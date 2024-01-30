@@ -21,6 +21,7 @@ public class PrestadorConfiguration : IEntityTypeConfiguration<Prestador>
         builder.Property(p => p.EmailEmpresa).HasMaxLength(50);
         builder.Property(p => p.Endereco).HasMaxLength(100);
         builder.Property(p => p.EmailRepresentante).HasMaxLength(50);
+        builder.Property(p => p.Logo).HasMaxLength(600);
         builder.Property(p => p.SituacaoCadastral);
         builder.Property(p => p.UsrCadastro);
         builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()");
