@@ -10,7 +10,6 @@ public class ClienteCpf
     {
         Cpf = new Cpf(cpf);
         Nome = nome;
-        Email = new Email(email);
         Rg = rg;
         Enderecos = enderecos;
         DataNascimento = dataNascimento;
@@ -25,7 +24,6 @@ public class ClienteCpf
 
     public Cpf Cpf { get; private set; }
     public string Nome { get; private set; }
-    public Email Email { get; private set; }
     public string Rg { get; private set; }
     public IEnumerable<Endereco> Enderecos { get; private set; }
     public DateTime DataNascimento { get; private set; }
