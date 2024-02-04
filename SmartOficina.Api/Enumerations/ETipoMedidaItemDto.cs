@@ -3,5 +3,6 @@
 public enum ETipoMedidaItemDto
 {
     Litro,
-    Peca
+    Peca,
+    Produto
 }

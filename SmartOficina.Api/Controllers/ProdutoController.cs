@@ -42,6 +42,32 @@ public class ProdutoController : MainController
         return Ok(result);
     }
 
+    [HttpPost("AddFromExcel")]
+    public async Task<IActionResult> AddFromExcel(IFormFile file)
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        if (file == null || file.Length == 0)
+            return BadRequest("Arquivo não enviado");
+
+        var produtosLot = await _produtoService.MapperProdutoLot(file);
+
+        if (produtosLot == null)
+            return BadRequest("Não foi possível mappear os produtos, verificar se existe produto no formato incorreto do exemplo");
+
+        foreach (var produto in produtosLot)
+            MapearLogin(produto);
+
+        var result = await _produtoService.CreateProdutoLot(produtosLot);
+
+        if (result == null)
+            NoContent();
+
+        return Ok(result);
+
+    }
+
     private void MapearLogin(ProdutoDto produto)
     {
         if (!produto.PrestadorId.HasValue)
@@ -127,9 +153,9 @@ public class ProdutoController : MainController
     [HttpPut("DesativarProduto")]
     public async Task<IActionResult> DesativarProduto(Guid id)
     {
-        if (!ModelState.IsValid)        
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
 
         var result = await _produtoService.Desabled(id, PrestadorId);
 
@@ -149,7 +175,7 @@ public class ProdutoController : MainController
     {
         try
         {
-            if (!ModelState.IsValid)           
+            if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
             await _produtoService.Delete(id);
