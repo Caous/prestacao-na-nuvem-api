@@ -2,6 +2,6 @@
 {
     public interface IEmailManager
     {
-        Task<bool> SendEmailAsync(Email emailConfig);
+        Task<bool> SendEmailSmtpAsync(Email emailConfig);
     }
 }

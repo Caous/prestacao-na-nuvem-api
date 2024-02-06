@@ -2,12 +2,12 @@
 
 public class EmailConfigHost
 {
-    public EmailConfigHost(string host, int port, string userName, string pass)
+    public EmailConfigHost(string host, int port, string userName, string password)
     {
         Host = host;
         Port = port;
         UserName = userName;
-        Password = pass;
+        Password = password;
     }
     public string Host { get; private set; }
     public int Port { get; private set; }

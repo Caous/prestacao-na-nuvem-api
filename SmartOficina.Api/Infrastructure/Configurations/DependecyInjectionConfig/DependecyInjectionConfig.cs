@@ -1,4 +1,6 @@
-﻿namespace SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
+﻿using SmartOficina.Api.Domain.Interfacesk;
+
+namespace SmartOficina.Api.Infrastructure.Configurations.DependecyInjectionConfig;
 
 public static class DependecyInjectionConfig
 {
@@ -28,6 +30,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<ISubCategoriaServicoService, SubCategoriaServicoService>();
         services.AddScoped<IVeiculoService, VeiculoService>();
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IEmailManager, EmailManager>();
         #endregion
 
         #region Cors
