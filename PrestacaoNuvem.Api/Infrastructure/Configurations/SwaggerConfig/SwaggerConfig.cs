@@ -6,7 +6,7 @@ public static class SwaggerConfig
     {
         services.AddSwaggerGen(c =>
          {
-             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Smart Oficina v1", Version = "v1" });
+             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Prestacao Nuvem v1", Version = "v1" });
 
              var scheme = new OpenApiSecurityScheme
              {
