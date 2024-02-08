@@ -6,7 +6,7 @@ name: prestacao-nuvem-api
 on:
   push:
     branches:
-      - Hml
+      - main
   workflow_dispatch:
 
 jobs:
