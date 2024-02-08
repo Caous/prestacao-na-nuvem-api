@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-api",
-            "program": "${workspaceFolder}/SmartOficina.Api/bin/Debug/net8.0/SmartOficina.Api.dll",
+            "program": "${workspaceFolder}/PrestacaoNuvem.Api/bin/Debug/net8.0/PrestacaoNuvem.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SmartOficina.Api",
+            "cwd": "${workspaceFolder}/PrestacaoNuvem.Api",
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
@@ -23,9 +23,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-seguranca",
-            "program": "${workspaceFolder}/SmartOficina.Seguranca/bin/Debug/net8.0/SmartOficina.Seguranca.dll",
+            "program": "${workspaceFolder}/PrestacaoNuvem.Seguranca/bin/Debug/net8.0/PrestacaoNuvem.Seguranca.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SmartOficina.Seguranca",
+            "cwd": "${workspaceFolder}/PrestacaoNuvem.Seguranca",
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
