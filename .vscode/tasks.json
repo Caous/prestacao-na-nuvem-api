@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/SmartOficina.Api/SmartOficina.Api.csproj",
+                "${workspaceFolder}/PrestacaoNuvem.Api/PrestacaoNuvem.Api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/SmartOficina.Seguranca/SmartOficina.Seguranca.csproj",
+                "${workspaceFolder}/PrestacaoNuvem.Seguranca/PrestacaoNuvem.Seguranca.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -31,7 +31,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/SmartOficina.Api/SmartOficina.Api.dll",
+                "${workspaceFolder}/PrestacaoNuvem.Api/PrestacaoNuvem.Api.dll",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -43,7 +43,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/SmartOficina.Api/SmartOficina.Seguranca.dll",
+                "${workspaceFolder}/PrestacaoNuvem.Api/PrestacaoNuvem.Seguranca.dll",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
