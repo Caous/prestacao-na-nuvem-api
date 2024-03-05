@@ -1,4 +1,5 @@
-﻿using PrestacaoNuvem.Api.Domain.Interfaces;
+﻿using Azure;
+using PrestacaoNuvem.Api.Domain.Interfaces;
 using System.Net;
 
 namespace PrestacaoNuvem.UnitTest.PrestacaoNuvem.API.Controllers;
@@ -304,7 +305,7 @@ public class CategoriaServicoControllerTest
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         //Act
 
-        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value );
+        var response = await controllerCategoria.DesativarCategoria(categoriaDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as CategoriaServicoDto;
         //Assert
@@ -344,7 +345,7 @@ public class CategoriaServicoControllerTest
     {
         //Arrange
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste"); 
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
         CategoriaServicoDto categoriaDtoFakeNull = null;
         _serviceMock.Setup(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(categoriaDtoFakeNull);
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
@@ -395,14 +396,50 @@ public class CategoriaServicoControllerTest
     {
         //Arrange
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-         CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
         _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>()));
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         //Act
         await controllerCategoria.DeletarCategoria(Guid.NewGuid());
         //Assert
         _serviceMock.Verify(x => x.Delete(It.IsAny<Guid>()), Times.Once);
-        
+
+    }
+
+    [Fact]
+    public async Task Deve_GerarErro_RetornoNoContent()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>())).ThrowsAsync(new Exception("Indice não encontrado"));
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+        //var response = await Assert.ThrowsAsync<ObjectResult>(() => controllerCategoria.DeletarCategoria(Guid.NewGuid()));
+        var response = await controllerCategoria.DeletarCategoria(Guid.NewGuid());
+        var okResult = response as NoContentResult;
+        //Assert
+        _serviceMock.Verify(x => x.Delete(It.IsAny<Guid>()), Times.Once);
+        Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
+
+    }
+
+    [Fact]
+    public async Task Deve_GerarErro_RetornoException()
+    {
+        //Arrange
+        ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
+        CategoriaServicoDto categoriaDtoFake = RetornarCategoriaDtoFake("Teste Titulo", "teste");
+        _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>())).ThrowsAsync(new Exception("Error"));
+        CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
+        //Act
+        //var response = await Assert.ThrowsAsync<Exception>(() => controllerCategoria.DeletarCategoria(Guid.NewGuid()));
+        var response = await controllerCategoria.DeletarCategoria(Guid.NewGuid());
+        var okResult = response as ObjectResult;
+        //Assert
+        _serviceMock.Verify(x => x.Delete(It.IsAny<Guid>()), Times.Once);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
+
     }
 
     private static CategoriaServicoDto RetornarCategoriaDtoFake(string titulo, string desc)

@@ -39,10 +39,9 @@ public class CategoriaServicoController : MainController
     public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
     {
 
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid)        
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         MapearLogin(categoriaServico);
 
@@ -63,10 +62,9 @@ public class CategoriaServicoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid)        
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         CategoriaServicoDto filter = MapperFilter(titulo, desc);
 

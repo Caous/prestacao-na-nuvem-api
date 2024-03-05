@@ -12,7 +12,7 @@ namespace PrestacaoNuvem.Api.Controllers;
 [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
 [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-public class EmailController : ControllerBase
+public class EmailController : MainController
 {
     private readonly IEmailManager _emailManager;
     private readonly IConfiguration _configuration;

@@ -250,7 +250,7 @@ public class PrestadorController : MainController
     /// <param name="_nome"></param>
     /// <returns></returns>
     [HttpGet("Funcionario/Prestador/id")]
-    public async Task<IActionResult> GetAllFuncionarioPorPrestador(Guid id, [FromBody] string _cpf, string _email, string _nome)
+    public async Task<IActionResult> GetAllFuncionarioPorPrestador([FromBody] string _cpf, string _email, string _nome)
     {
         FuncionarioPrestadorDto filter = new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = _cpf, Email = _email, Nome = _nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
 
@@ -311,7 +311,7 @@ public class PrestadorController : MainController
     [HttpPut("DesativarFuncionario")]
     public async Task<IActionResult> DesativarFuncionario(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
 

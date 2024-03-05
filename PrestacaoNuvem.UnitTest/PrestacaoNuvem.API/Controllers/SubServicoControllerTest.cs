@@ -349,4 +349,22 @@ public class SubServicoControllerTest
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
     }
 
+    [Fact]
+    public async Task NaoDeve_Deletar_Retornar_Veiculo_RetornoBadRequest_Exception()
+    {
+        //Arranger
+        ICollection<SubCategoriaServicoDto> subCategoriaServicosListaFake = RetornaListaSubCategoriaServico("Teste", "teste desc");
+        SubCategoriaServicoDto subCategoriaServicoFake = RetornaSubCategoriaServico("Teste", "teste desc");
+        _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>())).ThrowsAsync(new Exception("Error"));
+        SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
+        //Act
+        var response = await controllerSubCategoria.DeletarSubServico(subCategoriaServicoFake.Id.Value);
+        var okResult = response as ObjectResult;
+
+        //Assert
+        _serviceMock.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Once);
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+    }
+
 }

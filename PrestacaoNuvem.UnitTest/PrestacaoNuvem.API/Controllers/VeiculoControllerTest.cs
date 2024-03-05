@@ -338,6 +338,24 @@ public class VeiculoControllerTest
         Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
     }
 
+    [Fact]
+    public async Task NaoDeve_Deletar_Retornar_Veiculo_RetornoBadRequest_Exeception()
+    {
+        //Arranger
+        ICollection<VeiculoDto> veiculosFake = RetornaListaVeiculoFake("Hyundai", "i30", "ebv7898");
+        VeiculoDto veiculoFake = RetornaVeiculoFake("Hyundai", "i30", "ebv7898");
+        _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>())).ThrowsAsync(new Exception("Error"));
+        VeiculoController controllerVeiculo = CreateFakeController(veiculosFake);
+        //Act
+        var response = await controllerVeiculo.DeletarVeiculo(veiculoFake.Id.Value);
+        var okResult = response as ObjectResult;
+
+        //Assert
+        _serviceMock.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Once);
+        Assert.NotNull(okResult);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
+    }
+
     private VeiculoDto RetornaVeiculoFake(string marca, string modelo, string placa)
     {
         return  new VeiculoDto() { Marca = marca, Modelo = modelo, Placa = placa, Id = Guid.NewGuid(), UsrCadastro = Guid.NewGuid(), PrestadorId = Guid.NewGuid() } ;

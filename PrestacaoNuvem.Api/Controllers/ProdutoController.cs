@@ -27,17 +27,16 @@ public class ProdutoController : MainController
     [HttpPost]
     public async Task<IActionResult> Add(ProdutoDto produto)
     {
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid)        
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         MapearLogin(produto);
 
         var result = await _produtoService.CreateProduto(produto);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
         return Ok(result);
     }
@@ -62,7 +61,7 @@ public class ProdutoController : MainController
         var result = await _produtoService.CreateProdutoLot(produtosLot);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
         return Ok(result);
 
@@ -92,7 +91,7 @@ public class ProdutoController : MainController
         var result = await _produtoService.GetAllProduto(filter);
 
         if (result == null || !result.Any())
-            NoContent();
+            return NoContent();
 
         return Ok(result);
     }
@@ -116,7 +115,7 @@ public class ProdutoController : MainController
         var result = await _produtoService.FindByIdProduto(id);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
         return Ok(result);
     }
@@ -139,9 +138,9 @@ public class ProdutoController : MainController
 
         MapearLogin(produto);
 
-        var result = await _produtoService.CreateProduto(produto);
+        var result = await _produtoService.UpdateProduto(produto);
         if (result == null)
-            NoContent();
+            return NoContent();
         return Ok(result);
     }
 
@@ -160,7 +159,7 @@ public class ProdutoController : MainController
         var result = await _produtoService.Desabled(id, PrestadorId);
 
         if (result == null)
-            NoContent();
+            return NoContent();
 
         return Ok(result);
     }

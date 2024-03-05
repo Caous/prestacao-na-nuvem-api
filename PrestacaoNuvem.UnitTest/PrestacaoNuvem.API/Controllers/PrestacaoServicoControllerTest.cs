@@ -585,6 +585,27 @@ public class PrestacaoServicoControllerTest
     }
 
     [Fact]
+    public async Task NaoDeve_Retornar_ListaPrestacaoServicoFechadoEConcluidos_BadRequestValidationFails()
+    {
+        //Arrange
+        ICollection<PrestacaoServicoDto> prestacaoListaFake = RetornaListaPrestacaoServico();
+        ICollection<PrestacaoServicoDto> prestacaoListaFakeNull = null;
+        _serviceMock.Setup(s => s.GetByPrestacoesServicosStatus(It.IsAny<Guid>(), It.IsAny<ICollection<EPrestacaoServicoStatus>>())).ReturnsAsync(prestacaoListaFakeNull);
+        PrestacaoServicoController controller = CreateFakeController(prestacaoListaFake);
+        //Act
+        controller.ModelState.AddModelError("key", "error message");
+        var response = await controller.GetByPrestacaoServicoFechadosPrestador();
+        var okResult = response as ObjectResult;
+
+        //Assert
+        _serviceMock.Verify(s => s.GetByPrestacoesServicosStatus(It.IsAny<Guid>(), It.IsAny<ICollection<EPrestacaoServicoStatus>>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
+
+    }
+
+
+    [Fact]
     public async Task Deve_Retornar_ListaPrestacaoServicoFechadoEConcluidos_RetornoBadRequest()
     {
         //Arrange
@@ -928,6 +949,25 @@ public class PrestacaoServicoControllerTest
     }
 
     [Fact]
+    public async Task NaoDeve_Atualizar_PrestacaoServico_RetornoBadRequest_RequestComErro()
+    {
+        //Arrange
+        ICollection<PrestacaoServicoDto> prestacaoListaFake = RetornaListaPrestacaoServico();
+        PrestacaoServicoDto prestacaoFake = RetornaPrestacaoServico();
+        _serviceMock.Setup(s => s.UpdatePrestacaoServico(It.IsAny<PrestacaoServicoDto>())).ReturnsAsync(prestacaoFake);
+        PrestacaoServicoController controller = CreateFakeController(prestacaoListaFake);
+        prestacaoFake.Id = null;
+        //Act
+        var response = await controller.AtualizarPrestacaoServico(prestacaoFake);
+        var okResult = response as ObjectResult;
+        //Assert
+        _serviceMock.Verify(s => s.UpdatePrestacaoServico(It.IsAny<PrestacaoServicoDto>()), Times.Never());
+        Assert.NotNull(okResult);
+        Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
+
+    }
+
+    [Fact]
     public async Task Deve_Desativar_PrestacaoServico_RetornoOk()
     {
         //Arrange
@@ -1072,6 +1112,25 @@ public class PrestacaoServicoControllerTest
     }
 
     [Fact]
+    public async Task NaoDeve_Deletar_PrestacaoServico_RetornoBadRequestExecption()
+    {
+        //Arrange
+        ICollection<PrestacaoServicoDto> prestacaoListaFake = RetornaListaPrestacaoServico();
+        PrestacaoServicoDto prestacaoFake = RetornaPrestacaoServico();
+        _serviceMock.Setup(s => s.Delete(It.IsAny<Guid>())).ThrowsAsync(new Exception("Error"));
+
+        PrestacaoServicoController controller = CreateFakeController(prestacaoListaFake);
+        //Act
+        var response = await controller.DeletarPrestador(prestacaoFake.Id.Value);
+        var okResult = response as ObjectResult;
+        //Assert
+        _serviceMock.Verify(s => s.Delete(It.IsAny<Guid>()), Times.Once());
+        Assert.NotNull(okResult);
+        Assert.Equal((int)HttpStatusCode.BadRequest, okResult.StatusCode);
+
+    }
+
+    [Fact]
     public async Task Deve_Mudar_Status_PrestacaoServico_RetornoOk()
     {
         //Arrange
@@ -1084,5 +1143,21 @@ public class PrestacaoServicoControllerTest
         //Assert
         _serviceMock.Verify(s => s.ChangeStatus(It.IsAny<Guid>(), It.IsAny<EPrestacaoServicoStatus>()), Times.Once());
         Assert.NotNull(response);        
+    }
+
+    [Fact]
+    public async Task Deve_Mudar_Status_PrestacaoServico_RetornoBadRequest()
+    {
+        //Arrange
+        ICollection<PrestacaoServicoDto> prestacaoListaFake = RetornaListaPrestacaoServico();
+        PrestacaoServicoDto prestacaoFake = RetornaPrestacaoServico();
+        _serviceMock.Setup(s => s.ChangeStatus(It.IsAny<Guid>(), It.IsAny<EPrestacaoServicoStatus>()));
+        PrestacaoServicoController controller = CreateFakeController(prestacaoListaFake);
+        controller.ModelState.AddModelError("key", "error message"); 
+        //Act
+        var response = await controller.ChangeStatus(prestacaoFake.Id.Value, EPrestacaoServicoStatus.Concluido);
+        //Assert
+        _serviceMock.Verify(s => s.ChangeStatus(It.IsAny<Guid>(), It.IsAny<EPrestacaoServicoStatus>()), Times.Never());
+        Assert.NotNull(response);
     }
 }

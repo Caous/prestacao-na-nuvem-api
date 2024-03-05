@@ -39,7 +39,7 @@ public class ClienteController : MainController
 
         if (resultValitor != null && !resultValitor.IsValid)
         {
-            List<ErrosValidationsResponse> errors = new List<ErrosValidationsResponse>();
+            List<ErrosValidationsResponse> errors = new();
 
             foreach (var item in resultValitor.Errors)
                 errors.Add(new ErrosValidationsResponse() { ErrorMensagem = item.ErrorMessage });
@@ -48,9 +48,8 @@ public class ClienteController : MainController
         }
 
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+
 
         TratarDto(cliente);
 
@@ -84,9 +83,7 @@ public class ClienteController : MainController
     public async Task<IActionResult> GetAll(string? cpf, string? nome, string? email)
     {
         if (!ModelState.IsValid)
-        {
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
 
         ClienteDto clienteDto = MapearDto(cpf, nome, email);
 
@@ -111,7 +108,7 @@ public class ClienteController : MainController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        if (!ModelState.IsValid || id == null)
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
 
