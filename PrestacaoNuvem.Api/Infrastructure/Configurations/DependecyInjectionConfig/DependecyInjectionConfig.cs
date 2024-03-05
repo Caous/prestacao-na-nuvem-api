@@ -1,7 +1,8 @@
 ﻿using PrestacaoNuvem.Api.Domain.Interfacesk;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PrestacaoNuvem.Api.Infrastructure.Configurations.DependecyInjectionConfig;
-
+[ExcludeFromCodeCoverage]
 public static class DependecyInjectionConfig
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
