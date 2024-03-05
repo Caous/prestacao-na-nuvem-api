@@ -102,10 +102,9 @@ public class DashboardController : MainController
     [HttpGet("DashboardReceitaMes")]
     public async Task<IActionResult> GetDashboardReceitaMes()
     {
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid)        
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        
 
         var result = await _dashboardService.GetSalesMonth(PrestadorId);
 

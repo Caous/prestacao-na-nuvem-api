@@ -724,7 +724,7 @@ public class PrestadorControllerTest
         _funcionarioService.Setup(s => s.UpdateFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFake);
         PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFakeLista);
         //Act
-        funcionarioFakeLista.First().Id = null;
+        funcionarioFake.Id = null;
         var response = await controller.AtualizarFuncionario(funcionarioFake);
         var okResult = response as ObjectResult;
         //Assert
