@@ -1,5 +1,7 @@
-﻿namespace PrestacaoNuvem.Api.Converters;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace PrestacaoNuvem.Api.Converters;
+[ExcludeFromCodeCoverage]
 public class TimeOnlyConverter : JsonConverter<TimeOnly>
 {
     private readonly string serializationFormat;
