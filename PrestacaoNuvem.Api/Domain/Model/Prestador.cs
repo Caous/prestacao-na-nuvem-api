@@ -29,4 +29,5 @@ public class Prestador : Base
     public ICollection<FuncionarioPrestador>? Funcionarios { get; set; }
     public ICollection<Produto>? Produtos { get; set; }
     public ICollection<Veiculo>? Veiculos { get; set; }
+    public ICollection<Filial>? Filiais { get; set; }
 }

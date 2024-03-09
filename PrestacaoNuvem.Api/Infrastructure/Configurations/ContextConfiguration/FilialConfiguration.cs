@@ -24,5 +24,9 @@ public class FilialConfiguration : IEntityTypeConfiguration<Filial>
         builder.Property(p => p.Matriz).IsRequired();
 
         builder.Property(p => p.Numero).HasMaxLength(10).IsRequired();
+        
+        builder.Property(p => p.PrestadorId).IsRequired();
+
+        builder.HasOne(p => p.Prestador).WithMany(s => s.Filiais).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
     }
 }
