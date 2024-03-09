@@ -16,17 +16,19 @@ public class ProdutoService : IProdutoService
 
     public async Task<ProdutoDto> CreateProduto(ProdutoDto item)
     {
-        var result = await _repository.Create(_mapper.Map<Produto>(item));
+        for (int i = 0; i < item.Qtd; i++)
+            await _repository.Create(_mapper.Map<Produto>(item));
 
-        return _mapper.Map<ProdutoDto>(result);
+
+        return _mapper.Map<ProdutoDto>(item);
     }
 
     public async Task<string> CreateProdutoLot(ICollection<ProdutoDto> itens)
     {
         foreach (var item in itens)
-        {
-            await _repository.Create(_mapper.Map<Produto>(item));
-        }
+            for (int i = 0; i < item.Qtd; i++)
+                await _repository.Create(_mapper.Map<Produto>(item));
+
         return "Produtos cadastrados com sucesso qtd de produtos cadastrados: " + itens.Count();
     }
 
@@ -53,7 +55,6 @@ public class ProdutoService : IProdutoService
     public async Task<ICollection<ProdutoDto>> GetAllProduto(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
-
         return _mapper.Map<ICollection<ProdutoDto>>(result);
     }
 
@@ -122,8 +123,9 @@ public class ProdutoService : IProdutoService
 
     public async Task<ProdutoDto> UpdateProduto(ProdutoDto item)
     {
-        var result = await _repository.Update(_mapper.Map<Produto>(item));
+        for (int i = 0; i < item.Qtd; i++)
+            await _repository.Update(_mapper.Map<Produto>(item));
 
-        return _mapper.Map<ProdutoDto>(result);
+        return _mapper.Map<ProdutoDto>(item);
     }
 }

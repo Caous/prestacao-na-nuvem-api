@@ -23,16 +23,19 @@ namespace PrestacaoNuvem.Api.Domain.Services
                 return false;
             try
             {
-
-                using (MailMessage mensagemEmail = new MailMessage(emailConfig.FromEmail, emailConfig.ToEmail[0], emailConfig.Subject, emailConfig.Menssage))
+                foreach (var item in emailConfig.ToEmail)
                 {
-                    SmtpClient smtpClient = new SmtpClient(emailConfig.ConfigHost.Host, emailConfig.ConfigHost.Port);
-                    smtpClient.EnableSsl = true;
-                    smtpClient.UseDefaultCredentials = false;
-                    smtpClient.Credentials = new NetworkCredential(emailConfig.ConfigHost.UserName, emailConfig.ConfigHost.Password);                    
-                    smtpClient.UseDefaultCredentials = false;
-                    smtpClient.Timeout = 30000;
-                    smtpClient.Send(mensagemEmail);
+
+                    using (MailMessage mensagemEmail = new MailMessage(emailConfig.FromEmail, item, emailConfig.Subject, emailConfig.Menssage))
+                    {
+                        SmtpClient smtpClient = new SmtpClient(emailConfig.ConfigHost.Host, emailConfig.ConfigHost.Port);
+                        smtpClient.EnableSsl = true;
+                        smtpClient.UseDefaultCredentials = false;
+                        smtpClient.Credentials = new NetworkCredential(emailConfig.ConfigHost.UserName, emailConfig.ConfigHost.Password);
+                        smtpClient.UseDefaultCredentials = false;
+                        smtpClient.Timeout = 30000;
+                        smtpClient.Send(mensagemEmail);
+                    }
                 }
 
             }
