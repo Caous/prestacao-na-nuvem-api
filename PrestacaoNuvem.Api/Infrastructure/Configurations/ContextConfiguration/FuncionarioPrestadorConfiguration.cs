@@ -31,6 +31,9 @@ public class FuncionarioPrestadorConfiguration : IEntityTypeConfiguration<Funcio
         builder.Property(p => p.PrestadorId).IsRequired();
 
         builder.HasOne(p => p.Prestador).WithMany(s => s.Funcionarios).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
+        
+       // builder.HasOne(p => p.Filial).WithMany(s => s.Id).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
+
 
     }
 }

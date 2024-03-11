@@ -28,11 +28,11 @@ namespace PrestacaoNuvem.Api.Domain.Services
 
                     using (MailMessage mensagemEmail = new MailMessage(emailConfig.FromEmail, item, emailConfig.Subject, emailConfig.Menssage))
                     {
+                        mensagemEmail.IsBodyHtml = true;
                         SmtpClient smtpClient = new SmtpClient(emailConfig.ConfigHost.Host, emailConfig.ConfigHost.Port);
                         smtpClient.EnableSsl = true;
                         smtpClient.UseDefaultCredentials = false;
                         smtpClient.Credentials = new NetworkCredential(emailConfig.ConfigHost.UserName, emailConfig.ConfigHost.Password);
-                        smtpClient.UseDefaultCredentials = false;
                         smtpClient.Timeout = 30000;
                         smtpClient.Send(mensagemEmail);
                     }

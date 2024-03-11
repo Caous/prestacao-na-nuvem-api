@@ -55,6 +55,7 @@ public class ProdutoService : IProdutoService
     public async Task<ICollection<ProdutoDto>> GetAllProduto(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+        //var xpto = result.GroupBy(x => x.Nome).Select(x=> new ProdutoDto { Marca = x.First().Marca, });
         return _mapper.Map<ICollection<ProdutoDto>>(result);
     }
 
