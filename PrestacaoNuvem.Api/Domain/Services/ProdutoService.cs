@@ -111,6 +111,9 @@ public class ProdutoService : IProdutoService
                         case 2:
                             tipoItem = ETipoMedidaItemDto.Produto;
                             break;
+                        default:
+                            tipoItem = ETipoMedidaItemDto.Produto;
+                            break;
                     }
 
                     produtosLot.Add(new ProdutoDto { Nome = tituloProduto, Marca = marcProduto, Valor_Compra = valCompra, Valor_Venda = valVenda, Qtd = qtd, TipoMedidaItem = tipoItem, Modelo = modelo });
@@ -123,9 +126,62 @@ public class ProdutoService : IProdutoService
 
     public async Task<ProdutoDto> UpdateProduto(ProdutoDto item)
     {
-        for (int i = 0; i < item.Qtd; i++)
-            await _repository.Update(_mapper.Map<Produto>(item));
+        var result = await TratarUpdate(item);
 
-        return _mapper.Map<ProdutoDto>(item);
+        return _mapper.Map<ProdutoDto>(result);
+    }
+
+    private async Task<ProdutoDto> TratarUpdate(ProdutoDto item)
+    {
+        int qtdEstoque = await RecuperarQtdProdutoEstoque(item);
+
+        if (qtdEstoque < item.Qtd)
+            AtualizarQtdEstoqueMenos(DefinirQtdEstoqueAtual(item.Qtd, qtdEstoque), item);
+        if (item.Qtd > qtdEstoque)
+            AtualizarQtdEstoqueMaior(DefinirQtdEstoqueAtual(item.Qtd, qtdEstoque), item);
+
+
+        for (int i = 0; i < item.Qtd; i++)
+            await AtualizarProduto(item);
+
+        return item;
+    }
+
+    private void AtualizarQtdEstoqueMaior(int qtd, ProdutoDto item)
+    {
+        for (int i = 0; i > qtd; i++)
+            CreateProduto(item);
+    }
+
+    private async Task AtualizarProduto(ProdutoDto item)
+    {
+        await _repository.Update(_mapper.Map<Produto>(item));
+    }
+
+    private static int DefinirQtdEstoqueAtual(int qtdAtual, int qtdEstoqueAntiga)
+    {
+        return qtdEstoqueAntiga - qtdAtual;
+    }
+
+    private async Task AtualizarQtdEstoqueMenos(int qtd, ProdutoDto item)
+    {
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+        var itensEstoqueAtualizacao = result.Take(qtd);
+        foreach (var itemAtualizacao in itensEstoqueAtualizacao)
+        {
+            itemAtualizacao.DataDesativacao = DateTime.Now;
+            itemAtualizacao.UsrDesativacao = item.UsrCadastro;
+            await _repository.Update(_mapper.Map<Produto>(itemAtualizacao));
+        }
+    }
+
+    private async Task<int> RecuperarQtdProdutoEstoque(ProdutoDto item)
+    {
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+
+        if (result == null)
+            return 0;
+
+        return result.Count;
     }
 }
