@@ -96,6 +96,26 @@ public class ProdutoController : MainController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Recuperar produtos agrupados
+    /// </summary>
+    /// <param name="marca"></param>
+    /// <param name="nome"></param>
+    /// <param name="modelo"></param>
+    /// <returns></returns>
+    [HttpGet("ProdutosEstoque")]
+    public async Task<IActionResult> GetAllGroupBy(string? marca, string? nome, string? modelo)
+    {
+        ProdutoDto filter = MapperFilter(marca, nome, modelo);
+
+        var result = await _produtoService.GetAllGroupByProduto(filter);
+
+        if (result == null || !result.Any())
+            return NoContent();
+
+        return Ok(result);
+    }
+
     private ProdutoDto MapperFilter(string? marca, string? nome, string? modelo)
     {
         return new ProdutoDto() { Marca = marca, Nome = nome, Modelo = modelo, PrestadorId = PrestadorId, Valor_Compra = 0, Valor_Venda = 0 };

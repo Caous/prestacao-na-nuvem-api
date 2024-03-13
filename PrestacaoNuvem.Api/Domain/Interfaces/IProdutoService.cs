@@ -3,6 +3,7 @@
 public interface IProdutoService
 {
     Task<ICollection<ProdutoDto>> GetAllProduto(ProdutoDto item);
+    Task<ICollection<ProdutoDto>> GetAllGroupByProduto(ProdutoDto item);
     Task<ProdutoDto> FindByIdProduto(Guid Id);
     Task<ProdutoDto> CreateProduto(ProdutoDto item);
     Task<ICollection<ProdutoDto>?> MapperProdutoLot(IFormFile file);
