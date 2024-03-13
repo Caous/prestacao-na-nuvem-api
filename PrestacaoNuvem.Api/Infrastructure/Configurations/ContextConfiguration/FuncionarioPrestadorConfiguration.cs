@@ -28,7 +28,7 @@ public class FuncionarioPrestadorConfiguration : IEntityTypeConfiguration<Funcio
         
         builder.Property(p => p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
 
-        builder.Property(p => p.FilialId).IsRequired();
+        builder.Property(p => p.FilialId);
 
         builder.HasOne(p => p.Prestador).WithMany(s => s.Funcionarios).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
         

@@ -13,4 +13,5 @@ public class FuncionarioPrestadorDto : Base
     public required string CPF { get; set; }// 9 
     public required string Endereco { get; set; }// 250
     public required string Cargo { get; set; }// 100
+    public Guid FilialId { get; set; }
 }

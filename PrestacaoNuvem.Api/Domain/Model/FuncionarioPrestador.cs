@@ -7,7 +7,7 @@ public class FuncionarioPrestador : Base
 
     }
     public Guid PrestadorId { get; set; }
-    public Guid FilialId { get; set; }
+    public Guid? FilialId { get; set; }
     public required string Nome { get; set; }
     public required string Telefone { get; set; }
     public required string Email { get; set; }
