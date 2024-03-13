@@ -7,6 +7,7 @@ public class FuncionarioPrestador : Base
 
     }
     public Guid PrestadorId { get; set; }
+    public Guid FilialId { get; set; }
     public required string Nome { get; set; }
     public required string Telefone { get; set; }
     public required string Email { get; set; }
@@ -19,6 +20,5 @@ public class FuncionarioPrestador : Base
     public required string Cargo { get; set; }
     public Prestador Prestador { get; set; }
     public ICollection<PrestacaoServico>? OrdemServicos { get; set; }
-    public required Guid IdFilial { get; set; }
     public Filial Filial { get; set; }
 }

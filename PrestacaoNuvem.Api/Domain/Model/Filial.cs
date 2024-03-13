@@ -11,4 +11,5 @@ public class Filial : Base
     public required Guid PrestadorId { get; set; }
     public Prestador Prestador { get; set; }
     public Guid IdGerenteFilial { get; set; }
+    public ICollection<FuncionarioPrestador>? Funcionarios { get; set; }
 }
