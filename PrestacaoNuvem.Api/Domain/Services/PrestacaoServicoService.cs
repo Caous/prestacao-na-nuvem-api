@@ -19,34 +19,19 @@ public class PrestacaoServicoService : IPrestacaoServicoService
     }
     public async Task ChangeStatus(Guid id, EPrestacaoServicoStatus status)
     {
-        await EnvioEmailOrdemServicoConcluida(status, id);
+        var prestacao = await _repository.FindById(id);
 
-        await _repository.ChangeStatus(id, status);
+        var envioEmailTask = EnvioEmailOrdemServicoConcluida(status, prestacao);
+
+        var alterandoStatusTask = _repository.ChangeStatus(prestacao, status);
+
+        Task.WaitAll(envioEmailTask, alterandoStatusTask);
     }
 
-    private async Task EnvioEmailOrdemServicoConcluida(EPrestacaoServicoStatus status, Guid idOrdemServico)
+    private async Task EnvioEmailOrdemServicoConcluida(EPrestacaoServicoStatus status, PrestacaoServico prestacao)
     {
-
         if (status == EPrestacaoServicoStatus.Concluido)
         {
-            PrestacaoServico result = null;
-            var connectionstring = _configuration.GetConnectionString("DefaultConnection");
-
-            var optionsBuilder = new DbContextOptionsBuilder<OficinaContext>();
-            optionsBuilder.UseSqlServer(connectionstring);            
-
-            using (OficinaContext dbContextsa = new OficinaContext(optionsBuilder.Options))
-            {
-                result =  dbContextsa.PrestacaoServico.Where(f => f.Id == idOrdemServico)
-            .Include(i => i.Prestador)
-            .Include(i => i.Cliente)
-            .Include(i => i.Veiculo)
-            .Include(i => i.Produtos)
-            .Include(i => i.Servicos)
-                .ThenInclude(i => i.SubCategoriaServico)
-                .ThenInclude(i => i.Categoria)
-            .FirstOrDefault(); 
-            }
             Email emailConfig = new(
                 new EmailConfigHost(
                     _configuration.GetValue<string>("EmailConfiguration:Host"),
@@ -56,7 +41,7 @@ public class PrestacaoServicoService : IPrestacaoServicoService
 
             emailConfig.Subject = "Prestação na Nuvem - Ordem De Serviço Concluída";
             emailConfig.FromEmail = _configuration.GetValue<string>("EmailConfiguration:UserName");
-            emailConfig.ToEmail = new string[] { result.Cliente.Email, "suporte@innovasfera.com.br", "caous.g@gmail.com" };
+            emailConfig.ToEmail = new string[] { prestacao.Cliente.Email, "suporte@innovasfera.com.br", "caous.g@gmail.com" };
             emailConfig.Menssage = GerarMensagem();
 
             await _emailManager.SendEmailSmtpAsync(emailConfig);

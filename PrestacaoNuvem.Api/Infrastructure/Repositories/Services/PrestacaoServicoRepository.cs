@@ -1,4 +1,6 @@
-﻿namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
+﻿using Microsoft.EntityFrameworkCore.SqlServer;
+
+namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
 
 public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, IPrestacaoServicoRepository
 {
@@ -22,7 +24,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
 
     public async Task<PrestacaoServico> FindById(Guid id)
     {
-        var result = _context.PrestacaoServico
+        var result = await _context.PrestacaoServico
             .Where(f => f.Id == id)
             .Include(i => i.Prestador)
             .Include(i => i.Cliente)
@@ -31,10 +33,8 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
             .Include(i => i.Servicos)
                 .ThenInclude(i => i.SubCategoriaServico)
                 .ThenInclude(i => i.Categoria)
-            .ToList();
-        await _context.DisposeAsync();
-
-        return result.FirstOrDefault();
+            .FirstOrDefaultAsync();
+        return result;
     }
 
     public override async Task<PrestacaoServico> Update(PrestacaoServico item)
@@ -98,15 +98,14 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         return item;
     }
 
-    public async Task ChangeStatus(Guid id, EPrestacaoServicoStatus status)
-    {
-        var prestacao = await _context.PrestacaoServico.FindAsync(id);
-        if (prestacao is not null)
+    public async Task ChangeStatus(PrestacaoServico prestacaoServico, EPrestacaoServicoStatus status)
+    {       
+        if (prestacaoServico is not null)
         {
-            prestacao.Status = status;
+            prestacaoServico.Status = status;
 
-            if (prestacao.Status == EPrestacaoServicoStatus.Concluido)
-                prestacao.DataConclusaoServico = DateTime.Now;
+            if (prestacaoServico.Status == EPrestacaoServicoStatus.Concluido)
+                prestacaoServico.DataConclusaoServico = DateTime.Now;
 
             await _context.SaveChangesAsync();
             await _context.DisposeAsync();

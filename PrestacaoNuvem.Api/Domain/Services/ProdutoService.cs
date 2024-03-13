@@ -49,13 +49,15 @@ public class ProdutoService : IProdutoService
     {
         var result = await _repository.FindById(id);
 
+        //if (result != null)
+        //    result.
+
         return _mapper.Map<ProdutoDto>(result);
     }
 
     public async Task<ICollection<ProdutoDto>> GetAllProduto(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
-        //var xpto = result.GroupBy(x => x.Nome).Select(x=> new ProdutoDto { Marca = x.First().Marca, });
         return _mapper.Map<ICollection<ProdutoDto>>(result);
     }
 
@@ -184,5 +186,33 @@ public class ProdutoService : IProdutoService
             return 0;
 
         return result.Count;
+    }
+
+    public async Task<ICollection<ProdutoDto>> GetAllGroupByProduto(ProdutoDto item)
+    {
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+        if (result == null)
+            return new List<ProdutoDto>();
+
+        var resultAgrupado = result.GroupBy(x => x.Nome).Select(x =>
+            new ProdutoDto
+            {
+                Id = x.First().Id,
+                Nome = x.First().Nome,
+                Marca = x.First().Marca,
+                DataCadastro = x.First().DataCadastro,
+                Data_validade = x.First().Data_validade,
+                Modelo = x.First().Modelo,
+                Garantia = x.First().Garantia,
+                Qtd = x.Count(),
+                TipoMedidaItem = (ETipoMedidaItemDto)x.First().TipoMedidaItem,
+                PrestadorId = x.First().PrestadorId,
+                UsrCadastro = x.First().UsrCadastro,
+                Valor_Venda = x.First().Valor_Venda,
+                Valor_Compra = x.First().Valor_Compra
+            }
+        );
+
+        return resultAgrupado.ToList();
     }
 }
