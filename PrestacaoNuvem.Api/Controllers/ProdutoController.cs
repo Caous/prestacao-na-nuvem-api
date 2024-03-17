@@ -27,9 +27,9 @@ public class ProdutoController : MainController
     [HttpPost]
     public async Task<IActionResult> Add(ProdutoDto produto)
     {
-        if (!ModelState.IsValid)        
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
 
         MapearLogin(produto);
 
@@ -138,6 +138,34 @@ public class ProdutoController : MainController
             return NoContent();
 
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Recuperar um produto por nome, descrição e marca
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("ProdutoInfo/{nome}/{marca}/{modelo}")]
+    public async Task<IActionResult> GetProdutoNomeDescMarca(string nome, string marca, string modelo)
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        ProdutoDto request = MapperRequest(nome, marca, modelo);
+
+        MapearLogin(request);
+
+        var result = await _produtoService.GetProdutoInfo(request);
+
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
+    }
+
+    private static ProdutoDto MapperRequest(string? nome, string? marca, string? modelo)
+    {
+        return new ProdutoDto() { Marca = marca, Nome = nome, Modelo = modelo, Valor_Compra = 0, Valor_Venda = 0 };
     }
 
     /// <summary>

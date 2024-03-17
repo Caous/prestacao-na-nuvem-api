@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using PrestacaoNuvem.Api.Domain.Model;
 using PrestacaoNuvem.Api.Enumerations;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
@@ -136,16 +137,20 @@ public class ProdutoService : IProdutoService
 
     private async Task<ProdutoDto> TratarUpdate(ProdutoDto item)
     {
-        int qtdEstoque = await RecuperarQtdProdutoEstoque(item);
+        ICollection<Produto> produtos = await RecuperarQtdProdutoEstoque(item);
 
-        if (qtdEstoque < item.Qtd)
-            AtualizarQtdEstoqueMenos(DefinirQtdEstoqueAtual(item.Qtd, qtdEstoque), item);
-        if (item.Qtd > qtdEstoque)
-            AtualizarQtdEstoqueMaior(DefinirQtdEstoqueAtual(item.Qtd, qtdEstoque), item);
+        if (produtos != null)
+        {
+
+            if (item.Qtd < produtos.Count)
+                AtualizarQtdEstoqueMenos(DefinirQtdEstoqueAtual(item.Qtd, produtos.Count), produtos);
+            if (item.Qtd > produtos.Count)
+                AtualizarQtdEstoqueMaior(DefinirQtdEstoqueAtual(item.Qtd, produtos.Count), item);
 
 
-        for (int i = 0; i < item.Qtd; i++)
-            await AtualizarProduto(item);
+            foreach (var produto in produtos)
+                await _repository.Update(produto);
+        }
 
         return item;
     }
@@ -166,31 +171,26 @@ public class ProdutoService : IProdutoService
         return qtdEstoqueAntiga - qtdAtual;
     }
 
-    private async Task AtualizarQtdEstoqueMenos(int qtd, ProdutoDto item)
+    private async Task AtualizarQtdEstoqueMenos(int qtd, ICollection<Produto> item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
-        var itensEstoqueAtualizacao = result.Take(qtd);
+        var itensEstoqueAtualizacao = item.Take(qtd);
         foreach (var itemAtualizacao in itensEstoqueAtualizacao)
         {
             itemAtualizacao.DataDesativacao = DateTime.Now;
-            itemAtualizacao.UsrDesativacao = item.UsrCadastro;
-            await _repository.Update(_mapper.Map<Produto>(itemAtualizacao));
+            itemAtualizacao.UsrDesativacao = item.FirstOrDefault().UsrCadastro;
         }
     }
 
-    private async Task<int> RecuperarQtdProdutoEstoque(ProdutoDto item)
+    private async Task<ICollection<Produto>?> RecuperarQtdProdutoEstoque(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
-
-        if (result == null)
-            return 0;
-
-        return result.Count;
+        return result;
     }
 
     public async Task<ICollection<ProdutoDto>> GetAllGroupByProduto(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+
         if (result == null)
             return new List<ProdutoDto>();
 
@@ -214,5 +214,12 @@ public class ProdutoService : IProdutoService
         );
 
         return resultAgrupado.ToList();
+    }
+
+    public async Task<ProdutoDto> GetProdutoInfo(ProdutoDto item)
+    {
+        var result = await GetAllGroupByProduto(item);
+
+        return _mapper.Map<ProdutoDto>(result.First());
     }
 }

@@ -9,4 +9,6 @@ public interface IGenericRepository<T> where T : class
     Task Delete(Guid Id);
     Task<T> Desabled(Guid id, Guid userDesabled);
 
+    Task CommitAsync();
+
 }

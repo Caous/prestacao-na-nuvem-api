@@ -9,6 +9,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _context = context;
     }
 
+    public async Task CommitAsync()
+    {
+        await _context.SaveChangesAsync();
+        await _context.DisposeAsync();
+    }
+
     public virtual async Task<T> Create(T item)
     {
         await _context.Set<T>().AddAsync(item);
@@ -25,7 +31,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         _context.Set<T>().Remove(item);
         await _context.SaveChangesAsync();
-        await _context.DisposeAsync();
 
     }
 
@@ -44,7 +49,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         _context.Set<T>().Update(item);
         await _context.SaveChangesAsync();
-        await _context.DisposeAsync();
 
         return item;
 
@@ -56,8 +60,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public virtual async Task<ICollection<T>> GetAll(Guid id, T filter)
     {
         var result = await _context.Set<T>().ToListAsync();
-        await _context.DisposeAsync();
-
         return result;
     }
 
@@ -65,7 +67,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _context.Set<T>().Update(item);
         await _context.SaveChangesAsync();
-        await _context.DisposeAsync();
         return item;
     }
 }
