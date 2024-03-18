@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using PrestacaoNuvem.Api.Domain.Model;
 using PrestacaoNuvem.Api.Enumerations;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
@@ -49,10 +48,6 @@ public class ProdutoService : IProdutoService
     public async Task<ProdutoDto> FindByIdProduto(Guid id)
     {
         var result = await _repository.FindById(id);
-
-        //if (result != null)
-        //    result.
-
         return _mapper.Map<ProdutoDto>(result);
     }
 
@@ -157,13 +152,16 @@ public class ProdutoService : IProdutoService
 
     private void AtualizarQtdEstoqueMaior(int qtd, ProdutoDto item)
     {
-        for (int i = 0; i > qtd; i++)
-            CreateProduto(item);
+        for (int i = 0; qtd < i; i--)
+        {
+            ProdutoDto itemCopy = ProdutoCopy(item);
+            CreateProduto(itemCopy);
+        }
     }
 
-    private async Task AtualizarProduto(ProdutoDto item)
+    private static ProdutoDto ProdutoCopy(ProdutoDto item)
     {
-        await _repository.Update(_mapper.Map<Produto>(item));
+        return new ProdutoDto() { Data_validade = item.Data_validade, Garantia = item.Garantia, Marca = item.Marca, Modelo = item.Modelo, Nome = item.Nome, PrestadorId = item.PrestadorId, Qtd = 1, TipoMedidaItem = item.TipoMedidaItem, UsrCadastro = item.UsrCadastro, Valor_Venda = item.Valor_Venda, Valor_Compra = item.Valor_Compra };
     }
 
     private static int DefinirQtdEstoqueAtual(int qtdAtual, int qtdEstoqueAntiga)
