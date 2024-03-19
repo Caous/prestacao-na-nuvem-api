@@ -19,17 +19,25 @@ public class FilialService : IFilialService
     {
         var result = await _repository.Create(_mapper.Map<Filial>(request));
 
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<FilialDto>(result);
     }
 
     public async Task Delete(Guid id)
     {
-        await _repository.Delete(id);        
+        await _repository.Delete(id);
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
     }
 
     public async Task<FilialDto> Desabled(Guid id, Guid userDesabled)
     {
         var result = await _repository.Desabled(id, userDesabled);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<FilialDto>(result);
     }
@@ -38,6 +46,8 @@ public class FilialService : IFilialService
     {
         var result = await _repository.FindById(id);
 
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<FilialDto>(result);
     }
 
@@ -45,12 +55,18 @@ public class FilialService : IFilialService
     {
         var result = await _repository.GetAll(request.PrestadorId.Value, _mapper.Map<Filial>(request));
 
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<ICollection<FilialDto>>(result);
     }
 
     public async Task<FilialDto> UpdateFilial(FilialDto request)
     {
         var result = await _repository.Update(_mapper.Map<Filial>(request));
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
 
         return _mapper.Map<FilialDto>(result);
     }

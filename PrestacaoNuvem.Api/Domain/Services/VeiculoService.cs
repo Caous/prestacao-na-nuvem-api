@@ -14,17 +14,26 @@ public class VeiculoService : IVeiculoService
     {
         var result = await _repository.Create(_mapper.Map<Veiculo>(item));
 
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<VeiculoDto>(result);
     }
 
     public async Task Delete(Guid id)
     {
         await _repository.Delete(id);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
     }
 
     public async Task<VeiculoDto> Desabled(Guid id, Guid userDesabled)
     {
         var result = await _repository.Desabled(id, userDesabled);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<VeiculoDto>(result);
     }
@@ -38,12 +47,17 @@ public class VeiculoService : IVeiculoService
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Veiculo>(item));
 
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<ICollection<VeiculoDto>>(result);
     }
 
     public async Task<VeiculoDto> UpdateVeiculos(VeiculoDto item)
     {
         var result = await _repository.Update(_mapper.Map<Veiculo>(item));
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
         return _mapper.Map<VeiculoDto>(result);
     }
 }

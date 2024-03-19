@@ -14,11 +14,6 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
     public override async Task<PrestacaoServico> Create(PrestacaoServico item)
     {
         await _context.PrestacaoServico.AddAsync(item);
-
-        await _context.SaveChangesAsync();
-
-        await _context.DisposeAsync();
-
         return item;
     }
 
@@ -42,7 +37,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         if (item != null && item.Servicos != null && item.Servicos.Any())
         {
             var servicoId = item.Servicos.Where(x => x.Id != Guid.Empty).Select(x => x.Id);
-            var servicoASerDeletado = await _context.Servico.Where(x=> x.PrestacaoServicoId == item.Id && !servicoId.Contains(x.Id)).ToListAsync();
+            var servicoASerDeletado = await _context.Servico.Where(x => x.PrestacaoServicoId == item.Id && !servicoId.Contains(x.Id)).ToListAsync();
 
             foreach (var serv in servicoASerDeletado)
             {
@@ -52,7 +47,7 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
             foreach (var servico in item.Servicos)
             {
                 servico.SubCategoriaServico = null;
-               
+
                 if (servico.Id == Guid.Empty)
                 {
                     servico.PrestacaoServicoId = item.Id;
@@ -92,23 +87,18 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         }
 
         _context.PrestacaoServico.Update(item);
-        await _context.SaveChangesAsync();
-        await _context.DisposeAsync();
 
         return item;
     }
 
     public async Task ChangeStatus(PrestacaoServico prestacaoServico, EPrestacaoServicoStatus status)
-    {       
+    {
         if (prestacaoServico is not null)
         {
             prestacaoServico.Status = status;
 
             if (prestacaoServico.Status == EPrestacaoServicoStatus.Concluido)
                 prestacaoServico.DataConclusaoServico = DateTime.Now;
-
-            await _context.SaveChangesAsync();
-            await _context.DisposeAsync();
         }
         else throw new Exception("Prestacao não encontrada");
     }
@@ -125,7 +115,6 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
                 .ThenInclude(i => i.SubCategoriaServico)
                 .ThenInclude(i => i.Categoria)
             .ToArrayAsync();
-        await _context.DisposeAsync();
 
         return result;
     }
@@ -142,7 +131,6 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
                 .ThenInclude(i => i.SubCategoriaServico)
                 .ThenInclude(i => i.Categoria)
             .ToArrayAsync();
-        await _context.DisposeAsync();
 
         return result;
     }

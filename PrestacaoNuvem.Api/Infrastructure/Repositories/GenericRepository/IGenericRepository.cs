@@ -8,7 +8,7 @@ public interface IGenericRepository<T> where T : class
     Task<T> Update(T item);
     Task Delete(Guid Id);
     Task<T> Desabled(Guid id, Guid userDesabled);
-
     Task CommitAsync();
+    Task DisposeCommitAsync();
 
 }

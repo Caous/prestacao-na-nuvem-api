@@ -1,22 +1,23 @@
-﻿using static PrestacaoNuvem.Api.Domain.Model.Dashboards;
+﻿using NuGet.Protocol.Core.Types;
+using static PrestacaoNuvem.Api.Domain.Model.Dashboards;
 using static PrestacaoNuvem.Api.Dto.DashboardDto;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
 
 public class DashboardService : IDashboardService
 {
-    private readonly IDashboardRepository _dashboardService;
+    private readonly IDashboardRepository _repository;
     private readonly IMapper _mapper;
 
     public DashboardService(IDashboardRepository dashboardRepository, IMapper mapper)
     {
-        _dashboardService = dashboardRepository;
+        _repository = dashboardRepository;
         _mapper = mapper;
     }
 
     public async Task<ICollection<DashboardReceitaDiariaDto>?> GetDailySales(Guid prestador)
     {
-        ICollection<PrestacaoServico> resultDailySales = await _dashboardService.GetDailySales(prestador);
+        ICollection<PrestacaoServico> resultDailySales = await _repository.GetDailySales(prestador);
 
         if (resultDailySales == null)
             return null;
@@ -47,7 +48,7 @@ public class DashboardService : IDashboardService
 
     public async Task<ICollection<DashboardReceitaCategoriaDto>?> GetServicesGroupByCategoryService(Guid prestador)
     {
-        ICollection<PrestacaoServico> result = await _dashboardService.GetServicesGroupByCategoryService(prestador);
+        ICollection<PrestacaoServico> result = await _repository.GetServicesGroupByCategoryService(prestador);
 
         if (result == null)
             return null;
@@ -78,7 +79,7 @@ public class DashboardService : IDashboardService
 
     public async Task<ICollection<DashboardReceitaSubCaterogiaDto>?> GetServicesGroupBySubCategoryService(Guid prestador)
     {
-        ICollection<PrestacaoServico> result = await _dashboardService.GetServicesGroupBySubCategoryService(prestador);
+        ICollection<PrestacaoServico> result = await _repository.GetServicesGroupBySubCategoryService(prestador);
 
         if (result == null)
             return null;
@@ -110,7 +111,7 @@ public class DashboardService : IDashboardService
 
     public async Task<DashboardReceitaMesDto> GetSalesMonth(Guid prestador)
     {
-        ICollection<PrestacaoServico> result = await _dashboardService.GetSalesMonth(prestador);
+        ICollection<PrestacaoServico> result = await _repository.GetSalesMonth(prestador);
 
         if (result == null)
             return null;
@@ -127,7 +128,7 @@ public class DashboardService : IDashboardService
 
     public async Task<DashboardClientesNovos> GetNewCustomerMonth(Guid prestador)
     {
-        ICollection<Cliente> result = await _dashboardService.GetNewCustomerMonth(prestador);
+        ICollection<Cliente> result = await _repository.GetNewCustomerMonth(prestador);
 
         if (result == null)
             return null;
@@ -137,7 +138,7 @@ public class DashboardService : IDashboardService
 
     public async Task<DashboardProdutosNovos?> GetSalesProductMonth(Guid prestador)
     {
-        ICollection<Produto> result = await _dashboardService.GetSalesProductMonth(prestador);
+        ICollection<Produto> result = await _repository.GetSalesProductMonth(prestador);
 
         if (result == null)
             return null;
@@ -147,7 +148,7 @@ public class DashboardService : IDashboardService
 
     public async Task<DashboardOSMes?> GetOSMonth(Guid prestador)
     {
-        ICollection<PrestacaoServico> result = await _dashboardService.GetOSMonth(prestador);
+        ICollection<PrestacaoServico> result = await _repository.GetOSMonth(prestador);
 
         if (result == null)
             return null;

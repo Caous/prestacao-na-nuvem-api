@@ -14,19 +14,26 @@ public class SubCategoriaServicoService : ISubCategoriaServicoService
     {
         var result = await _repository.Create(_mapper.Map<SubCategoriaServico>(item));
 
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<SubCategoriaServicoDto>(result);
     }
 
     public async Task Delete(Guid id)
     {
         await _repository.Delete(id);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
     }
 
     public async Task<SubCategoriaServicoDto> Desabled(Guid id, Guid userDesabled)
     {
-        var resultFilter = await _repository.FindById(id);
-
         var result = await _repository.Desabled(id, userDesabled);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
         return _mapper.Map<SubCategoriaServicoDto>(result);
     }
 
@@ -34,6 +41,7 @@ public class SubCategoriaServicoService : ISubCategoriaServicoService
     {
         var result = await _repository.FindById(id);
 
+        await _repository.DisposeCommitAsync();
         return _mapper.Map<SubCategoriaServicoDto>(result);
     }
 
@@ -41,6 +49,7 @@ public class SubCategoriaServicoService : ISubCategoriaServicoService
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<SubCategoriaServico>(item));
 
+        await _repository.DisposeCommitAsync();
         return _mapper.Map<ICollection<SubCategoriaServicoDto>>(result);
     }
 
@@ -49,6 +58,9 @@ public class SubCategoriaServicoService : ISubCategoriaServicoService
 
         var result = await _repository.Update(_mapper.Map<SubCategoriaServico>(item));
 
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
         return _mapper.Map<SubCategoriaServicoDto>(result);
 
     }

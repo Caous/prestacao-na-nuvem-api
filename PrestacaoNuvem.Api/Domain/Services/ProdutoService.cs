@@ -20,6 +20,9 @@ public class ProdutoService : IProdutoService
             await _repository.Create(_mapper.Map<Produto>(item));
 
 
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<ProdutoDto>(item);
     }
 
@@ -29,12 +32,16 @@ public class ProdutoService : IProdutoService
             for (int i = 0; i < item.Qtd; i++)
                 await _repository.Create(_mapper.Map<Produto>(item));
 
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
         return "Produtos cadastrados com sucesso qtd de produtos cadastrados: " + itens.Count();
     }
 
     public async Task Delete(Guid id)
     {
         await _repository.Delete(id);
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
     }
 
     public async Task<ProdutoDto> Desabled(Guid id, Guid userDesabled)
@@ -42,18 +49,25 @@ public class ProdutoService : IProdutoService
 
         var result = await _repository.Desabled(id, userDesabled);
 
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
         return _mapper.Map<ProdutoDto>(result);
     }
 
     public async Task<ProdutoDto> FindByIdProduto(Guid id)
     {
         var result = await _repository.FindById(id);
+
+        await _repository.DisposeCommitAsync();
         return _mapper.Map<ProdutoDto>(result);
     }
 
     public async Task<ICollection<ProdutoDto>> GetAllProduto(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+        
+        await _repository.DisposeCommitAsync();
+        
         return _mapper.Map<ICollection<ProdutoDto>>(result);
     }
 
@@ -147,6 +161,10 @@ public class ProdutoService : IProdutoService
                 await _repository.Update(produto);
         }
 
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return item;
     }
 
@@ -182,12 +200,16 @@ public class ProdutoService : IProdutoService
     private async Task<ICollection<Produto>?> RecuperarQtdProdutoEstoque(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+
+        await _repository.DisposeCommitAsync();
         return result;
     }
 
     public async Task<ICollection<ProdutoDto>> GetAllGroupByProduto(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+
+        await _repository.DisposeCommitAsync();
 
         if (result == null)
             return new List<ProdutoDto>();
@@ -217,6 +239,8 @@ public class ProdutoService : IProdutoService
     public async Task<ProdutoDto> GetProdutoInfo(ProdutoDto item)
     {
         var result = await GetAllGroupByProduto(item);
+
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<ProdutoDto>(result.First());
     }

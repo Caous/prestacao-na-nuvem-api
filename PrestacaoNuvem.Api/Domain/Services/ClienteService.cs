@@ -14,17 +14,29 @@ public class ClienteService : IClienteService
     {
         var result = await _repository.Create(_mapper.Map<Cliente>(item));
 
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<ClienteDto>(result);
     }
 
     public async Task Delete(Guid id)
     {
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         await _repository.Delete(id);
     }
 
     public async Task<ClienteDto> Desabled(Guid id, Guid userDesabled)
     {
         var result = await _repository.Desabled(id, userDesabled);
+
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<ClienteDto>(result);
     }
@@ -33,6 +45,8 @@ public class ClienteService : IClienteService
     {
         var result = await _repository.FindById(id);
 
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<ClienteDto>(result);
     }
 
@@ -40,12 +54,18 @@ public class ClienteService : IClienteService
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Cliente>(item));
 
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<ICollection<ClienteDto>>(result);
     }
 
     public async Task<ClienteDto> UpdateCliente(ClienteDto item)
     {
         var result = await _repository.Update(_mapper.Map<Cliente>(item));
+
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<ClienteDto>(result);
     }

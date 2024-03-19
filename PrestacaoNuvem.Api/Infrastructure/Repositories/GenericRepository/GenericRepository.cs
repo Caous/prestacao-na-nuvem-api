@@ -12,13 +12,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public async Task CommitAsync()
     {
         await _context.SaveChangesAsync();
+    }
+
+    public async Task DisposeCommitAsync()
+    {
         await _context.DisposeAsync();
     }
 
     public virtual async Task<T> Create(T item)
     {
         await _context.Set<T>().AddAsync(item);
-        await _context.SaveChangesAsync();
         return item;
     }
 
@@ -30,8 +33,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             throw new Exception("Indice não encontrado");
 
         _context.Set<T>().Remove(item);
-        await _context.SaveChangesAsync();
-
     }
 
     public async Task<T> Desabled(Guid id, Guid userDesabled)
@@ -43,12 +44,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         PropertyInfo nameprop = typeof(T).GetProperty("DataDesativacao");
 
-        if (nameprop != null)        
+        if (nameprop != null)
             nameprop.SetValue(item, DateTime.Now);
-        
+
 
         _context.Set<T>().Update(item);
-        await _context.SaveChangesAsync();
 
         return item;
 
@@ -66,7 +66,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public virtual async Task<T> Update(T item)
     {
         _context.Set<T>().Update(item);
-        await _context.SaveChangesAsync();
         return item;
     }
 }

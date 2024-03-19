@@ -13,12 +13,20 @@ public class CategoriaService : ICategoriaService
     public async Task<CategoriaServicoDto> CreateCategoria(CategoriaServicoDto item)
     {
         var result = await _repository.Create(_mapper.Map<CategoriaServico>(item));
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<CategoriaServicoDto>(result);
     }
 
     public async Task Delete(Guid Id)
     {
         await _repository.Delete(Id);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
     }
 
     public async Task<CategoriaServicoDto> Desabled(Guid id, Guid IdUserDesabled)
@@ -31,6 +39,10 @@ public class CategoriaService : ICategoriaService
         InsertDesabled(IdUserDesabled, resultFind);
 
         var result = await _repository.Update(resultFind);
+
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<CategoriaServicoDto>(result);
     }
@@ -45,6 +57,8 @@ public class CategoriaService : ICategoriaService
     {
         var result = await _repository.FindById(Id);
 
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<CategoriaServicoDto>(result);
     }
 
@@ -52,12 +66,18 @@ public class CategoriaService : ICategoriaService
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<CategoriaServico>(item));
 
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<ICollection<CategoriaServicoDto>>(result);
     }
 
     public async Task<CategoriaServicoDto> UpdateCategoria(CategoriaServicoDto item)
     {
         var result = await _repository.Update(_mapper.Map<CategoriaServico>(item));
+
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<CategoriaServicoDto>(result);
     }

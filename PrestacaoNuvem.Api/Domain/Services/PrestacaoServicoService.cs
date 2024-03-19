@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using PrestacaoNuvem.Api.Domain.Interfacesk;
+﻿using PrestacaoNuvem.Api.Domain.Interfacesk;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
 
@@ -24,6 +23,9 @@ public class PrestacaoServicoService : IPrestacaoServicoService
         var envioEmailTask = EnvioEmailOrdemServicoConcluida(status, prestacao);
 
         var alterandoStatusTask = _repository.ChangeStatus(prestacao, status);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
 
         Task.WaitAll(envioEmailTask, alterandoStatusTask);
     }
@@ -114,24 +116,38 @@ public class PrestacaoServicoService : IPrestacaoServicoService
 
         var result = await _repository.Create(_mapper.Map<PrestacaoServico>(prestacaoServico));
 
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<PrestacaoServicoDto>(result);
     }
 
     public async Task Delete(Guid id)
     {
         await _repository.Delete(id);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
     }
 
     public async Task<PrestacaoServicoDto> Desabled(Guid id, Guid userDesabled)
     {
 
         var result = await _repository.Desabled(id, userDesabled);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<PrestacaoServicoDto>(result);
     }
 
     public async Task<PrestacaoServicoDto> FindByIdPrestacaoServico(Guid id)
     {
         var result = await _repository.FindById(id);
+
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<PrestacaoServicoDto>(result);
     }
@@ -140,17 +156,27 @@ public class PrestacaoServicoService : IPrestacaoServicoService
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<PrestacaoServico>(item));
 
+        await _repository.DisposeCommitAsync();
+
         return _mapper.Map<ICollection<PrestacaoServicoDto>>(result);
     }
 
     public async Task<ICollection<PrestacaoServicoDto>> GetByPrestacoesServicosStatus(Guid prestadorId, ICollection<EPrestacaoServicoStatus> statusPrestacao)
     {
-        return _mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestacoesServicosStatus(prestadorId, statusPrestacao));
+        var result = await _repository.GetByPrestacoesServicosStatus(prestadorId, statusPrestacao);
+
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<ICollection<PrestacaoServicoDto>>(result);
     }
 
     public async Task<ICollection<PrestacaoServicoDto>> GetByPrestador(Guid prestadorId)
     {
-        return _mapper.Map<ICollection<PrestacaoServicoDto>>(await _repository.GetByPrestador(prestadorId));
+        var result = await _repository.GetByPrestador(prestadorId);
+
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<ICollection<PrestacaoServicoDto>>(result);
     }
 
     public async Task<PrestacaoServicoDto> UpdatePrestacaoServico(PrestacaoServicoDto prestacaoServico)
@@ -205,6 +231,9 @@ public class PrestacaoServicoService : IPrestacaoServicoService
         prestacaoServico.Produtos = produtos;
 
         var result = await _repository.Update(_mapper.Map<PrestacaoServico>(prestacaoServico));
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<PrestacaoServicoDto>(result);
     }

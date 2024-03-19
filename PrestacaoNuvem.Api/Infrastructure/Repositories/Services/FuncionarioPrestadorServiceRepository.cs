@@ -14,7 +14,6 @@ public class FuncionarioPrestadorServiceRepository : GenericRepository<Funcionar
              .Where(f => f.PrestadorId == id && f.DataDesativacao == null)
              .Include(i => i.Prestador)
              .ToList();
-        await _context.DisposeAsync();
 
         if (filter != null && result.Any())
         {
