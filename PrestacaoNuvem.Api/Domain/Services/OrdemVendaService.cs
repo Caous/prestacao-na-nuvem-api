@@ -1,5 +1,4 @@
-﻿
-namespace PrestacaoNuvem.Api.Domain.Services;
+﻿namespace PrestacaoNuvem.Api.Domain.Services;
 
 public class OrdemVendaService : IOrdemVendaService
 {
@@ -11,48 +10,87 @@ public class OrdemVendaService : IOrdemVendaService
         _repository = ordemVendaRepository;
         _mapper = mapper;
     }
-    public Task ChangeStatus(Guid id, EOrdemVendaStatus status)
+    public async Task ChangeStatus(Guid id, EOrdemVendaStatus status)
     {
-        throw new NotImplementedException();
+        var ordemVenda = await _repository.FindById(id);
+
+        var alterandoStatusTask = _repository.ChangeStatus(ordemVenda, status);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
+        Task.WaitAll(alterandoStatusTask);
     }
 
-    public Task<OrdemVendaDto> CreateOrdemVenda(OrdemVendaDto item)
+    public async Task<OrdemVendaDto> CreateOrdemVenda(OrdemVendaDto item)
     {
-        throw new NotImplementedException();
+        var result = await _repository.Create(_mapper.Map<OrdemVenda>(item));
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<OrdemVendaDto>(result);
     }
 
-    public Task Delete(Guid Id)
+    public async Task Delete(Guid Id)
     {
-        throw new NotImplementedException();
+        await _repository.Delete(Id);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
     }
 
-    public Task<OrdemVendaDto> Desabled(Guid id, Guid userDesabled)
+    public async Task<OrdemVendaDto> Desabled(Guid id, Guid userDesabled)
     {
-        throw new NotImplementedException();
+        var result = await _repository.Desabled(id, userDesabled);
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<OrdemVendaDto>(result);
     }
 
-    public Task<OrdemVendaDto> FindByIdOrdemVenda(Guid Id)
+    public async Task<OrdemVendaDto> FindByIdOrdemVenda(Guid Id)
     {
-        throw new NotImplementedException();
+        var result = await _repository.FindById(Id);
+
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<OrdemVendaDto>(result);
     }
 
-    public Task<ICollection<OrdemVendaDto>> GetAllOrdemVenda(OrdemVendaDto item)
+    public async Task<ICollection<OrdemVendaDto>> GetAllOrdemVenda(OrdemVendaDto item)
     {
-        throw new NotImplementedException();
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<OrdemVenda>(item));
+        await _repository.DisposeCommitAsync();
+        return _mapper.Map<ICollection<OrdemVendaDto>>(result);
     }
 
-    public Task<ICollection<OrdemVendaDto>> GetByOrdemVendaStatus(Guid prestadorId, ICollection<EOrdemVendaStatus> statusPrestacao)
+    public async Task<ICollection<OrdemVendaDto>> GetByOrdemVendaStatus(Guid prestadorId, ICollection<EOrdemVendaStatus> statusPrestacao)
     {
-        throw new NotImplementedException();
+        var result = await _repository.GetByPrestacoesServicosStatus(prestadorId, statusPrestacao);
+
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<ICollection<OrdemVendaDto>>(result);
     }
 
-    public Task<ICollection<OrdemVendaDto>> GetByPrestador(Guid prestadorId)
+    public async Task<ICollection<OrdemVendaDto>> GetByPrestador(Guid prestadorId)
     {
-        throw new NotImplementedException();
+        var result = await _repository.GetByPrestador(prestadorId);
+
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<ICollection<OrdemVendaDto>>(result);
     }
 
-    public Task<OrdemVendaDto> UpdateOrdemVenda(OrdemVendaDto item)
+    public async Task<OrdemVendaDto> UpdateOrdemVenda(OrdemVendaDto item)
     {
-        throw new NotImplementedException();
+        var result = await _repository.Update(_mapper.Map<OrdemVenda>(item));
+
+        await _repository.CommitAsync();
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<OrdemVendaDto>(result);
     }
 }
