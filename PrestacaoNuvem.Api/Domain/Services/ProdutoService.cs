@@ -146,7 +146,8 @@ public class ProdutoService : IProdutoService
 
     private async Task<ProdutoDto> TratarUpdate(ProdutoDto item)
     {
-        ICollection<Produto> produtos = await RecuperarQtdProdutoEstoque(item);
+        ICollection<Produto> produtos =  await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+
 
         if (produtos != null)
         {
@@ -173,7 +174,7 @@ public class ProdutoService : IProdutoService
         for (int i = 0; qtd < i; i--)
         {
             ProdutoDto itemCopy = ProdutoCopy(item);
-            CreateProduto(itemCopy);
+            _repository.Create(_mapper.Map<Produto>(itemCopy));
         }
     }
 
@@ -195,14 +196,6 @@ public class ProdutoService : IProdutoService
             itemAtualizacao.DataDesativacao = DateTime.Now;
             itemAtualizacao.UsrDesativacao = item.FirstOrDefault().UsrCadastro;
         }
-    }
-
-    private async Task<ICollection<Produto>?> RecuperarQtdProdutoEstoque(ProdutoDto item)
-    {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
-
-        await _repository.DisposeCommitAsync();
-        return result;
     }
 
     public async Task<ICollection<ProdutoDto>> GetAllGroupByProduto(ProdutoDto item)
