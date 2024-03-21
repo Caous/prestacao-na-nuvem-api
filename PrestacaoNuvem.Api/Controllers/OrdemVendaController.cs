@@ -9,28 +9,32 @@
 [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
 public class OrdemVendaController : MainController
 {
-    public OrdemVendaController()
-    {
+    private readonly IOrdemVendaService _service;
 
+    public OrdemVendaController(IOrdemVendaService service)
+    {
+        _service = service;
     }
-    
+
     /// <summary>
-    /// Adicionar prestação de serviço
+    /// Adicionar ordem de venda
     /// </summary>
-    /// <param name="prestacaoServico"></param>
+    /// <param name="ordemvendadto"></param>
     /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Add(OrdemVendaDto request)
     {
-        //if (!ModelState.IsValid)
-        //    return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        //MapearLogin(prestacaoServico);
-        //var result = await _repository.CreatePrestacaoServico(prestacaoServico);
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        //if (result == null)
-        //    return NoContent();
+        MapearLogin(request);
 
-        return Ok();
+        var result = await _service.CreateOrdemVenda(request);
+
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
     }
 
     private void MapearLogin(OrdemVendaDto request)
@@ -43,35 +47,35 @@ public class OrdemVendaController : MainController
     }
 
     /// <summary>
-    /// Recupera todas prestação de serviço
+    /// Recupera todas ordem de venda
     /// </summary>
     /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        //PrestacaoServicoDto filter = new PrestacaoServicoDto() { PrestadorId = PrestadorId };
+        OrdemVendaDto filter = new() { PrestadorId = PrestadorId };
 
-        //var result = await _repository.GetAllPrestacaoServico(filter);
+        var result = await _service.GetAllOrdemVenda(filter);
 
-        return Ok();
+        return Ok(result);
     }
 
     /// <summary>
-    /// Recupera uma prestação de serviço por Id
+    /// Recupera uma odem de venda por Id
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetId(Guid id)
     {
-        //if (!ModelState.IsValid)
-        //    return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        //var result = await _repository.FindByIdPrestacaoServico(id);
+        var result = await _service.FindByIdOrdemVenda(id);
 
-        //if (result == null)
-        //    return NoContent();
+        if (result == null)
+            return NoContent();
 
-        return Ok();
+        return Ok(result);
     }
 }

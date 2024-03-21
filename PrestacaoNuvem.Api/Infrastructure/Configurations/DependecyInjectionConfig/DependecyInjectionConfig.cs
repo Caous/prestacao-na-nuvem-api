@@ -20,6 +20,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IFuncionarioPrestadorRepository, FuncionarioPrestadorServiceRepository>();
         services.AddScoped<IDashboardRepository, DashboardRepository>();
         services.AddScoped<IFilialRepository, FilialRepository>();
+        services.AddScoped<IOrdemVendaRepository, OrdemVendaRepository>();
         #endregion
 
         #region Injection Services
@@ -34,6 +35,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IEmailManager, EmailManager>();
         services.AddScoped<IFilialService, FilialService>();
+        services.AddScoped<IOrdemVendaService, OrdemVendaService>();
         #endregion
 
         #region Cors

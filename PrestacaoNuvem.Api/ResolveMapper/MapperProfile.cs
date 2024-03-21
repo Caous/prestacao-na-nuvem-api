@@ -20,6 +20,7 @@ public class MapperProfile : Profile
         CreateMap<DashboardReceitaDiariaDto, FaturamentoDiario>().ReverseMap();
         CreateMap<DashboardReceitaSubCaterogiaDto, SubCategoriaAgrupado>().ReverseMap();
         CreateMap<FilialDto, Filial>().ReverseMap();
+        CreateMap<OrdemVendaDto, OrdemVenda>().ReverseMap();
 
     }
 }
