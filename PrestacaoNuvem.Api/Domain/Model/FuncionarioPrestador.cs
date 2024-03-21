@@ -20,5 +20,6 @@ public class FuncionarioPrestador : Base
     public required string Cargo { get; set; }
     public Prestador Prestador { get; set; }
     public ICollection<PrestacaoServico>? OrdemServicos { get; set; }
+    public ICollection<OrdemVenda>? OrdemVendas { get; set; }
     public Filial Filial { get; set; }
 }

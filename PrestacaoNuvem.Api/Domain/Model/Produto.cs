@@ -18,5 +18,7 @@ public class Produto : Base
     public required Guid PrestadorId { get; set; }
     public Prestador Prestador { get; set; }
     public Guid? PrestacaoServicoId{ get; set; }
+    public Guid? OrdemVendaId{ get; set; }
     public PrestacaoServico? PrestacaoServico { get; set; }
+    public OrdemVenda? OrdemVenda { get; set; }
 }

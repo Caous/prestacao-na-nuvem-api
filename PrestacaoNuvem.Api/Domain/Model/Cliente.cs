@@ -13,5 +13,6 @@ public class Cliente : Base
     public required Guid PrestadorId { get; set; }
     public Prestador Prestador{ get; set; }
     public ICollection<PrestacaoServico>? Servicos { get; set; }
+    public ICollection<OrdemVenda>? OrdemVendas { get; set; }
 
 }

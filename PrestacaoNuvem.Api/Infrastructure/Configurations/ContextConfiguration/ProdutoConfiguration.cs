@@ -28,6 +28,8 @@ public class ProdutoConfiguration : IEntityTypeConfiguration<Produto>
 
         builder.HasOne(p => p.PrestacaoServico).WithMany(s => s.Produtos).HasForeignKey(f => f.PrestacaoServicoId).OnDelete(DeleteBehavior.SetNull);
 
+        builder.HasOne(p => p.OrdemVenda).WithMany(s => s.Produtos).HasForeignKey(f => f.OrdemVendaId).OnDelete(DeleteBehavior.SetNull);
+
         builder.HasOne(p => p.Prestador).WithMany(s => s.Produtos).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
 
     }

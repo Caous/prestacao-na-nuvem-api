@@ -2,7 +2,7 @@
 
 public class OrdemVenda : Base
 {
-    public string CPF { get; set; }
+    public string? CPF { get; set; }
     public string? Referencia { get; set; }
     public EOrdemVendaStatus Status { get; set; }
     public Prestador? Prestador { get; set; }

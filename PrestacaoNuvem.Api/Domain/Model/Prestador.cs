@@ -23,6 +23,7 @@ public class Prestador : Base
     public DateTime? DataAbertura { get; set; }
     public DateTime? DataSituacaoCadastral { get; set; }
     public ICollection<PrestacaoServico>? OrdemServicos { get; set; }
+    public ICollection<OrdemVenda>? OrdemVendas { get; set; }
     public ICollection<Servico>? Servicos { get; set; }
     public ICollection<CategoriaServico>? CategoriaServicos { get; set; }
     public ICollection<Cliente>? Clientes { get; set; }

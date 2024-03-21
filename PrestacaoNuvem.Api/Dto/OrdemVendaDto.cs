@@ -8,5 +8,5 @@ public class OrdemVendaDto : Base
     public Guid? FuncionarioPrestadorId { get; set; }
     public FuncionarioPrestadorDto? FuncionarioPrestador { get; set; }
     public ICollection<ProdutoDto>? Produtos { get; set; }
-    public string CPF { get; set; }
+    public string? CPF { get; set; }
 }
