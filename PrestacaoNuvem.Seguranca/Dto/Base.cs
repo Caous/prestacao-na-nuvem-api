@@ -9,4 +9,5 @@ public abstract class Base
     public Guid? UsrDesativacao { get; set; }
     public string? UsrDescricaoDesativacao { get; set; }
     public Guid? PrestadorId { get; set; }
+    public Guid? FuncionarioId { get; set; }
 }

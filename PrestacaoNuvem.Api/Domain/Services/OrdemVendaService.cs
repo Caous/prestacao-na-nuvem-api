@@ -3,11 +3,13 @@
 public class OrdemVendaService : IOrdemVendaService
 {
     private readonly IOrdemVendaRepository _repository;
+    private readonly IProdutoRepository _produtoRepository;
     private readonly IMapper _mapper;
 
-    public OrdemVendaService(IOrdemVendaRepository ordemVendaRepository, IMapper mapper)
+    public OrdemVendaService(IOrdemVendaRepository ordemVendaRepository, IProdutoRepository produtoRepository, IMapper mapper)
     {
         _repository = ordemVendaRepository;
+        _produtoRepository = produtoRepository;
         _mapper = mapper;
     }
     public async Task ChangeStatus(Guid id, EOrdemVendaStatus status)
@@ -24,12 +26,60 @@ public class OrdemVendaService : IOrdemVendaService
 
     public async Task<OrdemVendaDto> CreateOrdemVenda(OrdemVendaDto item)
     {
+        if (item != null && item.Produtos != null)
+        {
+            foreach (var produto in item.Produtos)
+            {
+                produto.PrestadorId = item.PrestadorId;
+                ICollection<Produto> produtos = await _produtoRepository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(produto));
+
+                if (produtos != null)
+                {
+                    if (produto.Qtd < produtos.Count)
+                        AtualizarQtdEstoqueMenos(DefinirQtdEstoqueAtual(produto.Qtd, produtos.Count), produtos);
+                    if (produto.Qtd > produtos.Count)
+                        AtualizarQtdEstoqueMaior(DefinirQtdEstoqueAtual(produto.Qtd, produtos.Count), produto);
+
+                    await _produtoRepository.Update(_mapper.Map<Produto>(produto));
+                }
+            }
+        }
+
         var result = await _repository.Create(_mapper.Map<OrdemVenda>(item));
 
         await _repository.CommitAsync();
         await _repository.DisposeCommitAsync();
 
         return _mapper.Map<OrdemVendaDto>(result);
+    }
+
+    private void AtualizarQtdEstoqueMaior(int qtd, ProdutoDto item)
+    {
+        for (int i = 0; qtd < i; i--)
+        {
+            ProdutoDto itemCopy = ProdutoCopy(item);
+            _produtoRepository.Create(_mapper.Map<Produto>(itemCopy));
+        }
+    }
+
+    private static ProdutoDto ProdutoCopy(ProdutoDto item)
+    {
+        return new ProdutoDto() { Data_validade = item.Data_validade, Garantia = item.Garantia, Marca = item.Marca, Modelo = item.Modelo, Nome = item.Nome, PrestadorId = item.PrestadorId, Qtd = 1, TipoMedidaItem = item.TipoMedidaItem, UsrCadastro = item.UsrCadastro, Valor_Venda = item.Valor_Venda, Valor_Compra = item.Valor_Compra };
+    }
+
+    private static int DefinirQtdEstoqueAtual(int qtdAtual, int qtdEstoqueAntiga)
+    {
+        return qtdEstoqueAntiga - qtdAtual;
+    }
+
+    private async Task AtualizarQtdEstoqueMenos(int qtd, ICollection<Produto> item)
+    {
+        var itensEstoqueAtualizacao = item.Take(qtd);
+        foreach (var itemAtualizacao in itensEstoqueAtualizacao)
+        {
+            itemAtualizacao.DataDesativacao = DateTime.Now;
+            itemAtualizacao.UsrDesativacao = item.FirstOrDefault().UsrCadastro;
+        }
     }
 
     public async Task Delete(Guid Id)

@@ -92,6 +92,7 @@ public class AcessoManager : IAcessoManager
                         new Claim(ClaimTypes.Role, role),
                         new Claim("PrestadorId", user.PrestadorId?.ToString() ?? ""),
                         new Claim("UserName", user.UserName?.ToString() ?? ""),
+                        new Claim("FuncionarioId", user.FuncionarioId?.ToString() ?? ""),
                         new Claim("IdUserLogin", user.Id!)
 
             }

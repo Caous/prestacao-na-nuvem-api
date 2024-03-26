@@ -193,6 +193,7 @@ public class PrestadorController : MainController
     [HttpPost("Funcionario")]
     public async Task<IActionResult> AddFuncionario(FuncionarioPrestadorDto func)
     {
+        func.FilialId = new Guid("100f16fe-37f1-4d6f-e722-08dc4adee1ee");
         var resultValidator = await _validatorFuncionario.ValidateAsync(func);
 
         if (resultValidator != null && !resultValidator.IsValid)

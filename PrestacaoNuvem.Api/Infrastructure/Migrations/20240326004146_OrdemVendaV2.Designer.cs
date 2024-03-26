@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrestacaoNuvem.Api.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using PrestacaoNuvem.Api.Infrastructure.Context;
 namespace PrestacaoNuvem.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(OficinaContext))]
-    partial class OficinaContextModelSnapshot : ModelSnapshot
+    [Migration("20240326004146_OrdemVendaV2")]
+    partial class OrdemVendaV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -469,6 +472,7 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                         .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("Modelo")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 

@@ -42,7 +42,7 @@ public class OrdemVendaController : MainController
         if (!request.PrestadorId.HasValue)
             request.PrestadorId = PrestadorId;
 
-        request.FuncionarioPrestadorId = UserId;
+        request.FuncionarioPrestadorId = FuncionarioId;
 
         request.UsrCadastroDesc = UserName;
         request.UsrCadastro = UserId;

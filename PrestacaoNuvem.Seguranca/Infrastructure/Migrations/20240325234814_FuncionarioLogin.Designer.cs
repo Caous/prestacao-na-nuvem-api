@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrestacaoNuvem.Seguranca.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using PrestacaoNuvem.Seguranca.Infrastructure.Context;
 namespace PrestacaoNuvem.Seguranca.Infrastructure.Migrations
 {
     [DbContext(typeof(SegurancaContext))]
-    partial class SegurancaContextModelSnapshot : ModelSnapshot
+    [Migration("20240325234814_FuncionarioLogin")]
+    partial class FuncionarioLogin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

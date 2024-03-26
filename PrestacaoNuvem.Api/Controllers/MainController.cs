@@ -30,4 +30,12 @@ public abstract class MainController : ControllerBase
         }
     }
 
+    public Guid FuncionarioId
+    {
+        get
+        {
+            return new Guid(User.Claims.First(c => c.Type == "FuncionarioId").Value);
+        }
+    }
+
 }

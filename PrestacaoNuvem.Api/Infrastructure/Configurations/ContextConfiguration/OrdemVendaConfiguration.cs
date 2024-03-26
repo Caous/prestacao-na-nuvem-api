@@ -21,6 +21,8 @@ public class OrdemVendaConfiguration : IEntityTypeConfiguration<OrdemVenda>
 
         builder.Property(p => p.PrestadorId).IsRequired();
 
+        builder.Property(p=> p.DataCadastro).HasDefaultValueSql("getDate()").IsRequired();
+
         builder.HasOne(p => p.Prestador).WithMany(s => s.OrdemVendas).HasForeignKey(f => f.PrestadorId).OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(p => p.FuncionarioPrestador).WithMany(s => s.OrdemVendas).HasForeignKey(f => f.FuncionarioPrestadorId).OnDelete(DeleteBehavior.NoAction);
