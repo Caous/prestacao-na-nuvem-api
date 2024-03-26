@@ -17,6 +17,7 @@ public class OficinaContext : DbContext
     public DbSet<FuncionarioPrestador> FuncionarioPrestador { get; set; }
     public DbSet<Produto> Produto { get; set; }
     public DbSet<Filial> Filial { get; set; }
+    public DbSet<OrdemVenda> OrdemVenda { get; set; }
 
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -36,7 +37,7 @@ public class OficinaContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficinaContext).Assembly);
-        
+
         modelBuilder.HasSequence<int>("PrestacaoOrdem").StartsAt(1000).IncrementsBy(1);
 
         base.OnModelCreating(modelBuilder);

@@ -1,4 +1,7 @@
-﻿namespace PrestacaoNuvem.Api.Domain.Services;
+﻿using NuGet.Packaging;
+using PrestacaoNuvem.Api.Domain.Model;
+
+namespace PrestacaoNuvem.Api.Domain.Services;
 
 public class OrdemVendaService : IOrdemVendaService
 {
@@ -26,45 +29,48 @@ public class OrdemVendaService : IOrdemVendaService
 
     public async Task<OrdemVendaDto> CreateOrdemVenda(OrdemVendaDto item)
     {
-        if (item != null && item.Produtos != null)
+        OrdemVenda ordemVendaNovo = _mapper.Map<OrdemVenda>(item);
+        ICollection<Produto> produtosParaRemover = new List<Produto>();
+        ICollection<Produto> produtosParaAdicionar = new List<Produto>();
+
+        if (ordemVendaNovo != null && ordemVendaNovo.Produtos != null)
         {
-            foreach (var produto in item.Produtos)
+            for (int i = 0; i < ordemVendaNovo.Produtos.Count; i++)
             {
-                produto.PrestadorId = item.PrestadorId;
-                ICollection<Produto> produtos = await _produtoRepository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(produto));
+                var produto = ordemVendaNovo.Produtos.ElementAt(i);
+                var produtoDto = item.Produtos.ElementAt(i);
+                produto.PrestadorId = ordemVendaNovo.PrestadorId;
+                ICollection<Produto> produtos = await _produtoRepository.GetAll(ordemVendaNovo.PrestadorId, produto);
 
                 if (produtos != null)
-                {
-                    if (produto.Qtd < produtos.Count)
-                        AtualizarQtdEstoqueMenos(DefinirQtdEstoqueAtual(produto.Qtd, produtos.Count), produtos);
-                    if (produto.Qtd > produtos.Count)
-                        AtualizarQtdEstoqueMaior(DefinirQtdEstoqueAtual(produto.Qtd, produtos.Count), produto);
+                    AtualizarQtdEstoqueMenos(DefinirQtdEstoqueAtual(produtoDto.Qtd, produtos.Count), produtos);
+                
+                produtosParaRemover.Add(produto);
 
-                    await _produtoRepository.Update(_mapper.Map<Produto>(produto));
-                }
+                foreach (var produtoEstoque in produtos)
+                    produtosParaAdicionar.Add(produtoEstoque);
             }
+
         }
 
-        var result = await _repository.Create(_mapper.Map<OrdemVenda>(item));
+        if (produtosParaRemover.Any())
+        {
+            foreach (var produto in produtosParaRemover)
+                ordemVendaNovo.Produtos.Remove(produto);
+        }
+
+        if (produtosParaAdicionar.Any())
+        {
+            foreach (var produto in produtosParaAdicionar)
+                ordemVendaNovo.Produtos.Add(produto);
+        }
+
+        var result = await _repository.Create(ordemVendaNovo);
 
         await _repository.CommitAsync();
         await _repository.DisposeCommitAsync();
 
         return _mapper.Map<OrdemVendaDto>(result);
-    }
-
-    private void AtualizarQtdEstoqueMaior(int qtd, ProdutoDto item)
-    {
-        for (int i = 0; qtd < i; i--)
-        {
-            ProdutoDto itemCopy = ProdutoCopy(item);
-            _produtoRepository.Create(_mapper.Map<Produto>(itemCopy));
-        }
-    }
-
-    private static ProdutoDto ProdutoCopy(ProdutoDto item)
-    {
-        return new ProdutoDto() { Data_validade = item.Data_validade, Garantia = item.Garantia, Marca = item.Marca, Modelo = item.Modelo, Nome = item.Nome, PrestadorId = item.PrestadorId, Qtd = 1, TipoMedidaItem = item.TipoMedidaItem, UsrCadastro = item.UsrCadastro, Valor_Venda = item.Valor_Venda, Valor_Compra = item.Valor_Compra };
     }
 
     private static int DefinirQtdEstoqueAtual(int qtdAtual, int qtdEstoqueAntiga)
@@ -74,7 +80,7 @@ public class OrdemVendaService : IOrdemVendaService
 
     private async Task AtualizarQtdEstoqueMenos(int qtd, ICollection<Produto> item)
     {
-        var itensEstoqueAtualizacao = item.Take(qtd);
+        var itensEstoqueAtualizacao = item.Take(qtd == 0 ? 1 : qtd);
         foreach (var itemAtualizacao in itensEstoqueAtualizacao)
         {
             itemAtualizacao.DataDesativacao = DateTime.Now;
