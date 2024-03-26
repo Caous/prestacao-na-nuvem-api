@@ -30,8 +30,9 @@ public class PrestadorController : MainController
     /// Adicionar um prestador de serviço
     /// </summary>
     /// <param name="prestador"></param>
-    /// <returns></returns>
+    /// <returns></returns>    
     [HttpPost]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Add(PrestadorDto prestador)
     {
         var resultValidator = await _validator.ValidateAsync(prestador);

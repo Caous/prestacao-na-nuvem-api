@@ -23,7 +23,7 @@ public class AcessoManager : IAcessoManager
     public async Task<bool> CriarPrestador(PrestadorCadastroDto user)
     {
         var userModel = _mapper.Map<UserModel>(user);
-        
+
         userModel.Id = Guid.NewGuid().ToString();
 
         var result = await _userManager.CreateAsync(userModel, user.Password);
@@ -75,27 +75,30 @@ public class AcessoManager : IAcessoManager
             if (signResult.Succeeded)
             {
                 var roles = await _userManager.GetRolesAsync(usuario);
-                return GenerateToken(usuario, roles.First());
+                return GenerateToken(usuario, roles.ToArray());
             }
         }
 
         return new() { Authenticated = false, Message = "Invalid" };
     }
 
-    private Token GenerateToken(UserModel user, string role)
+    private Token GenerateToken(UserModel user, string[] roles)
     {
-        ClaimsIdentity identity = new(
-            new GenericIdentity(user.Id!, "Login"),
-            new[] {
+        Claim[] authClaims = new[] {
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                         new Claim(JwtRegisteredClaimNames.UniqueName, user.Id!),
-                        new Claim(ClaimTypes.Role, role),
                         new Claim("PrestadorId", user.PrestadorId?.ToString() ?? ""),
                         new Claim("UserName", user.UserName?.ToString() ?? ""),
                         new Claim("FuncionarioId", user.FuncionarioId?.ToString() ?? ""),
                         new Claim("IdUserLogin", user.Id!)
-
-            }
+            };
+        foreach (var role in roles)
+        {
+            authClaims = authClaims.Append(new Claim(ClaimTypes.Role, role)).ToArray();
+        }
+        ClaimsIdentity identity = new(
+            new GenericIdentity(user.Id!, "Login"),
+           authClaims
         );
 
         DateTime dataCriacao = DateTime.Now;
@@ -122,7 +125,8 @@ public class AcessoManager : IAcessoManager
             Created = dataCriacao.ToString("yyyy-MM-dd HH:mm:ss"),
             Expiration = dataExpiracao.ToString("yyyy-MM-dd HH:mm:ss"),
             AccessToken = token,
-            Message = "OK"
+            Message = "OK",
+            Roles = roles
         };
     }
 }
