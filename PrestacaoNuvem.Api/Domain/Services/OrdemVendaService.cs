@@ -42,13 +42,28 @@ public class OrdemVendaService : IOrdemVendaService
                 produto.PrestadorId = ordemVendaNovo.PrestadorId;
                 ICollection<Produto> produtos = await _produtoRepository.GetAll(ordemVendaNovo.PrestadorId, produto);
 
-                if (produtos != null)
-                    AtualizarQtdEstoqueMenos(DefinirQtdEstoqueAtual(produtoDto.Qtd, produtos.Count), produtos);
-                
-                produtosParaRemover.Add(produto);
+                if (produtos != null && produtos.Any())
+                {
+                    AtualizarQtdEstoqueMenos(produtoDto.Qtd, produtos);
 
-                foreach (var produtoEstoque in produtos)
-                    produtosParaAdicionar.Add(produtoEstoque);
+                    produtosParaRemover.Add(produto);
+
+                    foreach (var produtoEstoque in produtos)
+                        produtosParaAdicionar.Add(produtoEstoque);
+                }
+                else
+                {
+                    produto.UsrCadastro = item.UsrCadastro.Value;
+                    produto.PrestadorId = item.PrestadorId.Value;
+
+                    for (int j = 1; j <= produtoDto.Qtd; j++)
+                    {
+                        if (j == produtoDto.Qtd)                        
+                            break;
+                        
+                        produtosParaAdicionar.Add(produto);
+                    }
+                }
             }
 
         }
@@ -73,10 +88,6 @@ public class OrdemVendaService : IOrdemVendaService
         return _mapper.Map<OrdemVendaDto>(result);
     }
 
-    private static int DefinirQtdEstoqueAtual(int qtdAtual, int qtdEstoqueAntiga)
-    {
-        return qtdEstoqueAntiga - qtdAtual;
-    }
 
     private async Task AtualizarQtdEstoqueMenos(int qtd, ICollection<Produto> item)
     {

@@ -1,4 +1,6 @@
-﻿namespace PrestacaoNuvem.Api.Controllers;
+﻿using PrestacaoNuvem.Api.Domain.Model;
+
+namespace PrestacaoNuvem.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
@@ -27,6 +29,7 @@ public class OrdemVendaController : MainController
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
+        request.CPF = CpfValidations.CpfSemPontuacao(request.CPF);
         MapearLogin(request);
 
         var result = await _service.CreateOrdemVenda(request);
