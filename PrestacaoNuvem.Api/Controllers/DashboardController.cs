@@ -65,6 +65,54 @@ public class DashboardController : MainController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Recuperar Faturamento Mês Por Nome Produto Agrupado
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("DashboardProdutoNomeAgrupado")]
+    public async Task<IActionResult> GetDashboardNomeAgrupado()
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        var resultDash = await _dashboardService.GetProductGroupByProductNameService(PrestadorId);
+
+        if (resultDash == null || !resultDash.Any())
+            return NoContent();
+
+        object[] result = ResultMapperProdutoNome(resultDash);
+
+        return Ok(result);
+    }
+    
+    /// <summary>
+    /// Recuperar Faturamento Mês Por Nome Marca Agrupado
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("DashboardProdutoMarcaAgrupado")]
+    public async Task<IActionResult> GetDashboardMarcaAgrupado()
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        var resultDash = await _dashboardService.GetProductGroupByProductMarcaService(PrestadorId);
+
+        if (resultDash == null || !resultDash.Any())
+            return NoContent();
+
+        object[] result = ResultMapperProdutoMarca(resultDash);
+
+        return Ok(result);
+    }
+
+    private static object[] ResultMapperProdutoNome(ICollection<DashboardReceitaNomeProdutoDto>? resultDash)
+    {
+        return resultDash.GroupBy(x => x.Nome).Select(grupo => new { Key = grupo.Key, Count = grupo.Sum(x => x.Valor).ToString() }).ToArray();
+    }
+    private static object[] ResultMapperProdutoMarca(ICollection<DashboardReceitaMarcaProdutoDto>? resultDash)
+    {
+        return resultDash.GroupBy(x => x.Marca).Select(grupo => new { Key = grupo.Key, Count = grupo.Sum(x => x.Valor).ToString() }).ToArray();
+    }
     private static object[] ResultMapperCategoriaServico(ICollection<DashboardReceitaCategoriaDto>? resultDash)
     {
         return resultDash.GroupBy(x => x.Categoria).Select(grupo => new { Key = grupo.Key, Count = grupo.Sum(x => x.Valor).ToString() }).ToArray();
@@ -102,9 +150,8 @@ public class DashboardController : MainController
     [HttpGet("DashboardReceitaMes")]
     public async Task<IActionResult> GetDashboardReceitaMes()
     {
-        if (!ModelState.IsValid)        
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
 
         var result = await _dashboardService.GetSalesMonth(PrestadorId);
 
@@ -126,7 +173,7 @@ public class DashboardController : MainController
 
 
         var result = await _dashboardService.GetNewCustomerMonth(PrestadorId);
-      
+
         if (result == null)
             return NoContent();
 
@@ -158,12 +205,11 @@ public class DashboardController : MainController
     [HttpGet("DashboardOSMes")]
     public async Task<IActionResult> GetDashboardServicosMes()
     {
-        if (!ModelState.IsValid)        
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
 
         var result = await _dashboardService.GetOSMonth(PrestadorId);
-       
+
         if (result == null)
             return NoContent();
 

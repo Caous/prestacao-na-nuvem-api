@@ -451,13 +451,13 @@ public class DashboardControllerTest
     {
         //Arranger
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-        DashboardOSMes dashboardReceitaDiarias = new DashboardOSMes() { Valor = 20 };
+        DashboardOSMesDto dashboardReceitaDiarias = new DashboardOSMesDto() { Valor = 20 };
         _serviceMock.Setup(s => s.GetOSMonth(It.IsAny<Guid>())).ReturnsAsync(dashboardReceitaDiarias);
         //Act
         DashboardController controller = CreateFakeController(categoriasFake);
         var response = await controller.GetDashboardServicosMes();
         var okResult = response as OkObjectResult;
-        var result = okResult.Value as DashboardOSMes;
+        var result = okResult.Value as DashboardOSMesDto;
 
 
 
@@ -473,7 +473,7 @@ public class DashboardControllerTest
     {
         //Arranger (parametros)
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-        DashboardOSMes dashboardReceitaDiarias = null;
+        DashboardOSMesDto dashboardReceitaDiarias = null;
         _serviceMock.Setup(s => s.GetOSMonth(It.IsAny<Guid>())).ReturnsAsync(dashboardReceitaDiarias);
 
         DashboardController controller = CreateFakeController(categoriasFake);
@@ -494,7 +494,7 @@ public class DashboardControllerTest
     {
         //Arranger (parametros)
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-        DashboardOSMes dashboardReceitaDiarias = null;
+        DashboardOSMesDto dashboardReceitaDiarias = null;
         _serviceMock.Setup(s => s.GetOSMonth(It.IsAny<Guid>())).ReturnsAsync(dashboardReceitaDiarias);
 
         DashboardController controller = CreateFakeController(categoriasFake);

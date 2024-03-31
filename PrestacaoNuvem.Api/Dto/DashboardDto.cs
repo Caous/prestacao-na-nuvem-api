@@ -2,7 +2,7 @@
 
 public class DashboardDto
 {
-    public class DashboardOSMes
+    public class DashboardOSMesDto
     {
         public long Valor { get; set; }
     }
@@ -13,6 +13,16 @@ public class DashboardDto
     public class DashboardReceitaCategoriaDto
     {
         public string Categoria { get; set; }
+        public double Valor { get; set; }
+    }
+    public class DashboardReceitaNomeProdutoDto
+    {
+        public string Nome { get; set; }
+        public double Valor { get; set; }
+    }
+    public class DashboardReceitaMarcaProdutoDto
+    {
+        public string Marca { get; set; }
         public double Valor { get; set; }
     }
     public class DashboardReceitaDiariaDto

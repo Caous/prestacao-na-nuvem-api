@@ -126,7 +126,8 @@ public class AcessoManager : IAcessoManager
             Expiration = dataExpiracao.ToString("yyyy-MM-dd HH:mm:ss"),
             AccessToken = token,
             Message = "OK",
-            Roles = roles
+            Roles = roles,
+            UserName = user.UserName
         };
     }
 }

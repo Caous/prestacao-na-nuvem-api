@@ -148,8 +148,11 @@ public class ProdutoController : MainController
     [HttpGet("ProdutoInfo/{nome}/{marca}/{modelo}")]
     public async Task<IActionResult> GetProdutoNomeDescMarca(string nome, string marca, string modelo)
     {
+
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        if (modelo == "empty")
+            modelo = string.Empty;
 
         ProdutoDto request = MapperRequest(nome, marca, modelo);
 

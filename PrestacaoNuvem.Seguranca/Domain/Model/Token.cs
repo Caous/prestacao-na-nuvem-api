@@ -8,5 +8,6 @@ public class Token
     public string? AccessToken { get; set; }
     public string? Message { get; set; }
     public string[] Roles { get; set; } = Array.Empty<string>();
+    public string UserName { get; set; }
 }
 

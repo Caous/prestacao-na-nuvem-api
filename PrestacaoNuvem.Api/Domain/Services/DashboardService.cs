@@ -1,4 +1,4 @@
-﻿using NuGet.Protocol.Core.Types;
+﻿using PrestacaoNuvem.Api.Domain.Model.Dashboard;
 using static PrestacaoNuvem.Api.Domain.Model.Dashboards;
 using static PrestacaoNuvem.Api.Dto.DashboardDto;
 
@@ -17,31 +17,15 @@ public class DashboardService : IDashboardService
 
     public async Task<ICollection<DashboardReceitaDiariaDto>?> GetDailySales(Guid prestador)
     {
-        ICollection<PrestacaoServico> resultDailySales = await _repository.GetDailySales(prestador);
+        ICollection<DashboardReceitaDiaria> resultDailySales = await _repository.GetDailySales(prestador);
 
         if (resultDailySales == null)
             return null;
 
-        var result = resultDailySales.GroupBy(x => x.DataConclusaoServico).OrderBy(x=> x.Key).ToList();
-
-        List<FaturamentoDiario> sales = new();
-
-        foreach (var item in result)
-        {
-            if (item != null && item.Key != null)
-            {
-                sales.Add(new FaturamentoDiario()
-                {
-                    DateRef = item.Key.Value.ToString("dd/MM/yyyy"),
-                    Valor = (double)item.Sum(x => x.Servicos.Sum(y => y.Valor))
-                });
-            }
-        }
-
-        return MappearFaturamentoDiario(sales);
+        return MappearFaturamentoDiario(resultDailySales);
     }
 
-    private ICollection<DashboardReceitaDiariaDto> MappearFaturamentoDiario(ICollection<FaturamentoDiario> result)
+    private ICollection<DashboardReceitaDiariaDto> MappearFaturamentoDiario(ICollection<DashboardReceitaDiaria> result)
     {
         return _mapper.Map<ICollection<DashboardReceitaDiariaDto>>(result);
     }
@@ -111,19 +95,9 @@ public class DashboardService : IDashboardService
 
     public async Task<DashboardReceitaMesDto> GetSalesMonth(Guid prestador)
     {
-        ICollection<PrestacaoServico> result = await _repository.GetSalesMonth(prestador);
+        DashboardReceitaMes result = await _repository.GetSalesMonth(prestador);
 
-        if (result == null)
-            return null;
-
-        return MapperSalerMonth(result);
-    }
-
-    private DashboardReceitaMesDto MapperSalerMonth(ICollection<PrestacaoServico> result)
-    {
-        var valorService = result.Sum(x => x.Servicos.Sum(y => y.Valor));
-        var valorProdutos = result.Sum(x => x.Produtos.Sum(y => y.Valor_Venda));
-        return new DashboardReceitaMesDto() { Valor = (decimal)(valorProdutos + valorService) };
+        return _mapper.Map<DashboardReceitaMesDto>(result);
     }
 
     public async Task<DashboardClientesNovos> GetNewCustomerMonth(Guid prestador)
@@ -146,13 +120,75 @@ public class DashboardService : IDashboardService
         return new DashboardProdutosNovos() { Valor = result.Count() };
     }
 
-    public async Task<DashboardOSMes?> GetOSMonth(Guid prestador)
+    public async Task<DashboardOSMesDto?> GetOSMonth(Guid prestador)
     {
-        ICollection<PrestacaoServico> result = await _repository.GetOSMonth(prestador);
+        DashboardOSMes result = await _repository.GetOSOVMonth(prestador);
 
         if (result == null)
             return null;
 
-        return new DashboardOSMes() { Valor = result.Count() };
+        return _mapper.Map<DashboardOSMesDto>(result);
+    }
+
+    public async Task<ICollection<DashboardReceitaNomeProdutoDto>?> GetProductGroupByProductNameService(Guid prestador)
+    {
+        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador);
+
+        if (result == null)
+            return null;
+
+        List<ProdutoAgrupado> resultfinal = new();
+
+        var xpto = result.Select(x => x.Produtos);
+
+        foreach (var item in xpto)
+        {
+            if (item != null && item.Select(x => x.Nome).FirstOrDefault() != null)
+            {
+                resultfinal.Add(new ProdutoAgrupado
+                {
+                    Nome = item.Select(x => x.Nome).FirstOrDefault(),
+                    Valor = item.Select(x => x.Valor_Venda).Sum()
+                });
+            }
+        }
+
+        return MapperNomeProdutoAgrupado(resultfinal);
+    }
+
+    private ICollection<DashboardReceitaNomeProdutoDto>? MapperNomeProdutoAgrupado(List<ProdutoAgrupado> resultfinal)
+    {
+        return _mapper.Map<ICollection<DashboardReceitaNomeProdutoDto>>(resultfinal);
+    }
+
+    public async Task<ICollection<DashboardReceitaMarcaProdutoDto>?> GetProductGroupByProductMarcaService(Guid prestador)
+    {
+        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador);
+
+        if (result == null)
+            return null;
+
+        List<ProdutoAgrupadoMarca> resultfinal = new();
+
+        var xpto = result.Select(x => x.Produtos);
+
+        foreach (var item in xpto)
+        {
+            if (item != null && item.Select(x => x.Marca).FirstOrDefault() != null)
+            {
+                resultfinal.Add(new ProdutoAgrupadoMarca
+                {
+                    Marca = item.Select(x => x.Marca).FirstOrDefault(),
+                    Valor = item.Select(x => x.Valor_Venda).Sum()
+                });
+            }
+        }
+
+        return MapperMarcaProdutoAgrupado(resultfinal);
+    }
+
+    private ICollection<DashboardReceitaMarcaProdutoDto>? MapperMarcaProdutoAgrupado(List<ProdutoAgrupadoMarca> resultfinal)
+    {
+        return _mapper.Map<ICollection<DashboardReceitaMarcaProdutoDto>>(resultfinal);
     }
 }
