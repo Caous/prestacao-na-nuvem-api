@@ -1,5 +1,7 @@
 ﻿
 
+using Microsoft.EntityFrameworkCore;
+
 namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
 
 public class OrdemVendaRepository : GenericRepository<OrdemVenda>, IOrdemVendaRepository
@@ -14,6 +16,17 @@ public class OrdemVendaRepository : GenericRepository<OrdemVenda>, IOrdemVendaRe
     {
         await _context.OrdemVenda.AddAsync(item);
         return item;
+    }
+
+    public override async Task<ICollection<OrdemVenda>> GetAll(Guid id, OrdemVenda filter)
+    {
+        var result = await _context.OrdemVenda.
+            Where(x=> x.PrestadorId == id)
+            .Include(x=> x.Produtos)
+            .Include(x=> x.Prestador)
+            .Include(x=> x.Cliente).ToListAsync();
+
+        return result;
     }
 
     public Task ChangeStatus(OrdemVenda ordemVenda, EOrdemVendaStatus status)
