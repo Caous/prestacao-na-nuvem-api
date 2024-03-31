@@ -53,12 +53,12 @@ public class FilialController : MainController
     /// <param name="email"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<IActionResult> GetAll(string? cep, string? nome)
+    public async Task<IActionResult> GetAll(string? logradouro, string? nome)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        FilialDto request = MapearDto(cep, nome);
+        FilialDto request = MapearDto(logradouro, nome);
 
         var result = await _filialService.GetAllFilial(request);
 
@@ -68,9 +68,9 @@ public class FilialController : MainController
         return Ok(result);
     }
 
-    private FilialDto MapearDto(string? cep, string? nome)
+    private FilialDto MapearDto(string? logradouro, string? nome)
     {
-        return new FilialDto() { CEP = cep, Nome = nome, PrestadorId = PrestadorId };
+        return new FilialDto() { Logradouro = logradouro, Nome = nome, PrestadorId = PrestadorId };
     }
 
     /// <summary>

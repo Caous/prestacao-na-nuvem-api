@@ -11,7 +11,7 @@ public class ClienteRepository : GenericRepository<Cliente>, IClienteRepository
     public async override Task<ICollection<Cliente>> GetAll(Guid id, Cliente filter)
     {
         var result = await _context.Cliente.Where(x => x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
-        await _context.DisposeAsync();
+
 
         if (filter != null && result.Any())
         {

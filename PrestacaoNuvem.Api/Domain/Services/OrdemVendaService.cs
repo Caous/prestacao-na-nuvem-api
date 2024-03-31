@@ -80,6 +80,7 @@ public class OrdemVendaService : IOrdemVendaService
                 ordemVendaNovo.Produtos.Add(produto);
         }
 
+        ordemVendaNovo.Status = EOrdemVendaStatus.Concluido;
         var result = await _repository.Create(ordemVendaNovo);
 
         await _repository.CommitAsync();

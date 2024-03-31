@@ -1,4 +1,6 @@
-﻿namespace PrestacaoNuvem.Api.Controllers;
+﻿using PrestacaoNuvem.Api.Domain.Model;
+
+namespace PrestacaoNuvem.Api.Controllers;
 
 /// <summary>
 /// Controller de cliente
@@ -87,6 +89,8 @@ public class ClienteController : MainController
 
         ClienteDto clienteDto = MapearDto(cpf, nome, email);
 
+        clienteDto.CPF = CpfValidations.CpfSemPontuacao(clienteDto.CPF);
+
         var result = await _clienteService.GetAllCliente(clienteDto);
 
         if (result == null || !result.Any())
@@ -148,6 +152,8 @@ public class ClienteController : MainController
 
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
         }
+
+        TratarDto(cliente);
 
         MapearLogin(cliente);
 
