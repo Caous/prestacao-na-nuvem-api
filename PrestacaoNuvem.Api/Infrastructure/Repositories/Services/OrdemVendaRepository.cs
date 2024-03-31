@@ -1,5 +1,6 @@
 ﻿
 
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
 
 namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
@@ -34,9 +35,15 @@ public class OrdemVendaRepository : GenericRepository<OrdemVenda>, IOrdemVendaRe
         throw new NotImplementedException();
     }
 
-    public Task<ICollection<OrdemVenda>> GetByPrestacoesServicosStatus(Guid prestadorId, ICollection<EOrdemVendaStatus> statusOrdemVenda)
+    public async Task<ICollection<OrdemVenda>> GetByPrestacoesServicosStatus(Guid prestadorId, ICollection<EOrdemVendaStatus> statusOrdemVenda)
     {
-        throw new NotImplementedException();
+        var result = await _context.OrdemVenda.
+             Where(x => x.PrestadorId == prestadorId && statusOrdemVenda.Contains(x.Status))
+             .Include(x => x.Produtos)
+             .Include(x => x.Prestador)
+             .Include(x => x.Cliente).ToListAsync();
+
+        return result;
     }
 
     public Task<ICollection<OrdemVenda>> GetByPrestador(Guid prestadorId)

@@ -1,4 +1,5 @@
-﻿using PrestacaoNuvem.Api.Domain.Model;
+﻿using NuGet.Protocol.Core.Types;
+using PrestacaoNuvem.Api.Domain.Model;
 
 namespace PrestacaoNuvem.Api.Controllers;
 
@@ -65,6 +66,22 @@ public class OrdemVendaController : MainController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Recupera ordens de vendas fechadas
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("OrdemVendaFechadosPrestador")]
+    public async Task<IActionResult> GetByPrestacaoServicoFechadosPrestador()
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        List<EOrdemVendaStatus> status = new List<EOrdemVendaStatus>() { EOrdemVendaStatus.Concluido, EOrdemVendaStatus.Cancelado };
+        var result = await _service.GetByOrdemVendaStatus(PrestadorId, status);
+        if (result == null)
+            return NoContent();
+        return Ok(result);
+    }
     /// <summary>
     /// Recupera uma odem de venda por Id
     /// </summary>
