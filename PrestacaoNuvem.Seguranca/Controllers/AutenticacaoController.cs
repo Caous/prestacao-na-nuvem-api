@@ -15,7 +15,7 @@ public class AutenticacaoController : MainController
 
     [Authorize]
     [HttpGet("BuscarPrestador")]
-    public async Task<IActionResult> GetPrestadorUser(string email, Guid? id, string? CpfCnpj)
+    public async Task<IActionResult> GetPrestadorUser(string? email, Guid? id, string? CpfCnpj)
     {
 
         UserModel? user = await _acessoManager.GetUserPorEmail(email);
