@@ -130,4 +130,9 @@ public class AcessoManager : IAcessoManager
             UserName = user.UserName
         };
     }
+
+    public async Task<UserModel?> GetUserPorId(Guid id)
+    {
+        return await _userManager.FindByIdAsync(id.ToString());
+    }
 }

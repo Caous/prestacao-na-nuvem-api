@@ -15,15 +15,23 @@ public class AutenticacaoController : MainController
 
     [Authorize]
     [HttpGet("BuscarPrestador")]
-    public async Task<IActionResult> GetPrestadorUser(string? email, Guid? id, string? CpfCnpj)
+    public async Task<IActionResult> GetPrestadorUser(string? email, Guid? id)
     {
-
-        UserModel? user = await _acessoManager.GetUserPorEmail(email);
-
-        if (user != null)
-            return Ok(user);
+        if (!email.IsNullOrEmpty())
+        {
+            UserModel? user = await _acessoManager.GetUserPorEmail(email);
+            if (user != null)
+                return Ok(user);
+        }
         else
-            return BadRequest("User not found!");
+        {
+            UserModel? user = await _acessoManager.GetUserPorId(id.Value);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+        }
+        return BadRequest("User not found!");
     }
 
     [Authorize]

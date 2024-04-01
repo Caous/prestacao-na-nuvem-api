@@ -6,4 +6,5 @@ public interface IAcessoManager
     Task<bool> CriarFuncionario(UserModelDto user);
     Task<Token> ValidarCredenciais(UserModelDto user);
     Task<UserModel?> GetUserPorEmail(string email);
+    Task<UserModel?> GetUserPorId(Guid id);
 }
