@@ -44,11 +44,11 @@ public class OrdemVendaService : IOrdemVendaService
 
                 if (produtos != null && produtos.Any())
                 {
-                    AtualizarQtdEstoqueMenos(produtoDto.Qtd, produtos);
+                    AtualizarQtdEstoqueMenor(produtoDto.Qtd, produtos);
 
                     produtosParaRemover.Add(produto);
 
-                    foreach (var produtoEstoque in produtos)
+                    foreach (var produtoEstoque in produtos.Where(x=> x.DataDesativacao != null))
                         produtosParaAdicionar.Add(produtoEstoque);
                 }
                 else
@@ -82,8 +82,6 @@ public class OrdemVendaService : IOrdemVendaService
 
         ordemVendaNovo.Status = EOrdemVendaStatus.Concluido;
 
-        //3 linhas pera
-
         var result = await _repository.Create(ordemVendaNovo);
 
         await _repository.CommitAsync();
@@ -93,7 +91,7 @@ public class OrdemVendaService : IOrdemVendaService
     }
 
 
-    private async Task AtualizarQtdEstoqueMenos(int qtd, ICollection<Produto> item)
+    private void AtualizarQtdEstoqueMenor(int qtd, ICollection<Produto> item)
     {
         var itensEstoqueAtualizacao = item.Take(qtd == 0 ? 1 : qtd);
         foreach (var itemAtualizacao in itensEstoqueAtualizacao)
