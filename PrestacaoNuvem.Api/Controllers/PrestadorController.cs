@@ -24,7 +24,13 @@ public class PrestadorController : MainController
         _validator = validator;
         _validatorFuncionario = validatorFuncionario;
     }
-
+    private void TratarDto(PrestadorDto prestador)
+    {
+        prestador.CPF = CpfValidations.CpfSemPontuacao(prestador.CPF);
+        prestador.CpfRepresentante = CpfValidations.CpfSemPontuacao(prestador.CpfRepresentante);
+        prestador.Telefone = TelefoneValidations.RemoverPontuacaoTelefone(prestador.Telefone);
+        prestador.CNPJ = CnpjValidations.CnpjSemPontuacao(prestador.CNPJ??"");
+    }
     #region Controller Prestador
     /// <summary>
     /// Adicionar um prestador de serviço
@@ -51,7 +57,7 @@ public class PrestadorController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
         MapearLogin(prestador);
-
+        TratarDto(prestador);
         var result = await _prestadorService.CreatePrestador(prestador);
 
         if (result == null)
@@ -128,6 +134,7 @@ public class PrestadorController : MainController
         }
 
         MapearLogin(prestador);
+        TratarDto(prestador);
 
         var result = await _prestadorService.UpdatePrestador(prestador);
         if (result == null)
@@ -141,12 +148,12 @@ public class PrestadorController : MainController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("DesativarPrestador")]
-    public async Task<IActionResult> DesativarPrestadorServico(Guid id, Guid userDesabled)
+    public async Task<IActionResult> DesativarPrestadorServico(Guid id)
     {
         if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
-        var result = await _prestadorService.Desabled(id, userDesabled);
+        var result = await _prestadorService.Desabled(id, UserId);
         if (result == null)
             return NoContent();
         return Ok(result);

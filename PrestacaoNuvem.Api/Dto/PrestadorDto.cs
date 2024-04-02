@@ -3,7 +3,7 @@
 namespace PrestacaoNuvem.Api.Dto;
 public class PrestadorDto : Base
 {
-    public ETipoCadastroDto TipoCadastro { get; set; }
+    public ETipoCadastroDto? TipoCadastro { get; set; }
     public string? Nome { get; set; }
     public string? CPF { get; set; }
     public string? CpfRepresentante { get; set; }
