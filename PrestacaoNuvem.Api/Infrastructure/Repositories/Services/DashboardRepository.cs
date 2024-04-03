@@ -103,7 +103,7 @@ public class DashboardRepository : IDashboardRepository
         DashboardOSMes dashboard = new DashboardOSMes();
 
         var result = _context.PrestacaoServico
-            .Where(x => x.PrestadorId == prestador && x.Status == EPrestacaoServicoStatus.Concluido).ToList();
+            .Where(x => x.PrestadorId == prestador && x.Status == EPrestacaoServicoStatus.Concluido && x.DataConclusaoServico.HasValue ? x.DataConclusaoServico.Value.Month == DateTime.Now.Month : x.DataConclusaoServico != null).ToList();
 
         if (result != null && result.Any())
         {
@@ -112,7 +112,7 @@ public class DashboardRepository : IDashboardRepository
         else
         {
             var resultOV = _context.OrdemVenda
-                  .Where(x => x.PrestadorId == prestador && x.Status == EOrdemVendaStatus.Concluido).ToList();
+                  .Where(x => x.PrestadorId == prestador && x.Status == EOrdemVendaStatus.Concluido && x.DataCadastro.Month == DateTime.Now.Month).ToList();
 
             dashboard = MapperOrdemVendaDashBoardOsMes(resultOV);
         }
@@ -136,7 +136,7 @@ public class DashboardRepository : IDashboardRepository
         DashboardReceitaMes profit = new DashboardReceitaMes();
 
         var result = _context.PrestacaoServico
-            .Where(x => x.PrestadorId == prestador && x.Status == EPrestacaoServicoStatus.Concluido)
+            .Where(x => x.PrestadorId == prestador && x.Status == EPrestacaoServicoStatus.Concluido && x.DataConclusaoServico.HasValue ? x.DataConclusaoServico.Value.Month == DateTime.Now.Month : x.DataConclusaoServico != null)
                 .Include(i => i.Servicos)
                 .Include(i => i.Produtos).ToList();
 
@@ -147,7 +147,7 @@ public class DashboardRepository : IDashboardRepository
         else
         {
             var resultOrdemVenda = _context.OrdemVenda.
-            Where(x => x.PrestadorId == prestador && x.Status == EOrdemVendaStatus.Concluido)
+            Where(x => x.PrestadorId == prestador && x.Status == EOrdemVendaStatus.Concluido && x.DataCadastro.Month == DateTime.Now.Month)
                 .Include(i => i.Produtos).ToList();
 
             if (resultOrdemVenda != null && resultOrdemVenda.Any())

@@ -45,11 +45,15 @@ public class OrdemVendaService : IOrdemVendaService
                 if (produtos != null && produtos.Any())
                 {
                     AtualizarQtdEstoqueMenor(produtoDto.Qtd, produtos);
-
+                    
+                    produto.Peso = produtoDto.Peso;
                     produtosParaRemover.Add(produto);
 
-                    foreach (var produtoEstoque in produtos.Where(x=> x.DataDesativacao != null))
+                    foreach (var produtoEstoque in produtos.Where(x => x.DataDesativacao != null))
+                    {
+                        produtoEstoque.Peso = produtoDto.Peso;
                         produtosParaAdicionar.Add(produtoEstoque);
+                    }
                 }
                 else
                 {
@@ -58,9 +62,9 @@ public class OrdemVendaService : IOrdemVendaService
 
                     for (int j = 1; j <= produtoDto.Qtd; j++)
                     {
-                        if (j == produtoDto.Qtd)                        
+                        if (j == produtoDto.Qtd)
                             break;
-                        
+                        produto.Peso = produtoDto.Peso;
                         produtosParaAdicionar.Add(produto);
                     }
                 }

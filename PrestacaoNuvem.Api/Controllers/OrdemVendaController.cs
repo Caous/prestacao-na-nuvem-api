@@ -31,6 +31,7 @@ public class OrdemVendaController : MainController
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
 
         request.CPF = CpfValidations.CpfSemPontuacao(request.CPF);
+        request.Referencia = null;
         MapearLogin(request);
 
         var result = await _service.CreateOrdemVenda(request);
