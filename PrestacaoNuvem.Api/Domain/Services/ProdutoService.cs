@@ -65,9 +65,9 @@ public class ProdutoService : IProdutoService
     public async Task<ICollection<ProdutoDto>> GetAllProduto(ProdutoDto item)
     {
         var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
-        
+
         await _repository.DisposeCommitAsync();
-        
+
         return _mapper.Map<ICollection<ProdutoDto>>(result);
     }
 
@@ -146,11 +146,15 @@ public class ProdutoService : IProdutoService
 
     private async Task<ProdutoDto> TratarUpdate(ProdutoDto item)
     {
-        ICollection<Produto> produtos =  await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+        Produto produtoOriginal = await _repository.FindById(item.Id.Value);
+
+        ICollection<Produto> produtos = await _repository.GetAll(item.PrestadorId.Value, produtoOriginal);
 
 
         if (produtos != null)
         {
+            TratarNomesProdutos(produtos, item);
+            TratarValoresProdutos(produtos, item);
 
             if (item.Qtd < produtos.Count)
                 AtualizarQtdEstoqueMenos(DefinirQtdEstoqueAtual(item.Qtd, produtos.Count), produtos);
@@ -167,6 +171,30 @@ public class ProdutoService : IProdutoService
         await _repository.DisposeCommitAsync();
 
         return item;
+    }
+
+    private void TratarValoresProdutos(ICollection<Produto> produtos, ProdutoDto item)
+    {
+        foreach (var prod in produtos)
+        {
+            if (prod.Valor_Compra != item.Valor_Compra)
+                prod.Valor_Compra = item.Valor_Compra;
+            if (prod.Valor_Venda != item.Valor_Venda)
+                prod.Valor_Venda = item.Valor_Venda;
+        }
+    }
+
+    private void TratarNomesProdutos(ICollection<Produto> produtos, ProdutoDto item)
+    {
+        foreach (var prod in produtos)
+        {
+            if (prod.Nome != item.Nome)
+                prod.Nome = item.Nome;
+            if (prod.Marca != item.Marca)
+                prod.Marca = item.Marca;
+            if (prod.Modelo != item.Modelo)
+                prod.Modelo = item.Modelo;
+        }
     }
 
     private void AtualizarQtdEstoqueMaior(int qtd, ProdutoDto item)

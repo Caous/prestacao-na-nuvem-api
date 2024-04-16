@@ -4,5 +4,6 @@ public enum ETipoMedidaItemDto
 {
     Litro,
     Peca,
-    Produto
+    Produto,
+    KgGrm
 }
