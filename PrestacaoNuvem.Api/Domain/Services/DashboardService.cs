@@ -191,4 +191,68 @@ public class DashboardService : IDashboardService
     {
         return _mapper.Map<ICollection<DashboardReceitaMarcaProdutoDto>>(resultfinal);
     }
+
+    public async Task<ICollection<DashboardReceitaMesAgrupadoDto>?> GetDailySalesGroupMonth(Guid prestador)
+    {
+        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador);
+
+        if (result == null)
+            return null;
+
+        List<FaturamentoMes> resultfinal = new();
+
+        foreach (var item in result)
+        {
+            if (item != null && item.Produtos != null)
+            {
+                resultfinal.Add(new FaturamentoMes
+                {
+                    DateRef = MappperMes(item.DataCadastro.Month.ToString()),
+                    Valor = item.Produtos.Sum(y=> y.Valor_Venda)
+                });
+            }
+        }
+
+        return MapperSalesMonthGroup(resultfinal);
+    }
+
+    private ICollection<DashboardReceitaMesAgrupadoDto>? MapperSalesMonthGroup(List<FaturamentoMes> resultfinal)
+    {
+        return _mapper.Map<ICollection<DashboardReceitaMesAgrupadoDto>>(resultfinal);
+    }
+
+    private string MappperMes(string mes)
+    {
+        switch (mes)
+        {
+            case "1":
+                return "Janeiro";
+            case "2":
+                return "Feveiro";
+            case "3":
+                return "Março";
+            case "4":
+                return "Abril";
+            case "5":
+                return "Maio";
+            case "6":
+                return "Junho";
+            case "7":
+                return "Julho";
+            case "8":
+                return "Agosto";
+            case "9":
+                return "Setembro";
+            case "10":
+                return "Outubro";
+            case "11":
+                return "Novembro";
+            case "12":
+                return "Dezembro";
+            default:
+                break;
+        }
+
+        return "Não encontrado";
+    }
 }

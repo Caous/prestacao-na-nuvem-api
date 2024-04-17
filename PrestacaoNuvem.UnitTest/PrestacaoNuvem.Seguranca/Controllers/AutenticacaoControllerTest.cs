@@ -218,7 +218,7 @@ public class AutenticacaoControllerTest
         _acessoManager.Setup(x => x.GetUserPorEmail(It.IsAny<string>())).ReturnsAsync(xpto);
         //Act
         AutenticacaoController controllerCategoria = new AutenticacaoController(_acessoManager.Object, _mapper.Object);
-        var response = await controllerCategoria.GetPrestadorUser(email: "teste.com.br", id: Guid.NewGuid(), CpfCnpj: "123456");
+        var response = await controllerCategoria.GetPrestadorUser(email: "teste.com.br", id: Guid.NewGuid());
         var okResult = response as OkObjectResult;
         var result = okResult.Value as UserModel;
         //Assert
@@ -239,7 +239,7 @@ public class AutenticacaoControllerTest
         _acessoManager.Setup(x => x.GetUserPorEmail(It.IsAny<string>())).ReturnsAsync(xpto);
         //Act
         AutenticacaoController controllerCategoria = new AutenticacaoController(_acessoManager.Object, _mapper.Object);
-        var response = await controllerCategoria.GetPrestadorUser(email: "teste.com.br", id: Guid.NewGuid(), CpfCnpj: "123456");
+        var response = await controllerCategoria.GetPrestadorUser(email: "teste.com.br", id: Guid.NewGuid());
         var okResult = response as BadRequestObjectResult;
         var result = okResult.Value as string;
         //Assert

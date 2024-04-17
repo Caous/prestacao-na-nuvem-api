@@ -215,4 +215,29 @@ public class DashboardController : MainController
 
         return Ok(result);
     }
+
+    /// <summary>
+    /// Recupera faturamento por mês agrupado
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("DashboardBarVendaMeses")]
+    public async Task<IActionResult> GetDashboardBarMes()
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        var resultDash = await _dashboardService.GetDailySalesGroupMonth(PrestadorId);
+
+        if (resultDash == null || !resultDash.Any())
+            return NoContent();
+
+        object[] result = ResultMapperOrdemVendaMesAgrupado(resultDash);
+
+        return Ok(result);
+    }
+
+    private object[] ResultMapperOrdemVendaMesAgrupado(ICollection<DashboardReceitaMesAgrupadoDto> resultDash)
+    {
+        return resultDash.GroupBy(x => x.DateRef).Select(grupo => new { Key = grupo.Key, Count = grupo.Sum(x => x.Valor) }).ToArray();
+    }
 }

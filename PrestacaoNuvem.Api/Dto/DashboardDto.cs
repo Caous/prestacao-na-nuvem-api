@@ -30,6 +30,11 @@ public class DashboardDto
         public string DateRef { get; set; }
         public double Valor { get; set; }
     }
+    public class DashboardReceitaMesAgrupadoDto
+    {
+        public string DateRef { get; set; }
+        public double Valor { get; set; }
+    }
     public class DashboardReceitaMesDto
     {
         public decimal Valor { get; set; }

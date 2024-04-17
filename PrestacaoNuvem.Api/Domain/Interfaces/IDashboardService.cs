@@ -13,4 +13,5 @@ public interface IDashboardService
     Task<DashboardClientesNovos?> GetNewCustomerMonth(Guid prestador);
     Task<DashboardProdutosNovos?> GetSalesProductMonth(Guid prestador);
     Task<DashboardOSMesDto?> GetOSMonth(Guid prestador);
+    Task<ICollection<DashboardReceitaMesAgrupadoDto>?> GetDailySalesGroupMonth(Guid prestador);
 }

@@ -327,7 +327,7 @@ public class PrestadorControllerTest
         _prestadorService.Setup(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(prestadoresFake.First());
         PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         //Act
-        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value, prestadorDtoFake.Id.Value);
+        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as PrestadorDto;
         //Assert
@@ -352,7 +352,7 @@ public class PrestadorControllerTest
         _prestadorService.Setup(s => s.Desabled(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(prestadorFakeNull);
         PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         //Act
-        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value, prestadorDtoFake.Id.Value);
+        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value);
         var okResult = response as NoContentResult;
 
         //Assert
@@ -372,7 +372,7 @@ public class PrestadorControllerTest
         PrestadorController controller = GenerateControllerFake(new List<PrestadorDto>() { prestadorDtoFake });
         controller.ModelState.AddModelError("key", "error message");
         //Act
-        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value, prestadorDtoFake.Id.Value);
+        var response = await controller.DesativarPrestadorServico(prestadorDtoFake.Id.Value);
         var okResult = response as ObjectResult;
 
         //Assert
