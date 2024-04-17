@@ -132,7 +132,7 @@ public class DashboardService : IDashboardService
 
     public async Task<ICollection<DashboardReceitaNomeProdutoDto>?> GetProductGroupByProductNameService(Guid prestador)
     {
-        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador);
+        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador, true);
 
         if (result == null)
             return null;
@@ -163,7 +163,7 @@ public class DashboardService : IDashboardService
 
     public async Task<ICollection<DashboardReceitaMarcaProdutoDto>?> GetProductGroupByProductMarcaService(Guid prestador)
     {
-        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador);
+        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador, true);
 
         if (result == null)
             return null;
@@ -194,7 +194,7 @@ public class DashboardService : IDashboardService
 
     public async Task<ICollection<DashboardReceitaMesAgrupadoDto>?> GetDailySalesGroupMonth(Guid prestador)
     {
-        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador);
+        ICollection<OrdemVenda> result = await _repository.GetOrdemVendaProductListAll(prestador, false);
 
         if (result == null)
             return null;
@@ -208,7 +208,7 @@ public class DashboardService : IDashboardService
                 resultfinal.Add(new FaturamentoMes
                 {
                     DateRef = MappperMes(item.DataCadastro.Month.ToString()),
-                    Valor = item.Produtos.Sum(y=> y.Valor_Venda)
+                    Valor = item.Produtos.Sum(y => y.Valor_Venda)
                 });
             }
         }

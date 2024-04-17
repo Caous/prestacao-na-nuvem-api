@@ -5,7 +5,7 @@ namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Interfaces;
 public interface IDashboardRepository
 {
     Task<ICollection<PrestacaoServico>> GetServicesGroupByCategoryService(Guid prestador);
-    Task<ICollection<OrdemVenda>?> GetOrdemVendaProductListAll(Guid prestador);
+    Task<ICollection<OrdemVenda>?> GetOrdemVendaProductListAll(Guid prestador, bool filtroMesAtual);
     Task<ICollection<PrestacaoServico>> GetServicesGroupBySubCategoryService(Guid prestador);
     Task<ICollection<DashboardReceitaDiaria>> GetDailySales(Guid prestador);
     Task<DashboardReceitaMes> GetSalesMonth(Guid prestador);

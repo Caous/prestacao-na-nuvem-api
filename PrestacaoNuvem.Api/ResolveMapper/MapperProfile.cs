@@ -27,6 +27,7 @@ public class MapperProfile : Profile
         CreateMap<DashboardReceitaMarcaProdutoDto, ProdutoAgrupadoMarca>().ReverseMap();        
         CreateMap<FilialDto, Filial>().ReverseMap();
         CreateMap<OrdemVendaDto, OrdemVenda>().ReverseMap();
+        CreateMap<DashboardReceitaMesAgrupadoDto, FaturamentoMes>().ReverseMap(); 
 
     }
 }

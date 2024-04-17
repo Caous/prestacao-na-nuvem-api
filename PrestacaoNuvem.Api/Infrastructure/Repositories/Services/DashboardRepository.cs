@@ -192,12 +192,22 @@ public class DashboardRepository : IDashboardRepository
         return result;
     }
 
-    public async Task<ICollection<OrdemVenda>?> GetOrdemVendaProductListAll(Guid prestador)
+    public async Task<ICollection<OrdemVenda>?> GetOrdemVendaProductListAll(Guid prestador, bool filtroMesAtual)
     {
-        var result = _context.OrdemVenda
-            .Where(x => x.PrestadorId == prestador && x.Status == EOrdemVendaStatus.Concluido)
-            .Include(i => i.Produtos).ToList();
+        List<OrdemVenda> result = new List<OrdemVenda>();
 
+        if (filtroMesAtual)
+        {
+            result = _context.OrdemVenda
+            .Where(x => x.PrestadorId == prestador && x.Status == EOrdemVendaStatus.Concluido && x.DataCadastro.Month == DateTime.Now.Month)
+            .Include(i => i.Produtos).ToList();
+        }
+        else
+        {
+            result = _context.OrdemVenda
+               .Where(x => x.PrestadorId == prestador && x.Status == EOrdemVendaStatus.Concluido)
+               .Include(i => i.Produtos).ToList();
+        }
         await _context.DisposeAsync();
 
         return result;
