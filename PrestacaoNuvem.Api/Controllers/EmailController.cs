@@ -6,7 +6,7 @@ namespace PrestacaoNuvem.Api.Controllers;
 /// Controller Email Serviço
 /// </summary>
 [Route("api/[controller]")]
-[ApiController,Authorize]
+[ApiController, Authorize]
 [Produces("application/json")]
 [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
 [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
@@ -40,8 +40,8 @@ public class EmailController : MainController
                _configuration.GetValue<string>("EmailConfiguration:Password")));
 
         emailConfig.Subject = "E-mail teste - Prestação na Nuvem";
-        emailConfig.FromEmail = "caous.g@gmail.com";
-        emailConfig.ToEmail = new string[] { "caous.g@gmail.com", "gustavo.nascimento@innovasfera.com.br" };
+        emailConfig.FromEmail = _configuration.GetValue<string>("EmailConfiguration:UserName");
+        emailConfig.ToEmail = new string[] { "caous.g@gmail.com"};
         emailConfig.Menssage = "Fazendo um teste pelo meu sistema :)";
 
         return Ok(await _emailManager.SendEmailSmtpAsync(emailConfig));

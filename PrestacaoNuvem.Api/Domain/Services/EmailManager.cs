@@ -1,6 +1,6 @@
 ﻿using PrestacaoNuvem.Api.Domain.Interfacesk;
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
 
 namespace PrestacaoNuvem.Api.Domain.Services
 {
@@ -36,6 +36,7 @@ namespace PrestacaoNuvem.Api.Domain.Services
                         smtpClient.Timeout = 30000;
                         smtpClient.Send(mensagemEmail);
                     }
+
                 }
 
             }
