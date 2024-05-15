@@ -1,9 +1,4 @@
-﻿
-
-using DocumentFormat.OpenXml.Office2010.Excel;
-using Microsoft.EntityFrameworkCore;
-
-namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
+﻿namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
 
 public class OrdemVendaRepository : GenericRepository<OrdemVenda>, IOrdemVendaRepository
 {
@@ -11,6 +6,18 @@ public class OrdemVendaRepository : GenericRepository<OrdemVenda>, IOrdemVendaRe
     public OrdemVendaRepository(OficinaContext context) : base(context)
     {
         _context = context;
+    }
+
+    public async Task<OrdemVenda> FindById(Guid id)
+    {
+
+        var result = await _context.OrdemVenda
+               .Where(f => f.Id == id)
+               .Include(i => i.Prestador)
+               .Include(i => i.Cliente)
+               .Include(i => i.Produtos)
+               .FirstOrDefaultAsync();
+        return result;
     }
 
     public override async Task<OrdemVenda> Create(OrdemVenda item)
@@ -22,10 +29,10 @@ public class OrdemVendaRepository : GenericRepository<OrdemVenda>, IOrdemVendaRe
     public override async Task<ICollection<OrdemVenda>> GetAll(Guid id, OrdemVenda filter)
     {
         var result = await _context.OrdemVenda.
-            Where(x=> x.PrestadorId == id)
-            .Include(x=> x.Produtos)
-            .Include(x=> x.Prestador)
-            .Include(x=> x.Cliente).ToListAsync();
+            Where(x => x.PrestadorId == id)
+            .Include(x => x.Produtos)
+            .Include(x => x.Prestador)
+            .Include(x => x.Cliente).ToListAsync();
 
         return result;
     }
