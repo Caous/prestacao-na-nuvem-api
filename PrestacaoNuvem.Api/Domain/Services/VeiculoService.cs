@@ -3,11 +3,13 @@
 public class VeiculoService : IVeiculoService
 {
     private readonly IVeiculoRepository _repository;
+    private readonly IPrestacaoServicoRepository _prestacaoServicoRepository;
     private readonly IMapper _mapper;
-    public VeiculoService(IVeiculoRepository repository, IMapper mapper)
+    public VeiculoService(IVeiculoRepository repository, IMapper mapper, IPrestacaoServicoRepository prestacaoServico)
     {
         _repository = repository;
         _mapper = mapper;
+        _prestacaoServicoRepository = prestacaoServico;
     }
 
     public async Task<VeiculoDto> CreateVeiculos(VeiculoDto item)
@@ -41,6 +43,22 @@ public class VeiculoService : IVeiculoService
     public Task<VeiculoDto> FindByIdVeiculos(Guid Id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<ICollection<VeiculoDto>> GetAllCarCustumer(VeiculoDto item)
+    {
+        ICollection<Veiculo> returnCars = new List<Veiculo>();
+        
+        var result = await _prestacaoServicoRepository.GetByPrestador(item.PrestadorId.Value);
+
+        var resultCar = result.Where(x => x.ClienteId == item.IdCliente).Select(x => x.Veiculo).GroupBy(x=> x.Placa);        
+        
+        foreach (var itemCar in resultCar)
+            returnCars.Add(itemCar.First());
+        
+        await _repository.DisposeCommitAsync();
+
+        return _mapper.Map<ICollection<VeiculoDto>>(returnCars);
     }
 
     public async Task<ICollection<VeiculoDto>> GetAllVeiculos(VeiculoDto item)

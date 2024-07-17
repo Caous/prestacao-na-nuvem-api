@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.SqlServer;
-
-namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
+﻿namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
 
 public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, IPrestacaoServicoRepository
 {

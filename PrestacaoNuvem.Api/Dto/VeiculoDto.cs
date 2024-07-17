@@ -10,4 +10,5 @@ public class VeiculoDto : Base
     public int Km { get; set; } //Obri
     public string? Chassi { get; set; }
     public string TipoCombustivel { get; set; } //hraracter 25
+    public Guid IdCliente { get; set; }
 }

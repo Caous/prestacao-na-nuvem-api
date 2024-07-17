@@ -65,6 +65,25 @@ public class VeiculoController : MainController
 
     }
 
+    /// <summary>
+    /// Retorna os veículos do cliente
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("RetornarCarro/{id}")]
+    public async Task<IActionResult> GetCarCustumer(Guid id)
+    {
+        VeiculoDto filter = MapperFilter();
+        MapearLogin(filter);
+        filter.IdCliente = id;
+        
+        var result = await _veiculoService.GetAllCarCustumer(filter);
+        
+        if (result == null || !result.Any())
+            return NoContent();
+        
+        return Ok(result);
+    }
+
     private static VeiculoDto MapperFilter()
     {
         return new VeiculoDto() { Marca = string.Empty, Modelo = string.Empty, Placa = string.Empty };

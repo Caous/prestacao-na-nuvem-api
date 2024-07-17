@@ -14,7 +14,7 @@ public class DashboardRepository : IDashboardRepository
 
     public async Task<ICollection<DashboardReceitaDiaria>> GetDailySales(Guid prestador)
     {
-        var result = _context.PrestacaoServico.Where(x => x.PrestadorId == prestador && x.Status == EPrestacaoServicoStatus.Concluido)
+        var result = _context.PrestacaoServico.Where(x => x.PrestadorId == prestador && x.Status == EPrestacaoServicoStatus.Concluido && x.DataConclusaoServico.Value.Month == DateTime.Now.Month)
            .Include(i => i.Servicos).ToList();
 
         if (result != null && result.Any())
