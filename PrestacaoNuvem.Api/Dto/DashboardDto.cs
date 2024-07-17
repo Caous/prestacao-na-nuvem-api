@@ -44,4 +44,14 @@ public class DashboardDto
         public string Titulo { get; set; }
         public double Valor { get; set; }
     }
+
+    public class DashboardLastServices {
+
+        public string ServicoCategoria { get; set; }
+        public float ValorServico { get; set; }
+        public float ValorProduto { get; set; }        
+        public float Total { get; set; }
+        public string Cpf { get; set; }
+
+    }
 }

@@ -224,4 +224,20 @@ public class DashboardRepository : IDashboardRepository
 
         return result;
     }
+
+    public async Task<ICollection<PrestacaoServico>> GetServices(Guid prestador, int limit = 0)
+    {
+        var result = _context.PrestacaoServico.Where(x => x.PrestadorId == prestador && x.Status == EPrestacaoServicoStatus.Concluido)
+            .Include(i => i.Cliente)
+            .Include(i => i.Produtos)
+            .Include(i => i.Servicos)
+                .ThenInclude(i => i.SubCategoriaServico).OrderByDescending(x => x.DataConclusaoServico).ToList();
+
+        if (limit > 0)        
+            result = result.Take(limit).ToList();
+        
+        await _context.DisposeAsync();
+
+        return result;
+    }
 }

@@ -84,7 +84,7 @@ public class DashboardController : MainController
 
         return Ok(result);
     }
-    
+
     /// <summary>
     /// Recuperar Faturamento Mês Por Nome Marca Agrupado
     /// </summary>
@@ -240,4 +240,23 @@ public class DashboardController : MainController
     {
         return resultDash.GroupBy(x => x.DateRef).Select(grupo => new { Key = grupo.Key, Count = grupo.Sum(x => x.Valor) }).ToArray();
     }
+
+    /// <summary>
+    /// Retona os ultimos 10 serviços efetuados
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("DashboardUltimosOs/{limit}")]
+    public async Task<IActionResult> GetDashboardLastOS(int limit)
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        var resultDash = await _dashboardService.GetLastServices(PrestadorId, limit);
+
+        if (resultDash == null || !resultDash.Any())
+            return NoContent();       
+
+        return Ok(resultDash);
+    }
+
 }

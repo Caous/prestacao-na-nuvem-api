@@ -255,4 +255,34 @@ public class DashboardService : IDashboardService
 
         return "Não encontrado";
     }
+
+    public async Task<ICollection<DashboardLastServices>> GetLastServices(Guid prestador, int limit = 0)
+    {
+        var result = await _repository.GetServices(prestador, limit);
+
+        return MapperLastService(result);
+    }
+
+    private ICollection<DashboardLastServices> MapperLastService(ICollection<PrestacaoServico> result)
+    {
+        List<DashboardLastServices> resultDash = new List<DashboardLastServices>();
+
+        foreach (var item in result)
+        {
+            float total = 0;
+
+            total = item.Servicos == null ? 0 : item.Servicos.Sum(x => x.Valor);
+            total += item.Produtos == null ? 0 : item.Produtos.Sum(x => x.Valor_Venda);
+
+            DashboardLastServices servico = new DashboardLastServices();
+            servico.Cpf = item.Cliente.CPF;
+            servico.Total = total;
+            servico.ValorServico = item.Servicos == null ? 0 : item.Servicos.Sum(x => x.Valor);
+            servico.ValorProduto = item.Produtos == null ? 0 : item.Produtos.Sum(x => x.Valor_Venda);
+            servico.ServicoCategoria = item.Servicos.FirstOrDefault().SubCategoriaServico.Titulo;
+            resultDash.Add(servico);
+        }
+
+        return resultDash;
+    }
 }
