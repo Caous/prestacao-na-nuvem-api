@@ -254,9 +254,37 @@ public class DashboardController : MainController
         var resultDash = await _dashboardService.GetLastServices(PrestadorId, limit);
 
         if (resultDash == null || !resultDash.Any())
-            return NoContent();       
+            return NoContent();
 
         return Ok(resultDash);
+    }
+
+    [HttpGet("DashboardBrands")]
+    public async Task<IActionResult> GetDashboardBrands()
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        var result = await _dashboardService.GetBrands(PrestadorId);
+
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
+    }
+
+    [HttpGet("DashboardTypesVehicles")]
+    public async Task<IActionResult> GetDashboardTypesVehicles()
+    {
+        if(!ModelState.IsValid)
+           return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        var result = await _dashboardService.GetTypesVehicles(PrestadorId);
+
+        if(result == null)
+           return NoContent();
+
+          return Ok(result);
     }
 
 }

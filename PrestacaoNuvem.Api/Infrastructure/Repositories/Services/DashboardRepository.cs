@@ -233,11 +233,33 @@ public class DashboardRepository : IDashboardRepository
             .Include(i => i.Servicos)
                 .ThenInclude(i => i.SubCategoriaServico).OrderByDescending(x => x.DataConclusaoServico).ToList();
 
-        if (limit > 0)        
+        if (limit > 0)
             result = result.Take(limit).ToList();
-        
+
         await _context.DisposeAsync();
 
         return result;
     }
+    public async Task<ICollection<Veiculo>> GetBrands(Guid prestador)
+    {
+
+        var result = _context.Veiculo
+            .Where(x => x.PrestadorId == prestador).ToList();
+
+       
+        await _context.DisposeAsync();
+
+        return result;
+    }
+
+    public async Task<ICollection<Veiculo>> GetTypesVehicles(Guid prestador)
+    {
+        var result = _context.Veiculo
+        .Where(x => x.PrestadorId == prestador).ToList();
+
+        await _context.DisposeAsync();
+
+        return result;
+    }
+
 }

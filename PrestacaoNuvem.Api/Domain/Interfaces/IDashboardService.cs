@@ -15,4 +15,6 @@ public interface IDashboardService
     Task<DashboardOSMesDto?> GetOSMonth(Guid prestador);
     Task<ICollection<DashboardReceitaMesAgrupadoDto>?> GetDailySalesGroupMonth(Guid prestador);
     Task<ICollection<DashboardLastServices>> GetLastServices(Guid prestador, int limit = 0);
+    Task<ICollection<DashboardBrands>?> GetBrands(Guid prestador);
+    Task<ICollection<DashboardTypesVehicle>?> GetTypesVehicles(Guid prestador);
 }

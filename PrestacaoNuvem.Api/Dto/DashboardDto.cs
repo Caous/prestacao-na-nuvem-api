@@ -54,4 +54,18 @@ public class DashboardDto
         public string Cpf { get; set; }
 
     }
+
+     public class DashboardBrands
+    {
+        public string Marca { get; set; }
+
+        public int Quantidade { get; set; }
+        
+    }
+
+    public class DashboardTypesVehicle
+    {
+        public EVeiculoTipo Tipo { get; set; }
+        public int Quantidade { get; set; }
+    }
 }

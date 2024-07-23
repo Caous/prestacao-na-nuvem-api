@@ -13,4 +13,6 @@ public interface IDashboardRepository
     Task<ICollection<Produto>> GetSalesProductMonth(Guid prestador);
     Task<DashboardOSMes> GetOSOVMonth(Guid prestador);
     Task<ICollection<PrestacaoServico>> GetServices(Guid prestador, int limit = 0);
+    Task<ICollection<Veiculo>> GetBrands(Guid prestador);
+    Task<ICollection<Veiculo>> GetTypesVehicles(Guid prestador);
 }

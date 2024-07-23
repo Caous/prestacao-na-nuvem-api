@@ -285,4 +285,34 @@ public class DashboardService : IDashboardService
 
         return resultDash;
     }
+
+       public async Task<ICollection<DashboardBrands>> GetBrands(Guid prestador)
+    {
+        ICollection<Veiculo> result = await _repository.GetBrands(prestador);  
+
+        var marcasAgrupadas = result.GroupBy(x => x.Marca).ToList();
+
+        List<DashboardBrands> dashboardBrands = new List<DashboardBrands>();
+
+        foreach(var item in marcasAgrupadas){
+            dashboardBrands.Add(new DashboardBrands(){ Marca = item.Key, Quantidade = item.Count()});
+        }
+
+        return dashboardBrands;
+    }
+
+    public async Task<ICollection<DashboardTypesVehicle>> GetTypesVehicles(Guid prestador)
+    {
+        ICollection<Veiculo> result = await _repository.GetTypesVehicles(prestador);
+
+        var tiposVeiculos = result.GroupBy(x => x.Tipo).ToList();
+
+        List<DashboardTypesVehicle> dashboardTypes = new List<DashboardTypesVehicle>();
+
+        foreach(var item in tiposVeiculos){
+            dashboardTypes.Add(new DashboardTypesVehicle(){ Tipo = item.Key, Quantidade = item.Count()});
+        }
+
+        return dashboardTypes;
+    }
 }
