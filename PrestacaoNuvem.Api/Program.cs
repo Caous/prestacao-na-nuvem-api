@@ -20,11 +20,7 @@ var tokenConfigurations = new TokenConfigurations();
 new ConfigureFromConfigurationOptions<TokenConfigurations>(
     builder.Configuration.GetSection("TokenConfigurations"))
         .Configure(tokenConfigurations);
-
-builder.Services.AddJwtSecurity(tokenConfigurations);
-
-builder.Services.AddAuthorization();
-
+        
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();

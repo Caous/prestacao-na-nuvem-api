@@ -808,12 +808,12 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                     b.Property<Guid>("UsrCadastro")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsrDesativacao")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UsrDescricaoCadastro")
+                    b.Property<string>("UsrCadastroDesc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UsrDescricaoDesativacao")
                         .HasColumnType("nvarchar(max)");
