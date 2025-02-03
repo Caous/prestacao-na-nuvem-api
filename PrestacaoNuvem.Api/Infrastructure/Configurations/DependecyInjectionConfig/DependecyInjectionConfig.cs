@@ -38,6 +38,30 @@ public static class DependecyInjectionConfig
         services.AddScoped<IOrdemVendaService, OrdemVendaService>();
         #endregion
 
+                #region Autentication
+        services.AddScoped<IdentityInitializer>();
+
+        services.AddIdentity<UserModel, IdentityRole>(options =>
+        {
+            options.Password.RequireDigit = true;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequiredLength = 6;
+        })
+                .AddEntityFrameworkStores<OficinaContext>()
+                .AddDefaultTokenProviders();
+        #endregion
+
+        #region JWT
+        var tokenConfigurations = new TokenConfigurations();
+        new ConfigureFromConfigurationOptions<TokenConfigurations>(
+            configuration.GetSection("TokenConfigurations"))
+                .Configure(tokenConfigurations);
+
+        services.AddJwtSecurity(tokenConfigurations);
+        #endregion
+
         #region Cors
         services.AddCors(options =>
         {

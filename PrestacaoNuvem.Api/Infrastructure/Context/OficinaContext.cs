@@ -1,6 +1,8 @@
-﻿namespace PrestacaoNuvem.Api.Infrastructure.Context;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class OficinaContext : DbContext
+namespace PrestacaoNuvem.Api.Infrastructure.Context;
+
+public class OficinaContext : IdentityDbContext<UserModel>
 {
     public OficinaContext(DbContextOptions<OficinaContext> context) : base(context)
     {

@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PrestacaoNuvem.Api\PrestacaoNuvem.Api.csproj" />
-    <ProjectReference Include="..\PrestacaoNuvem.Seguranca\PrestacaoNuvem.Seguranca.csproj" />
   </ItemGroup>
 
 </Project>

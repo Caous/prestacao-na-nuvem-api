@@ -17,20 +17,6 @@
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "ASPNETCORE_URLS": "http://localhost:7291"
             },
-        },
-        {
-            "name": "Seguranca",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build-seguranca",
-            "program": "${workspaceFolder}/PrestacaoNuvem.Seguranca/bin/Debug/net8.0/PrestacaoNuvem.Seguranca.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/PrestacaoNuvem.Seguranca",
-            "stopAtEntry": false,
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:7056"
-            },
         }
     ],
     "compounds": [

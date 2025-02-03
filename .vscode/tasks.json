@@ -13,18 +13,6 @@
             ],
             "problemMatcher": "$msCompile"
         },
-		{
-            "label": "build-seguranca",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/PrestacaoNuvem.Seguranca/PrestacaoNuvem.Seguranca.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
         {
             "label": "publish-api",
             "command": "dotnet",
@@ -32,18 +20,6 @@
             "args": [
                 "publish",
                 "${workspaceFolder}/PrestacaoNuvem.Api/PrestacaoNuvem.Api.dll",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-		{
-            "label": "publish-seguranca",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/PrestacaoNuvem.Api/PrestacaoNuvem.Seguranca.dll",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

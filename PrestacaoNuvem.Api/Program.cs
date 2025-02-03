@@ -35,6 +35,10 @@ app.UseSwagger();
 app.UseSwaggerUI();
 //}
 
+using var scope = app.Services.CreateScope();
+
+scope.ServiceProvider.GetRequiredService<IdentityInitializer>().Initialize();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

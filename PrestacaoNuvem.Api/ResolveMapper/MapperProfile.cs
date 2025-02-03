@@ -24,10 +24,20 @@ public class MapperProfile : Profile
         CreateMap<DashboardReceitaMesDto, DashboardReceitaMes>().ReverseMap();
         CreateMap<DashboardReceitaSubCaterogiaDto, SubCategoriaAgrupado>().ReverseMap();
         CreateMap<DashboardReceitaNomeProdutoDto, ProdutoAgrupado>().ReverseMap();
-        CreateMap<DashboardReceitaMarcaProdutoDto, ProdutoAgrupadoMarca>().ReverseMap();        
+        CreateMap<DashboardReceitaMarcaProdutoDto, ProdutoAgrupadoMarca>().ReverseMap();
         CreateMap<FilialDto, Filial>().ReverseMap();
         CreateMap<OrdemVendaDto, OrdemVenda>().ReverseMap();
-        CreateMap<DashboardReceitaMesAgrupadoDto, FaturamentoMes>().ReverseMap(); 
+        CreateMap<DashboardReceitaMesAgrupadoDto, FaturamentoMes>().ReverseMap();
+        CreateMap<UserModelDto, UserModel>()
+                    .ForMember(p => p.NormalizedEmail, opt => opt.MapFrom(src => src.Email))
+                    .ForMember(p => p.Email, opt => opt.MapFrom(src => src.Email))
+                    .ReverseMap();
+
+        CreateMap<PrestadorLoginDto, UserModelDto>()
+                     .ReverseMap();
+
+        CreateMap<PrestadorCadastroDto, UserModel>()
+                    .ReverseMap();
 
     }
 }
