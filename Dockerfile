@@ -35,4 +35,4 @@ COPY --from=build /app/publish .
 RUN apk add --no-cache icu-libs
 
 # Entrada do container
-ENTRYPOINT ["dotnet", "PrestacaoNuvem.Api.dll"]
+ENTRYPOINT ["dotnet", "PrestacaoNuvem.Api.dll", "--urls", "http://0.0.0.0:80"]
