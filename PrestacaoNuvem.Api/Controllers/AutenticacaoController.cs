@@ -34,7 +34,7 @@ public class AutenticacaoController : MainController
         return BadRequest("User not found!");
     }
 
-    [Authorize]
+  
     [HttpPost("RegistrarPrestador")]
     public async Task<IActionResult> Post(PrestadorCadastroDto prestadorDto)
     {
