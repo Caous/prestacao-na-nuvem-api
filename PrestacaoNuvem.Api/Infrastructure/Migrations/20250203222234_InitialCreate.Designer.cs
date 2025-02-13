@@ -12,7 +12,7 @@ using PrestacaoNuvem.Api.Infrastructure.Context;
 namespace PrestacaoNuvem.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(OficinaContext))]
-    [Migration("20250203214041_InitialCreate")]
+    [Migration("20250203222234_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -811,12 +811,12 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                     b.Property<Guid>("UsrCadastro")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsrDesativacao")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UsrDescricaoCadastro")
+                    b.Property<string>("UsrCadastroDesc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UsrDescricaoDesativacao")
                         .HasColumnType("nvarchar(max)");

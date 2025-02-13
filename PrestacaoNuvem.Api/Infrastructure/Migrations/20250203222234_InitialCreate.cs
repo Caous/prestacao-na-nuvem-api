@@ -42,7 +42,7 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                     FuncionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DataCadastro = table.Column<DateTime>(type: "DateTime", nullable: false, defaultValueSql: "GETDATE()"),
                     UsrCadastro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsrDescricaoCadastro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsrCadastroDesc = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataDesativacao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UsrDesativacao = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UsrDescricaoDesativacao = table.Column<string>(type: "nvarchar(max)", nullable: true),

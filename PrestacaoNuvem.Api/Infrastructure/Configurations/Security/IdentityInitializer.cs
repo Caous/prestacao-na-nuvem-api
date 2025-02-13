@@ -78,7 +78,7 @@ public class IdentityInitializer
                     Email = email,
                     NormalizedEmail = email,
                     UsrCadastro = Guid.NewGuid(),
-                    UsrDescricaoCadastro = "Usuário adm",
+                    UsrCadastroDesc = "Usuário adm",
                     EmailConfirmed = true
                 };
                 var resultado = _userManager
