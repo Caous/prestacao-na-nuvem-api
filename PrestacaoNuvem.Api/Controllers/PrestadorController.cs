@@ -258,9 +258,9 @@ public class PrestadorController : MainController
     /// <param name="_nome"></param>
     /// <returns></returns>
     [HttpGet("Funcionario/Prestador/id")]
-    public async Task<IActionResult> GetAllFuncionarioPorPrestador([FromBody] string _cpf, string _email, string _nome)
+    public async Task<IActionResult> GetAllFuncionarioPorPrestador([FromBody] string cpf, string email, string nome)
     {
-        FuncionarioPrestadorDto filter = new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = _cpf, Email = _email, Nome = _nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
+        FuncionarioPrestadorDto filter = new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = cpf, Email = email, Nome = nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
 
         var result = await _funcionarioSerive.GetAllFuncionario(filter);
         if (result == null || !result.Any())
