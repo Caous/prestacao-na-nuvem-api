@@ -25,6 +25,9 @@ public class CategoriaServicoController : MainController
         if (!categoriaServico.PrestadorId.HasValue)
             categoriaServico.PrestadorId = PrestadorId;
 
+        if (IsAdminLogged)
+            categoriaServico.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
+
         categoriaServico.UsrCadastroDesc = UserName;
         categoriaServico.UsrCadastro = UserId;
 
@@ -39,9 +42,9 @@ public class CategoriaServicoController : MainController
     public async Task<IActionResult> AddAsync(CategoriaServicoDto categoriaServico)
     {
 
-        if (!ModelState.IsValid)        
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
 
         MapearLogin(categoriaServico);
 
@@ -62,13 +65,13 @@ public class CategoriaServicoController : MainController
     [HttpGet]
     public async Task<IActionResult> GetAll(string? titulo, string? desc)
     {
-        if (!ModelState.IsValid)        
+        if (!ModelState.IsValid)
             return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        
+
 
         CategoriaServicoDto filter = MapperFilter(titulo, desc);
 
-        var result = await _categoriaService.GetAllCategoria(filter);
+        var result = await _categoriaService.GetAllCategoria(filter, IsAdminLogged);
 
         if (result == null || !result.Any())
             return NoContent();

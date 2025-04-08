@@ -7,9 +7,13 @@ public class ProdutoRepository : GenericRepository<Produto>, IProdutoRepository
         _context = context;
     }
 
-    public override async Task<ICollection<Produto>> GetAll(Guid id, Produto filter)
+    public override async Task<ICollection<Produto>> GetAll(Guid id, Produto filter, bool admin)
     {
-        var result = await _context.Produto.Where(x => x.PrestacaoServicoId == null && x.OrdemVendaId == null && x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
+        Produto[] result = [];
+        if (admin)
+            result = await _context.Produto.ToArrayAsync();
+        else
+            result = await _context.Produto.Where(x => x.PrestacaoServicoId == null && x.OrdemVendaId == null && x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
        
 
         if (filter != null && result.Any())

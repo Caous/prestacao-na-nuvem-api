@@ -63,7 +63,7 @@ public class VeiculoService : IVeiculoService
 
     public async Task<ICollection<VeiculoDto>> GetAllVeiculos(VeiculoDto item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Veiculo>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Veiculo>(item), false);
 
         await _repository.DisposeCommitAsync();
 

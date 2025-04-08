@@ -45,9 +45,9 @@ public class SubCategoriaServicoService : ISubCategoriaServicoService
         return _mapper.Map<SubCategoriaServicoDto>(result);
     }
 
-    public async Task<ICollection<SubCategoriaServicoDto>> GetAllSubCategoria(SubCategoriaServicoDto item)
+    public async Task<ICollection<SubCategoriaServicoDto>> GetAllSubCategoria(SubCategoriaServicoDto item, bool admin)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<SubCategoriaServico>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<SubCategoriaServico>(item), admin);
 
         await _repository.DisposeCommitAsync();
         return _mapper.Map<ICollection<SubCategoriaServicoDto>>(result);

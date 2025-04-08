@@ -40,7 +40,7 @@ public class OrdemVendaService : IOrdemVendaService
                 var produto = ordemVendaNovo.Produtos.ElementAt(i);
                 var produtoDto = item.Produtos.ElementAt(i);
                 produto.PrestadorId = ordemVendaNovo.PrestadorId;
-                ICollection<Produto> produtos = await _produtoRepository.GetAll(ordemVendaNovo.PrestadorId, produto);
+                ICollection<Produto> produtos = await _produtoRepository.GetAll(ordemVendaNovo.PrestadorId, produto, false);
 
                 if (produtos != null && produtos.Any())
                 {
@@ -134,7 +134,7 @@ public class OrdemVendaService : IOrdemVendaService
 
     public async Task<ICollection<OrdemVendaDto>> GetAllOrdemVenda(OrdemVendaDto item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<OrdemVenda>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<OrdemVenda>(item), false);
         await _repository.DisposeCommitAsync();
         return _mapper.Map<ICollection<OrdemVendaDto>>(result);
     }

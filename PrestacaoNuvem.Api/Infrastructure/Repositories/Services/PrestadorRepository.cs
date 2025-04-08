@@ -9,7 +9,7 @@ public class PrestadorRepository : GenericRepository<Prestador>, IPrestadorRepos
         _context = context;
     }
 
-    public override async Task<ICollection<Prestador>> GetAll(Guid id, Prestador filter)
+    public override async Task<ICollection<Prestador>> GetAll(Guid id, Prestador filter, bool admin)
     {
         var result = await _context.Prestador.Where(x => x.DataDesativacao == null).ToArrayAsync();
         return result;

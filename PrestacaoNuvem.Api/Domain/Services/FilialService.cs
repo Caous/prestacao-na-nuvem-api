@@ -53,7 +53,7 @@ public class FilialService : IFilialService
 
     public async Task<ICollection<FilialDto>> GetAllFilial(FilialDto request)
     {
-        var result = await _repository.GetAll(request.PrestadorId.Value, _mapper.Map<Filial>(request));
+        var result = await _repository.GetAll(request.PrestadorId.Value, _mapper.Map<Filial>(request), false);
 
         await _repository.DisposeCommitAsync();
 

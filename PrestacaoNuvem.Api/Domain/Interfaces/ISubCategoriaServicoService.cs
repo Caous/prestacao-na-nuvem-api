@@ -2,7 +2,7 @@
 
 public interface ISubCategoriaServicoService
 {
-    Task<ICollection<SubCategoriaServicoDto>> GetAllSubCategoria(SubCategoriaServicoDto item);
+    Task<ICollection<SubCategoriaServicoDto>> GetAllSubCategoria(SubCategoriaServicoDto item, bool admin);
     Task<SubCategoriaServicoDto> FindByIdSubCategoria(Guid Id);
     Task<SubCategoriaServicoDto> CreateSubCategoria(SubCategoriaServicoDto item);
     Task<SubCategoriaServicoDto> UpdateSubCategoria(SubCategoriaServicoDto item);

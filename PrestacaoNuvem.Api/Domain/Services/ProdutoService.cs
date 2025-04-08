@@ -64,7 +64,7 @@ public class ProdutoService : IProdutoService
 
     public async Task<ICollection<ProdutoDto>> GetAllProduto(ProdutoDto item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item), false);
 
         await _repository.DisposeCommitAsync();
 
@@ -148,7 +148,7 @@ public class ProdutoService : IProdutoService
     {
         Produto produtoOriginal = await _repository.FindById(item.Id.Value);
 
-        ICollection<Produto> produtos = await _repository.GetAll(item.PrestadorId.Value, produtoOriginal);
+        ICollection<Produto> produtos = await _repository.GetAll(item.PrestadorId.Value, produtoOriginal, false);
 
 
         if (produtos != null)
@@ -228,7 +228,7 @@ public class ProdutoService : IProdutoService
 
     public async Task<ICollection<ProdutoDto>> GetAllGroupByProduto(ProdutoDto item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Produto>(item), false);
 
         await _repository.DisposeCommitAsync();
 

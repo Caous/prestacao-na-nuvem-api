@@ -62,9 +62,9 @@ public class CategoriaService : ICategoriaService
         return _mapper.Map<CategoriaServicoDto>(result);
     }
 
-    public async Task<ICollection<CategoriaServicoDto>> GetAllCategoria(CategoriaServicoDto item)
+    public async Task<ICollection<CategoriaServicoDto>> GetAllCategoria(CategoriaServicoDto item, bool admin)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<CategoriaServico>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<CategoriaServico>(item), admin);
 
         await _repository.DisposeCommitAsync();
 

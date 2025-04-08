@@ -47,7 +47,7 @@ public class PrestadorService : IPrestadorService
 
     public async Task<ICollection<PrestadorDto>> GetAllPrestador(PrestadorDto item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Prestador>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Prestador>(item), false);
 
         await _repository.DisposeCommitAsync();
         return _mapper.Map<ICollection<PrestadorDto>>(result);

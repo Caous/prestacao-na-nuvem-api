@@ -9,9 +9,13 @@ public class FilialRepository : GenericRepository<Filial>, IFilialRepository
         _context = context;
     }
 
-    public override async Task<ICollection<Filial>> GetAll(Guid id, Filial filter)
+    public override async Task<ICollection<Filial>> GetAll(Guid id, Filial filter, bool admin)
     {
-        var result = await _context.Filial.Where(x => x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
+        Filial[] result = [];
+        if (admin)
+            result = await _context.Filial.ToArrayAsync();
+        else
+            result = await _context.Filial.Where(x => x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
 
         if (filter != null && result.Any())
         {

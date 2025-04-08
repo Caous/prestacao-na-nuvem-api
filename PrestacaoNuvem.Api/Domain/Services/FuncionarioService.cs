@@ -54,7 +54,7 @@ public class FuncionarioService : IFuncionarioService
 
     public async Task<ICollection<FuncionarioPrestadorDto>> GetAllFuncionario(FuncionarioPrestadorDto item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<FuncionarioPrestador>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<FuncionarioPrestador>(item), false);
 
         await _repository.DisposeCommitAsync();
 

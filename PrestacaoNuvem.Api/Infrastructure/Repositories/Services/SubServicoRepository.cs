@@ -7,9 +7,13 @@ public class SubServicoRepository : GenericRepository<SubCategoriaServico>, ISub
     {
         _context = context;
     }
-    public async override Task<ICollection<SubCategoriaServico>> GetAll(Guid id, SubCategoriaServico filter)
+    public async override Task<ICollection<SubCategoriaServico>> GetAll(Guid id, SubCategoriaServico filter, bool admin )
     {
-        var result = await _context.SubCategoriaServico.Include(i => i.Categoria).Where(x => x.Categoria.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
+        SubCategoriaServico[] result = [];
+        if (admin)
+            result = await _context.SubCategoriaServico.Include(i => i.Categoria).ToArrayAsync();
+        else
+            result = await _context.SubCategoriaServico.Include(i => i.Categoria).Where(x => x.Categoria.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
         await _context.DisposeAsync();
 
         if (filter != null && result.Any())

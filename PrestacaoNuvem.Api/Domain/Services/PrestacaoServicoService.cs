@@ -154,7 +154,7 @@ public class PrestacaoServicoService : IPrestacaoServicoService
 
     public async Task<ICollection<PrestacaoServicoDto>> GetAllPrestacaoServico(PrestacaoServicoDto item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<PrestacaoServico>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<PrestacaoServico>(item), false);
 
         await _repository.DisposeCommitAsync();
 

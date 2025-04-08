@@ -1,4 +1,6 @@
-﻿namespace PrestacaoNuvem.Api.Domain.Services;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+
+namespace PrestacaoNuvem.Api.Domain.Services;
 
 public class ClienteService : IClienteService
 {
@@ -52,7 +54,7 @@ public class ClienteService : IClienteService
 
     public async Task<ICollection<ClienteDto>> GetAllCliente(ClienteDto item)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Cliente>(item));
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Cliente>(item), false);
 
         await _repository.DisposeCommitAsync();
 

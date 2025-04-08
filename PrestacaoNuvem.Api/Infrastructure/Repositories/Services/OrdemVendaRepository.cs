@@ -26,9 +26,16 @@ public class OrdemVendaRepository : GenericRepository<OrdemVenda>, IOrdemVendaRe
         return item;
     }
 
-    public override async Task<ICollection<OrdemVenda>> GetAll(Guid id, OrdemVenda filter)
+    public override async Task<ICollection<OrdemVenda>> GetAll(Guid id, OrdemVenda filter, bool admin)
     {
-        var result = await _context.OrdemVenda.
+        ICollection<OrdemVenda> result = [];
+        if (admin)
+            result = await _context.OrdemVenda.
+             Include(x => x.Produtos)
+            .Include(x => x.Prestador)
+            .Include(x => x.Cliente).ToListAsync();
+        else
+            result = await _context.OrdemVenda.
             Where(x => x.PrestadorId == id)
             .Include(x => x.Produtos)
             .Include(x => x.Prestador)

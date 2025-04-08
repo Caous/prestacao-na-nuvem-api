@@ -8,9 +8,13 @@ public class CategoriaServicoRepository : GenericRepository<CategoriaServico>, I
         _context = context;
     }
 
-    public async override Task<ICollection<CategoriaServico>> GetAll(Guid id, CategoriaServico filter)
+    public async override Task<ICollection<CategoriaServico>> GetAll(Guid id, CategoriaServico filter, bool admin)
     {
-        var result = await _context.CategoriaServico.Where(x => x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
+        CategoriaServico[] result = [];
+        if (admin)
+            result = await _context.CategoriaServico.ToArrayAsync();
+        else
+            result = await _context.CategoriaServico.Where(x => x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
         await _context.DisposeAsync();
 
         if (filter != null && result.Any())

@@ -61,7 +61,7 @@ public class SubServicoController : MainController
     {
         SubCategoriaServicoDto filter = MapperFilter(titulo, desc);
         MapearLogin(filter);
-        var result = await _subCategoriaServicoService.GetAllSubCategoria(filter);
+        var result = await _subCategoriaServicoService.GetAllSubCategoria(filter, IsAdminLogged);
         if (result == null || !result.Any())
             return NoContent();
         return Ok(result);

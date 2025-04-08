@@ -8,9 +8,13 @@ public class ClienteRepository : GenericRepository<Cliente>, IClienteRepository
         _context = context;
     }
 
-    public async override Task<ICollection<Cliente>> GetAll(Guid id, Cliente filter)
+    public async override Task<ICollection<Cliente>> GetAll(Guid id, Cliente filter, bool admin)
     {
-        var result = await _context.Cliente.Where(x => x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
+        Cliente[] result = [];
+        if (admin)
+            result = await _context.Cliente.ToArrayAsync();
+        else
+             result = await _context.Cliente.Where(x => x.PrestadorId == id && x.DataDesativacao == null).ToArrayAsync();
 
 
         if (filter != null && result.Any())

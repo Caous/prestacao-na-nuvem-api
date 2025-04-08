@@ -2,14 +2,27 @@
 
 public abstract class MainController : ControllerBase
 {
+    public bool IsAdminLogged
+    {
+        get
+        {
+            return User.Claims.FirstOrDefault(c => c.Type == "UserName")?.Value == "admOficinaNaNuvem";
+        }
+    }
 
     public Guid PrestadorId
     {
         get
         {
-            if (User.Claims.FirstOrDefault(c => c.Type == "PrestadorId") == null && !User.Claims.First(c => c.Type == "UserName").Value.Equals("OficinaNaNuvemAdm"))
-                throw new Exception("Usuário logado de forma indevida");
-            return new Guid(User.Claims.First(c => c.Type == "PrestadorId").Value);
+            if (IsAdminLogged)
+                return Guid.Empty;
+
+            var prestadorClaim = User.Claims.FirstOrDefault(c => c.Type == "PrestadorId");
+
+            if (prestadorClaim == null || string.IsNullOrWhiteSpace(prestadorClaim.Value))
+                throw new Exception("Usuário logado de forma indevida - PrestadorId inválido");
+
+            return new Guid(prestadorClaim.Value);
         }
     }
 
@@ -18,7 +31,6 @@ public abstract class MainController : ControllerBase
         get
         {
             return new Guid(User.Claims.First(c => c.Type == "IdUserLogin").Value);
-
         }
     }
 
@@ -37,5 +49,4 @@ public abstract class MainController : ControllerBase
             return new Guid(User.Claims.First(c => c.Type == "FuncionarioId").Value);
         }
     }
-
 }
