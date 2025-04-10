@@ -8,21 +8,14 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# Instalar dependências do Alpine, incluindo icu-libs para suporte à globalização
-RUN apk add --no-cache icu-libs
-
-# Copia a solução e os projetos para otimizar o cache de dependências
+# Copia o arquivo de projeto e restaura as dependências
 COPY ["PrestacaoNuvem.Api/PrestacaoNuvem.Api.csproj", "PrestacaoNuvem.Api/"]
-
-# Restaura as dependências primeiro para cache otimizado
 WORKDIR /src/PrestacaoNuvem.Api
 RUN dotnet restore
 
-# Copia todo o código fonte restante
-COPY . .
-
-# Compila o projeto e publica os binários
-RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Copia todo o código fonte e compila o projeto
+COPY ["PrestacaoNuvem.Api/", "PrestacaoNuvem.Api/"]
+RUN dotnet publish PrestacaoNuvem.Api.csproj -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Imagem final minimalista para execução
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
