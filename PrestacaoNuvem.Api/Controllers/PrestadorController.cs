@@ -1,4 +1,6 @@
-﻿namespace PrestacaoNuvem.Api.Controllers;
+﻿using Azure.Core;
+
+namespace PrestacaoNuvem.Api.Controllers;
 
 /// <summary>
 /// Controller de prestador de serviço e funcionário
@@ -189,6 +191,9 @@ public class PrestadorController : MainController
         if (!func.PrestadorId.HasValue)
             func.PrestadorId = PrestadorId;
 
+        if (IsAdminLogged)
+            func.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
+
         func.UsrCadastroDesc = UserName;
         func.UsrCadastro = UserId;
     }
@@ -238,7 +243,7 @@ public class PrestadorController : MainController
     {
         FuncionarioPrestadorDto filter = MapperFilter(cpf, email, nome);
         MapearLoginFuncionario(filter);
-        var result = await _funcionarioSerive.GetAllFuncionario(filter);
+        var result = await _funcionarioSerive.GetAllFuncionario(filter, IsAdminLogged);
         if (result == null || !result.Any())
             return NoContent();
         return Ok(result);
@@ -262,7 +267,7 @@ public class PrestadorController : MainController
     {
         FuncionarioPrestadorDto filter = new FuncionarioPrestadorDto() { Cargo = string.Empty, CPF = cpf, Email = email, Nome = nome, RG = string.Empty, Telefone = string.Empty, Endereco = string.Empty };
 
-        var result = await _funcionarioSerive.GetAllFuncionario(filter);
+        var result = await _funcionarioSerive.GetAllFuncionario(filter, IsAdminLogged);
         if (result == null || !result.Any())
             return NoContent();
         return Ok(result);

@@ -51,9 +51,9 @@ public class FilialService : IFilialService
         return _mapper.Map<FilialDto>(result);
     }
 
-    public async Task<ICollection<FilialDto>> GetAllFilial(FilialDto request)
+    public async Task<ICollection<FilialDto>> GetAllFilial(FilialDto request, bool isAdmin)
     {
-        var result = await _repository.GetAll(request.PrestadorId.Value, _mapper.Map<Filial>(request), false);
+        var result = await _repository.GetAll(request.PrestadorId.Value, _mapper.Map<Filial>(request), isAdmin);
 
         await _repository.DisposeCommitAsync();
 

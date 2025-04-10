@@ -70,6 +70,9 @@ public class ClienteController : MainController
         if (!cliente.PrestadorId.HasValue)
             cliente.PrestadorId = PrestadorId;
 
+        if (IsAdminLogged)
+            cliente.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
+
         cliente.UsrCadastroDesc = UserName;
         cliente.UsrCadastro = UserId;
     }
@@ -91,7 +94,7 @@ public class ClienteController : MainController
 
         clienteDto.CPF = CpfValidations.CpfSemPontuacao(clienteDto.CPF);
 
-        var result = await _clienteService.GetAllCliente(clienteDto);
+        var result = await _clienteService.GetAllCliente(clienteDto, IsAdminLogged);
 
         if (result == null || !result.Any())
             return NoContent();

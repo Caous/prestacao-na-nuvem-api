@@ -2,7 +2,7 @@
 
 public interface IFilialService
 {
-    Task<ICollection<FilialDto>> GetAllFilial(FilialDto request);
+    Task<ICollection<FilialDto>> GetAllFilial(FilialDto request, bool isAdmin);
     Task<FilialDto> FindByIdFilial(Guid Id);
     Task<FilialDto> CreateFilial(FilialDto request);
     Task<FilialDto> UpdateFilial(FilialDto request);

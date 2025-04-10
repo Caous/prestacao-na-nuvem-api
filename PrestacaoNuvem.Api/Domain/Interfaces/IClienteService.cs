@@ -2,7 +2,7 @@
 
 public interface IClienteService
 {
-    Task<ICollection<ClienteDto>> GetAllCliente(ClienteDto item);
+    Task<ICollection<ClienteDto>> GetAllCliente(ClienteDto item, bool isAdmin);
     Task<ClienteDto> FindByIdCliente(Guid Id);
     Task<ClienteDto> CreateCliente(ClienteDto item);
     Task<ClienteDto> UpdateCliente(ClienteDto item);

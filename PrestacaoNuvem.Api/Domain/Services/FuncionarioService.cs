@@ -52,9 +52,9 @@ public class FuncionarioService : IFuncionarioService
         return _mapper.Map<FuncionarioPrestadorDto>(result);
     }
 
-    public async Task<ICollection<FuncionarioPrestadorDto>> GetAllFuncionario(FuncionarioPrestadorDto item)
+    public async Task<ICollection<FuncionarioPrestadorDto>> GetAllFuncionario(FuncionarioPrestadorDto item, bool isAdmin)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<FuncionarioPrestador>(item), false);
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<FuncionarioPrestador>(item), isAdmin);
 
         await _repository.DisposeCommitAsync();
 

@@ -2,7 +2,7 @@
 
 public interface IFuncionarioService
 {
-    Task<ICollection<FuncionarioPrestadorDto>> GetAllFuncionario(FuncionarioPrestadorDto item);
+    Task<ICollection<FuncionarioPrestadorDto>> GetAllFuncionario(FuncionarioPrestadorDto item, bool isAdmin);
     Task<FuncionarioPrestadorDto> FindByIdFuncionario(Guid Id);
     Task<FuncionarioPrestadorDto> CreateFuncionario(FuncionarioPrestadorDto item);
     Task<FuncionarioPrestadorDto> UpdateFuncionario(FuncionarioPrestadorDto item);

@@ -52,9 +52,9 @@ public class ClienteService : IClienteService
         return _mapper.Map<ClienteDto>(result);
     }
 
-    public async Task<ICollection<ClienteDto>> GetAllCliente(ClienteDto item)
+    public async Task<ICollection<ClienteDto>> GetAllCliente(ClienteDto item, bool isAdmin)
     {
-        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Cliente>(item), false);
+        var result = await _repository.GetAll(item.PrestadorId.Value, _mapper.Map<Cliente>(item), isAdmin);
 
         await _repository.DisposeCommitAsync();
 

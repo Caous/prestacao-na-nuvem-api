@@ -88,6 +88,8 @@ public class PrestacaoServicoService : IPrestacaoServicoService
         {
             foreach (var item in prestacaoServico.Servicos)
             {
+                if (item.SubServicoId == null || item.SubServicoId == Guid.Empty)
+                    item.SubServicoId = Guid.NewGuid();
                 item.PrestadorId = prestacaoServico.PrestadorId.Value;
                 item.UsrCadastro = prestacaoServico.UsrCadastro;
                 item.UsrCadastroDesc = prestacaoServico.UsrCadastroDesc;

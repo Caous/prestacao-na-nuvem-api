@@ -14,4 +14,8 @@ public class PrestacaoServicoDto : Base
     public Guid? VeiculoId { get; set; }
     public ICollection<ServicoDto>? Servicos { get; set; }
     public ICollection<ProdutoDto>? Produtos { get; set; }
+    public string? TipoPagamento { get; set; }
+    public double? DescontoPercentual { get; set; }
+    public double? ValorComDesconto { get; set; }
+    public double? PercentualGanho { get; set; }
 }
