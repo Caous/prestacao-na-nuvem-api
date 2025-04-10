@@ -9,6 +9,18 @@ public class PrestacaoServicoRepository : GenericRepository<PrestacaoServico>, I
         _context = context;
     }
 
+    public override async Task<ICollection<PrestacaoServico>> GetAll(Guid id, PrestacaoServico filter, bool admin)
+    {
+        var result = await _context.PrestacaoServico.Include(i => i.Prestador)
+            .Include(i => i.Cliente)
+            .Include(i => i.Veiculo)
+            .Include(i => i.Produtos)
+            .Include(i => i.Servicos)
+                .ThenInclude(i => i.SubCategoriaServico)
+                .ThenInclude(i => i.Categoria).ToArrayAsync();   
+        return result;
+    }
+
     public override async Task<PrestacaoServico> Create(PrestacaoServico item)
     {
         await _context.PrestacaoServico.AddAsync(item);
