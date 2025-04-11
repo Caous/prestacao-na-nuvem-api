@@ -23,23 +23,16 @@ public class DocumentoController : MainController
     [HttpPost("gerar-proposta")]
     public async Task<IActionResult> GerarProposta([FromBody] ContratoRequestDto request)
     {
-        var dados = new Dictionary<string, string>
-            {
-                { "NomeFantasia", WebUtility.HtmlEncode(request.NomeFantasia ?? "") },
-                { "NrCnpj", WebUtility.HtmlEncode(request.Cnpj ?? "") },
-                { "EnderecoCompleto", WebUtility.HtmlEncode(request.EnderecoEmpresa ?? "") },
-                { "NomeRepresentanteLegal", WebUtility.HtmlEncode(request.RepresentanteLegal ?? "") },
-                { "NrCpf", WebUtility.HtmlEncode(request.CpfRepresentante ?? "") },
-                { "EnderecoCompletoRepresentante", WebUtility.HtmlEncode(request.EnderecoRepresentante ?? "") },
-                { "DATACONTRATO", DateTime.Now.ToString("dd/MM/yyyy") },
-                { "TituloServico", WebUtility.HtmlEncode(request.TituloServico ?? "") }
-            };
-        var result = await _documentoService.GerarContrato(dados);
+
+        var result = await _documentoService.GerarContrato(request);
 
         if (result == null || result.Length == 0)
             return NoContent();
 
-        var fileName = $"Contrato_{request.NomeFantasia}.docx";
+        var nameRefactor = request.NomeFantasia?.Replace(" ", "_");
+        
+        var fileName = $"Contrato_{nameRefactor}.docx";
+        
         return File(result, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
     }
 }

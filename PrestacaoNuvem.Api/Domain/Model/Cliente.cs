@@ -2,8 +2,8 @@
 
 public class Cliente : Base
 {
-    public required string Nome { get; set; }   
-    public required string Telefone { get; set; }  
+    public required string Nome { get; set; }
+    public required string Telefone { get; set; }
     public required string Email { get; set; }
     public string? Rg { get; set; }
     //ToDo: Criar classe de CPF
@@ -20,10 +20,10 @@ public class Cliente : Base
     public string? BoxEmail { get; set; }
     public string? NomeRepresentante { get; set; }
     public string? CNPJ { get; set; }
-
+    public int? TipoCliente { get; set; }
     public ICollection<HistoricoCliente>? Historico { get; set; }
     public required Guid PrestadorId { get; set; }
-    public Prestador Prestador{ get; set; }
+    public Prestador Prestador { get; set; }
     public ICollection<PrestacaoServico>? Servicos { get; set; }
     public ICollection<OrdemVenda>? OrdemVendas { get; set; }
 

@@ -8,5 +8,5 @@ public interface IDocumentoService
     /// <param name="prestacaoServicoId">ID da prestação de serviço</param>
     /// <param name="prestadorId">ID do prestador logado</param>
     /// <returns>Arquivo em byte array</returns>
-    Task<byte[]> GerarContrato(Dictionary<string, string> dadosParaReplace);
+    Task<byte[]> GerarContrato(ContratoRequestDto request);
 }

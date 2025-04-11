@@ -22,5 +22,6 @@ public class ClienteDto : Base
     public string? BoxEmail { get; set; }
     public string? NomeRepresentante { get; set; }
     public string? CNPJ { get; set; }
+    public int? TipoCliente { get; set; }
     public ICollection<HistoricoClienteDto>? Historico { get; set; }
 }
