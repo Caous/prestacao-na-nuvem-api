@@ -42,7 +42,7 @@ public class SubServicoControllerTest
     {
         //Arranger
         ICollection<SubCategoriaServicoDto> subCategoriaServicosListaFake = RetornaListaSubCategoriaServico("Teste", "teste desc");
-        _serviceMock.Setup(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>())).ReturnsAsync(subCategoriaServicosListaFake);
+        _serviceMock.Setup(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>(), false)).ReturnsAsync(subCategoriaServicosListaFake);
         //Act
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
         var response = await controllerSubCategoria.GetAll(string.Empty, string.Empty);
@@ -50,7 +50,7 @@ public class SubServicoControllerTest
         var result = okResult.Value as ICollection<SubCategoriaServicoDto>;
 
         //Assert
-        _serviceMock.Verify(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>()), Times.Once);
+        _serviceMock.Verify(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>(), false), Times.Once);
         Assert.NotNull(result);
         Assert.NotEmpty(result);
         Assert.Equal(result.Count, subCategoriaServicosListaFake.Count);
@@ -65,14 +65,14 @@ public class SubServicoControllerTest
         ICollection<SubCategoriaServicoDto> subCategoriaServicosListaFake = RetornaListaSubCategoriaServico("Teste", "teste desc");
         ICollection<SubCategoriaServicoDto> subCategoriaServicosFakeNull = null;
 
-        _serviceMock.Setup(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>())).ReturnsAsync(subCategoriaServicosFakeNull);
+        _serviceMock.Setup(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>(), false)).ReturnsAsync(subCategoriaServicosFakeNull);
         //Act
         SubServicoController controllerSubCategoria = CreateFakeController(subCategoriaServicosListaFake);
         var response = await controllerSubCategoria.GetAll(string.Empty, string.Empty);
         var okResult = response as NoContentResult;
 
         //Assert
-        _serviceMock.Verify(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>()), Times.Once);
+        _serviceMock.Verify(s => s.GetAllSubCategoria(It.IsAny<SubCategoriaServicoDto>(), false), Times.Once);
         Assert.NotNull(okResult);
         Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
     }

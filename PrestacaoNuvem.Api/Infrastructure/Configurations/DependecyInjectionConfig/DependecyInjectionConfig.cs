@@ -36,9 +36,11 @@ public static class DependecyInjectionConfig
         services.AddScoped<IEmailManager, EmailManager>();
         services.AddScoped<IFilialService, FilialService>();
         services.AddScoped<IOrdemVendaService, OrdemVendaService>();
+        services.AddScoped<IDocumentoService, DocumentoService>();
+        
         #endregion
 
-                #region Autentication
+        #region Autentication
         services.AddScoped<IdentityInitializer>();
 
         services.AddIdentity<UserModel, IdentityRole>(options =>
