@@ -1,4 +1,6 @@
 ﻿
+using System.Net;
+
 namespace PrestacaoNuvem.Api.Controllers;
 
 [Route("api/[controller]")]
@@ -18,21 +20,20 @@ public class DocumentoController : MainController
     /// </summary>
     /// <param name="id">Id da prestação de serviço</param>
     /// <returns>Arquivo gerado</returns>
-    [HttpGet("gerar-proposta")]
-    public async Task<IActionResult> GerarProposta([FromQuery] ContratoRequestDto request)
+    [HttpPost("gerar-proposta")]
+    public async Task<IActionResult> GerarProposta([FromBody] ContratoRequestDto request)
     {
         var dados = new Dictionary<string, string>
-        {
-            { "NomeFantasia", request.NomeFantasia },
-            { "NrCnpj", request.Cnpj},
-            { "EnderecoCompleto", request.EnderecoEmpresa},
-            { "NomeRepresentanteLegal", request.RepresentanteLegal},
-            { "NrCpf", request.CpfRepresentante },
-            { "EnderecoCompletoRepresentante", request.EnderecoRepresentante},
-            { "DATACONTRATO", DateTime.Now.ToString("dd/MM/yyyy") },
-            { "TituloServico", request.TituloServico }
-        };
-
+            {
+                { "NomeFantasia", WebUtility.HtmlEncode(request.NomeFantasia ?? "") },
+                { "NrCnpj", WebUtility.HtmlEncode(request.Cnpj ?? "") },
+                { "EnderecoCompleto", WebUtility.HtmlEncode(request.EnderecoEmpresa ?? "") },
+                { "NomeRepresentanteLegal", WebUtility.HtmlEncode(request.RepresentanteLegal ?? "") },
+                { "NrCpf", WebUtility.HtmlEncode(request.CpfRepresentante ?? "") },
+                { "EnderecoCompletoRepresentante", WebUtility.HtmlEncode(request.EnderecoRepresentante ?? "") },
+                { "DATACONTRATO", DateTime.Now.ToString("dd/MM/yyyy") },
+                { "TituloServico", WebUtility.HtmlEncode(request.TituloServico ?? "") }
+            };
         var result = await _documentoService.GerarContrato(dados);
 
         if (result == null || result.Length == 0)
