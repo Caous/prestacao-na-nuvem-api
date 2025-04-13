@@ -63,5 +63,26 @@ public class EmailController : MainController
         else
             return BadRequest("Usuário já existente");
     }
+
+    /// <summary>
+    /// Envia e-mail de proposta com PDF em anexo
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [HttpPost("PostEmailPropostaComAnexo")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> PostEmailPropostaComAnexoAsync([FromForm] EmailRequestContratoFileDto request)
+    {
+        if (request.PdfAnexo == null || request.PdfAnexo.Length == 0)
+            return BadRequest("Nenhum arquivo enviado");
+
+        using var memoryStream = new MemoryStream();
+        await request.PdfAnexo.CopyToAsync(memoryStream);
+        var pdfBytes = memoryStream.ToArray();
+
+        var result = await _emailManager.PostPropostaEmailComAnexoAsync(request, pdfBytes);
+
+        return result ? Ok() : BadRequest("Erro ao enviar e-mail");
+    }
 }
 
