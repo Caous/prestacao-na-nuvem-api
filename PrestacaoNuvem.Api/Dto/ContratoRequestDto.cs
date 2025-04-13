@@ -13,5 +13,6 @@
         public int TipoCliente { get; set; }
         public EFormaPagamento FormaPagamento { get; set; }
         public ServicoDto[] Servicos { get; set; }
+        public string CondicaoPagamento { get; set; }
     }
 }

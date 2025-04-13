@@ -1,4 +1,5 @@
 ﻿using PrestacaoNuvem.Api.Domain.Interfacesk;
+using PrestacaoNuvem.Api.Domain.Model;
 
 namespace PrestacaoNuvem.Api.Controllers;
 
@@ -41,10 +42,26 @@ public class EmailController : MainController
 
         emailConfig.Subject = "E-mail teste - Prestação na Nuvem";
         emailConfig.FromEmail = _configuration.GetValue<string>("EmailConfiguration:UserName");
-        emailConfig.ToEmail = new string[] { "caous.g@gmail.com"};
+        emailConfig.ToEmail = new string[] { "caous.g@gmail.com" };
         emailConfig.Menssage = "Fazendo um teste pelo meu sistema :)";
 
         return Ok(await _emailManager.SendEmailSmtpAsync(emailConfig));
+    }
+
+    /// <summary>
+    /// Envio e-mail Proposta
+    /// </summary>
+    /// <param name="cliente"></param>
+    /// <returns></returns>
+    [HttpPost("PostEmailProposta")]
+    public async Task<IActionResult> PostEmailPropostaAsync(EmailRequestPropostaDto request)
+    {
+        var result = await _emailManager.PostPropostaEmailAsync(request);
+
+        if (result != null)
+            return Ok();
+        else
+            return BadRequest("Usuário já existente");
     }
 }
 

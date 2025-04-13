@@ -3,5 +3,6 @@
     public interface IEmailManager
     {
         Task<bool> SendEmailSmtpAsync(Email emailConfig);
+        Task<bool> PostPropostaEmailAsync(EmailRequestPropostaDto request);
     }
 }

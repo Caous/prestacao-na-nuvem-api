@@ -88,7 +88,8 @@ public class DocumentoService : IDocumentoService
                 { "DataContrato", dataFinal },
                 { "TituloServico", WebUtility.HtmlEncode(request.TituloServico ?? "") },
                 { "ListaServicos", WebUtility.HtmlEncode(linhasServico) },
-                { "FormaPagamento",  WebUtility.HtmlEncode(formapagamento)}
+                { "FormaPagamento",  WebUtility.HtmlEncode(formapagamento)},
+                { "CondicaoPagamento",  WebUtility.HtmlEncode(request.CondicaoPagamento)}
 
         };
 
