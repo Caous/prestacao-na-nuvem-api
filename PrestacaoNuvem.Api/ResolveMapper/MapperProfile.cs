@@ -40,5 +40,12 @@ public class MapperProfile : Profile
         CreateMap<PrestadorCadastroDto, UserModel>()
                     .ReverseMap();
 
+        CreateMap<LeadGoogleDtoResponse, LeadModel>().ReverseMap();
+        CreateMap<LeadGoogleDtoRequest, LeadModel>().ReverseMap();
+        CreateMap<LeadGoogleDtoRequest, LeadGoogleDtoResponse>().ReverseMap();
+        CreateMap<HistoricoLeadDto, HistoricoLead>().ReverseMap();
+        CreateMap<HistoricoLeadDto, HistoricoLeadResponse>().ReverseMap();
+        CreateMap<HistoricoLeadResponse, HistoricoLead>().ReverseMap();
+
     }
 }

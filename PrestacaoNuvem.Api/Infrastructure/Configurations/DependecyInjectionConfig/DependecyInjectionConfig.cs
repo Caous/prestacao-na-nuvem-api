@@ -1,4 +1,5 @@
-﻿using PrestacaoNuvem.Api.Domain.Interfacesk;
+﻿using MongoDB.Driver;
+using PrestacaoNuvem.Api.Domain.Interfacesk;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PrestacaoNuvem.Api.Infrastructure.Configurations.DependecyInjectionConfig;
@@ -7,7 +8,7 @@ public static class DependecyInjectionConfig
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-       
+
         #region Injection Repository
         services.AddScoped<IClienteRepository, ClienteRepository>();
         services.AddScoped<IPrestadorRepository, PrestadorRepository>();
@@ -21,6 +22,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IDashboardRepository, DashboardRepository>();
         services.AddScoped<IFilialRepository, FilialRepository>();
         services.AddScoped<IOrdemVendaRepository, OrdemVendaRepository>();
+        services.AddScoped<ILeadRepository, LeadRepository>();
         #endregion
 
         #region Injection Services
@@ -37,7 +39,8 @@ public static class DependecyInjectionConfig
         services.AddScoped<IFilialService, FilialService>();
         services.AddScoped<IOrdemVendaService, OrdemVendaService>();
         services.AddScoped<IDocumentoService, DocumentoService>();
-        
+        services.AddScoped<ILeadGoogleService, LeadGoogleService>();
+
         #endregion
 
         #region Autentication
@@ -86,6 +89,23 @@ public static class DependecyInjectionConfig
 
         #region Fluent
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        #endregion
+
+        #region Mongo
+        services.AddHttpClient();
+
+        services.AddSingleton<IMongoClient>(sp =>
+        {
+            var connectionString = configuration.GetSection("ConnectionStrings:MongoConnection").Value;
+            return new MongoClient(connectionString);
+        });
+
+        services.AddScoped(sp =>
+        {
+            var client = sp.GetRequiredService<IMongoClient>();
+            var database = "leads";
+            return client.GetDatabase(database);
+        });
         #endregion
     }
 }
