@@ -3,7 +3,7 @@ using Azure.Storage.Blobs;
 namespace PrestacaoNuvem.Api.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
+[ApiController, Authorize]
 public class GustaTechController : MainController
 {
     private readonly BlobServiceClient _blobServiceClient;
