@@ -6,7 +6,7 @@ namespace PrestacaoNuvem.Api.Controllers;
 /// Controller Domínio LeadGoogle
 /// </summary>
 [Route("api/[controller]")]
-[ApiController]
+[ApiController, Authorize]
 [Produces("application/json")]
 [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
 [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
