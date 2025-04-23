@@ -72,7 +72,7 @@ public static class DependecyInjectionConfig
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost:5173", "http://localhost:5174", "https://oficina-nuvem.vercel.app", "https://mercado-nuvem.vercel.app");
+                policy.WithOrigins("http://localhost:5173", "http://localhost:5174", "https://oficina-nuvem.vercel.app", "https://mercado-nuvem.vercel.app", "https://innovasferasystem.vercel.app");
                 policy.AllowAnyHeader();
                 policy.AllowAnyMethod();
             });
