@@ -28,6 +28,10 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
             modelBuilder.HasSequence<int>("PrestacaoOrdem")
                 .StartsAt(1000L);
 
+
+            modelBuilder.HasSequence<int>("VendaOrdem")
+                .StartsAt(1000L);
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
