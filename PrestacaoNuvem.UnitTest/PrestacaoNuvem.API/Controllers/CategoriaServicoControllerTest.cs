@@ -33,7 +33,7 @@ public class CategoriaServicoControllerTest
     {
         //Arranger
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
-        _serviceMock.Setup(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriasFake);
+        _serviceMock.Setup(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>(), false)).ReturnsAsync(categoriasFake);
         //Act
         CategoriaServicoController controllerCategoria = CreateFakeController(categoriasFake);
         var response = await controllerCategoria.GetAll(string.Empty, string.Empty);
@@ -41,7 +41,7 @@ public class CategoriaServicoControllerTest
         var result = okResult.Value as ICollection<CategoriaServicoDto>;
 
         //Assert
-        _serviceMock.Verify(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once);
+        _serviceMock.Verify(s => s.GetAllCategoria(It.IsAny<CategoriaServicoDto>(), false), Times.Once);
         Assert.NotNull(result);
         Assert.NotEmpty(result);
         Assert.Equal(result.Count, categoriasFake.Count);
@@ -56,7 +56,7 @@ public class CategoriaServicoControllerTest
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
 
         List<CategoriaServicoDto> categoriaServicoFake = null;
-        _serviceMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaServicoFake);
+        _serviceMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>(), false)).ReturnsAsync(categoriaServicoFake);
         CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
 
         //Act (ação/execução)
@@ -65,7 +65,7 @@ public class CategoriaServicoControllerTest
 
 
         //Assert (verificação)
-        _serviceMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Once); //Verifco se ele foi chamado apenas uma vez :)
+        _serviceMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>(), false), Times.Once); //Verifco se ele foi chamado apenas uma vez :)
         Assert.NotNull(okResult); //Verifico se é nulo
         Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
@@ -78,7 +78,7 @@ public class CategoriaServicoControllerTest
         ICollection<CategoriaServicoDto> categoriasFake = RetornarListaCategoriasFake("Teste Titulo", "teste");
 
         List<CategoriaServicoDto> categoriaServicoFake = null;
-        _serviceMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>())).ReturnsAsync(categoriaServicoFake);
+        _serviceMock.Setup(c => c.GetAllCategoria(It.IsAny<CategoriaServicoDto>(), false)).ReturnsAsync(categoriaServicoFake);
         CategoriaServicoController categoriaServicoControler = CreateFakeController(categoriasFake);
         categoriaServicoControler.ModelState.AddModelError("key", "error message");
         //Act
@@ -87,7 +87,7 @@ public class CategoriaServicoControllerTest
 
 
         //Assert (verificação)
-        _serviceMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>()), Times.Never);
+        _serviceMock.Verify(v => v.GetAllCategoria(It.IsAny<CategoriaServicoDto>(), false), Times.Never);
         Assert.NotNull(okResult);
         Assert.Equal(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
 

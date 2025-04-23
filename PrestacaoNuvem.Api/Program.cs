@@ -1,4 +1,6 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.Extensions.Azure;
+
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -14,6 +16,12 @@ builder.Services.AddSwaggerConfiguration(builder.Configuration);
 builder.Services.RegisterServices(builder.Configuration);
 
 builder.Services.RegisterContext(builder.Configuration);
+
+builder.Services.AddAzureClients(
+    clientBuilder =>
+    {
+        clientBuilder.AddBlobServiceClient(builder.Configuration["BlobStorage:ConnectionString"]);
+    });
 
 var tokenConfigurations = new TokenConfigurations();
 

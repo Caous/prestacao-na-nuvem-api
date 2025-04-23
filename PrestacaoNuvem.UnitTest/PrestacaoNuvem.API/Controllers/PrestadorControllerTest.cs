@@ -465,14 +465,14 @@ public class PrestadorControllerTest
     {
         //Arrange
         ICollection<FuncionarioPrestadorDto> funcionarioFake = CriarListaFuncionarioFake();
-        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFake);
+        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>(), false)).ReturnsAsync(funcionarioFake);
         PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFake);
         //Act
         var response = await controller.GetAllFuncionario(string.Empty, string.Empty, string.Empty);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<FuncionarioPrestadorDto>;
         //Assert
-        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>(), false), Times.Once());
         Assert.NotNull(result);
         Assert.Equal(result.First().Telefone, funcionarioFake.First().Telefone);
         Assert.Equal(result.First().CPF, funcionarioFake.First().CPF);
@@ -491,13 +491,13 @@ public class PrestadorControllerTest
         //Arrange
         ICollection<FuncionarioPrestadorDto> funcionarioFake = CriarListaFuncionarioFake();
         ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = null;
-        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFakeLista);
+        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>(), false)).ReturnsAsync(funcionarioFakeLista);
         PrestadorController controller = GenerateControllerFakeFuncionario(funcionarioFake);
         //Act
         var response = await controller.GetAllFuncionario(string.Empty, string.Empty, string.Empty);
         var okResult = response as NoContentResult;
         //Assert
-        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>(), false), Times.Once());
         Assert.NotNull(okResult);
         Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
@@ -739,14 +739,14 @@ public class PrestadorControllerTest
         //Arrange
         ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
         FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
-        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFakeLista);
+        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>(), false)).ReturnsAsync(funcionarioFakeLista);
         PrestadorController controller = GenerateControllerFakeFuncionario(new List<FuncionarioPrestadorDto>() { funcionarioFake });
         //Act
         var response = await controller.GetAllFuncionarioPorPrestador(string.Empty, string.Empty, string.Empty);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<FuncionarioPrestadorDto>;
         //Assert
-        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>(), false), Times.Once());
         Assert.NotNull(result);
         Assert.Equal(result.First().Telefone, funcionarioFakeLista.First().Telefone);
         Assert.Equal(result.First().CPF, funcionarioFakeLista.First().CPF);
@@ -765,13 +765,13 @@ public class PrestadorControllerTest
         ICollection<FuncionarioPrestadorDto> funcionarioFakeLista = CriarListaFuncionarioFake();
         FuncionarioPrestadorDto funcionarioFake = CriarFuncionarioDtoFake(Guid.NewGuid());
         funcionarioFakeLista = null;
-        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>())).ReturnsAsync(funcionarioFakeLista);
+        _funcionarioService.Setup(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>(), false)).ReturnsAsync(funcionarioFakeLista);
         PrestadorController controller = GenerateControllerFakeFuncionario([funcionarioFake]);
         //Act
         var response = await controller.GetAllFuncionarioPorPrestador(string.Empty, string.Empty, string.Empty);
         var okResult = response as NoContentResult;
         //Assert
-        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>()), Times.Once());
+        _funcionarioService.Verify(s => s.GetAllFuncionario(It.IsAny<FuncionarioPrestadorDto>(), false), Times.Once());
         Assert.NotNull(okResult);
         Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 

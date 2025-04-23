@@ -36,14 +36,14 @@ public class ClienteControllerTest
     {
         //Arrange
         ICollection<ClienteDto> clientesDtoFake = CriaListaClienteDtoFake();
-        _serviceMock.Setup(s => s.GetAllCliente(It.IsAny<ClienteDto>())).ReturnsAsync(clientesDtoFake);
+        _serviceMock.Setup(s => s.GetAllCliente(It.IsAny<ClienteDto>(), false)).ReturnsAsync(clientesDtoFake);
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         //Act
         var response = await controllerCliente.GetAll(string.Empty, string.Empty, string.Empty);
         var okResult = response as OkObjectResult;
         var result = okResult.Value as ICollection<ClienteDto>;
         //Assert
-        _serviceMock.Verify(s => s.GetAllCliente(It.IsAny<ClienteDto>()), Times.Once());
+        _serviceMock.Verify(s => s.GetAllCliente(It.IsAny<ClienteDto>(), false), Times.Once());
         Assert.NotNull(result);
         Assert.Equal(result.First().Telefone, clientesDtoFake.First().Telefone);
         Assert.Equal(result.First().CPF, clientesDtoFake.First().CPF);
@@ -61,14 +61,14 @@ public class ClienteControllerTest
         //Arrange
         ICollection<ClienteDto> clientesDtoFake = CriaListaClienteDtoFake();
         ICollection<ClienteDto> clientesDtoFakeLista = null;
-        _serviceMock.Setup(s => s.GetAllCliente(It.IsAny<ClienteDto>())).ReturnsAsync(clientesDtoFakeLista);
+        _serviceMock.Setup(s => s.GetAllCliente(It.IsAny<ClienteDto>(), false)).ReturnsAsync(clientesDtoFakeLista);
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         //Act
         var response = await controllerCliente.GetAll(string.Empty, string.Empty, string.Empty);
         var okResult = response as NoContentResult;
 
         //Assert
-        _serviceMock.Verify(s => s.GetAllCliente(It.IsAny<ClienteDto>()), Times.Once());
+        _serviceMock.Verify(s => s.GetAllCliente(It.IsAny<ClienteDto>(), false), Times.Once());
         Assert.NotNull(okResult);
         Assert.Equal((int)HttpStatusCode.NoContent, okResult.StatusCode);
 
@@ -80,7 +80,7 @@ public class ClienteControllerTest
     {
         //Arrange
         ICollection<ClienteDto> clientesDtoFake = CriaListaClienteDtoFake();
-        _serviceMock.Setup(s => s.GetAllCliente(It.IsAny<ClienteDto>())).ReturnsAsync(clientesDtoFake);
+        _serviceMock.Setup(s => s.GetAllCliente(It.IsAny<ClienteDto>(), false)).ReturnsAsync(clientesDtoFake);
         ClienteController controllerCliente = GenerateControllerFake(clientesDtoFake);
         controllerCliente.ModelState.AddModelError("key", "error message");
         //Act
@@ -88,7 +88,7 @@ public class ClienteControllerTest
         var okResult = response as ObjectResult;
 
         //Assert
-        _serviceMock.Verify(s => s.GetAllCliente(It.IsAny<ClienteDto>()), Times.Never());
+        _serviceMock.Verify(s => s.GetAllCliente(It.IsAny<ClienteDto>(), false), Times.Never());
         Assert.NotNull(okResult);
         Equals(okResult.StatusCode, (int)HttpStatusCode.BadRequest);
 

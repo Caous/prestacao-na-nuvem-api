@@ -9,6 +9,7 @@ public class MapperProfile : Profile
     public MapperProfile()
     {
         CreateMap<ClienteDto, Cliente>().ReverseMap();
+        CreateMap<HistoricoClienteDto, HistoricoCliente>().ReverseMap();
         CreateMap<PrestadorDto, Prestador>().ReverseMap();
         CreateMap<VeiculoDto, Veiculo>().ReverseMap();
         CreateMap<PrestacaoServicoDto, PrestacaoServico>().ReverseMap();
@@ -38,6 +39,13 @@ public class MapperProfile : Profile
 
         CreateMap<PrestadorCadastroDto, UserModel>()
                     .ReverseMap();
+
+        CreateMap<LeadGoogleDtoResponse, LeadModel>().ReverseMap();
+        CreateMap<LeadGoogleDtoRequest, LeadModel>().ReverseMap();
+        CreateMap<LeadGoogleDtoRequest, LeadGoogleDtoResponse>().ReverseMap();
+        CreateMap<HistoricoLeadDto, HistoricoLead>().ReverseMap();
+        CreateMap<HistoricoLeadDto, HistoricoLeadResponse>().ReverseMap();
+        CreateMap<HistoricoLeadResponse, HistoricoLead>().ReverseMap();
 
     }
 }

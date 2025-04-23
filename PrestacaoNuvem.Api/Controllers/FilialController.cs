@@ -1,4 +1,6 @@
-﻿namespace PrestacaoNuvem.Api.Controllers;
+﻿using PrestacaoNuvem.Api.Domain.Model;
+
+namespace PrestacaoNuvem.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]
@@ -41,6 +43,9 @@ public class FilialController : MainController
         if (!request.PrestadorId.HasValue)
             request.PrestadorId = PrestadorId;
 
+        if (IsAdminLogged)
+            request.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
+
         request.UsrCadastroDesc = UserName;
         request.UsrCadastro = UserId;
     }
@@ -60,7 +65,7 @@ public class FilialController : MainController
 
         FilialDto request = MapearDto(logradouro, nome);
 
-        var result = await _filialService.GetAllFilial(request);
+        var result = await _filialService.GetAllFilial(request, IsAdminLogged);
 
         if (result == null || !result.Any())
             return NoContent();

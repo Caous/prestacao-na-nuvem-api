@@ -2,6 +2,7 @@
 
 public class PrestacaoServicoDto : Base
 {
+
     public string? Referencia { get; set; }
     public EPrestacaoServicoStatus Status { get; set; }
     public PrestadorDto? Prestador { get; set; }
@@ -14,4 +15,10 @@ public class PrestacaoServicoDto : Base
     public Guid? VeiculoId { get; set; }
     public ICollection<ServicoDto>? Servicos { get; set; }
     public ICollection<ProdutoDto>? Produtos { get; set; }
+    public float? PrecoOrdem { get; set; }
+    public float? PrecoDescontado { get; set; }
+    public double? DescontoPercentual { get; set; }
+    public EFormaPagamento FormaPagamento { get; set; }
+    public DateTime? DataPagamento { get; set; }
+
 }

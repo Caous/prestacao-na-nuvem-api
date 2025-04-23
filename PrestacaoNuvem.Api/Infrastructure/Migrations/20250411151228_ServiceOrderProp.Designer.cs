@@ -12,8 +12,8 @@ using PrestacaoNuvem.Api.Infrastructure.Context;
 namespace PrestacaoNuvem.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(OficinaContext))]
-    [Migration("20250203222234_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250411151228_ServiceOrderProp")]
+    partial class ServiceOrderProp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,10 +26,6 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.HasSequence<int>("PrestacaoOrdem")
-                .StartsAt(1000L);
-
-
-            modelBuilder.HasSequence<int>("VendaOrdem")
                 .StartsAt(1000L);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -209,10 +205,19 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BoxEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CNPJ")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CPF")
                         .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
+
+                    b.Property<string>("Categoria")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DataCadastro")
                         .ValueGeneratedOnAdd()
@@ -231,18 +236,36 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("HorarioFuncionamento")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("NomeRepresentante")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nota")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Observacao")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("PrestadorId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RedesSociais")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rg")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
@@ -254,6 +277,9 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
 
                     b.Property<Guid?>("UsrDesativacao")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WebSite")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -389,6 +415,44 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                     b.ToTable("FuncionarioPrestador", (string)null);
                 });
 
+            modelBuilder.Entity("PrestacaoNuvem.Api.Domain.Model.HistoricoCliente", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Assunto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataAtualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataDesativacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UsrCadastro")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsrDesativacao")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.ToTable("HistoricoCliente");
+                });
+
             modelBuilder.Entity("PrestacaoNuvem.Api.Domain.Model.OrdemVenda", b =>
                 {
                     b.Property<Guid>("Id")
@@ -461,8 +525,23 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                     b.Property<DateTime?>("DataDesativacao")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DataPagamento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("DescontoPercentual")
+                        .HasColumnType("float");
+
+                    b.Property<int>("FormaPagamento")
+                        .HasColumnType("int");
+
                     b.Property<Guid?>("FuncionarioPrestadorId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<float?>("PrecoDescontado")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("PrecoOrdem")
+                        .HasColumnType("real");
 
                     b.Property<Guid>("PrestadorId")
                         .HasColumnType("uniqueidentifier");
@@ -1000,6 +1079,17 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
                     b.Navigation("Prestador");
                 });
 
+            modelBuilder.Entity("PrestacaoNuvem.Api.Domain.Model.HistoricoCliente", b =>
+                {
+                    b.HasOne("PrestacaoNuvem.Api.Domain.Model.Cliente", "Cliente")
+                        .WithMany("Historico")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+                });
+
             modelBuilder.Entity("PrestacaoNuvem.Api.Domain.Model.OrdemVenda", b =>
                 {
                     b.HasOne("PrestacaoNuvem.Api.Domain.Model.Cliente", "Cliente")
@@ -1139,6 +1229,8 @@ namespace PrestacaoNuvem.Api.Infrastructure.Migrations
 
             modelBuilder.Entity("PrestacaoNuvem.Api.Domain.Model.Cliente", b =>
                 {
+                    b.Navigation("Historico");
+
                     b.Navigation("OrdemVendas");
 
                     b.Navigation("Servicos");
