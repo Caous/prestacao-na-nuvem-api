@@ -71,7 +71,7 @@ public class ClienteController : MainController
             cliente.PrestadorId = PrestadorId;
 
         if (IsAdminLogged)
-            cliente.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
+            cliente.PrestadorId = new Guid("b3e74bc3-c241-4a12-5397-08dd82d6b14c");
 
         cliente.UsrCadastroDesc = UserName;
         cliente.UsrCadastro = UserId;
