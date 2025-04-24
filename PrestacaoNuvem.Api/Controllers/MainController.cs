@@ -6,7 +6,7 @@ public abstract class MainController : ControllerBase
     {
         get
         {
-            return User.Claims.FirstOrDefault(c => c.Type == "UserName")?.Value == "admOficinaNaNuvem";
+            return User.Claims.FirstOrDefault(c => c.Type == "UserName")?.Value == "OficinaNaNuvemAdm";
         }
     }
 
