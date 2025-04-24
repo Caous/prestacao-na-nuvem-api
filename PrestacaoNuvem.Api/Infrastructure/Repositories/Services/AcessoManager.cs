@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
+using PrestacaoNuvem.Api.Infrastructure.Configurations.PrestadorConfiguration;
 
 namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
 
@@ -9,12 +10,15 @@ public class AcessoManager : IAcessoManager
     private readonly SignInManager<UserModel> _signInManager;
     private readonly TokenConfigurations _tokenConfigurations;
     private readonly SigningConfigurations _signingConfigurations;
+    private readonly IOptions<PrestadorConfigurations> _prestadorConfigurations;
+
     private readonly IMapper _mapper;
 
     public AcessoManager(UserManager<UserModel> userManager,
             SignInManager<UserModel> signInManager,
             TokenConfigurations tokenConfigurations,
             SigningConfigurations signingConfigurations,
+            IOptions<PrestadorConfigurations> prestadorConfigurations,
             IMapper mapper)
     {
         _userManager = userManager;
@@ -22,6 +26,7 @@ public class AcessoManager : IAcessoManager
         _tokenConfigurations = tokenConfigurations;
         _signingConfigurations = signingConfigurations;
         _mapper = mapper;
+        _prestadorConfigurations = prestadorConfigurations;
     }
     public async Task<bool> CriarPrestador(PrestadorCadastroDto user)
     {
@@ -87,13 +92,17 @@ public class AcessoManager : IAcessoManager
 
     private Token GenerateToken(UserModel user, string[] roles)
     {
+        if (user != null && user.UserName == _prestadorConfigurations.Value.DefaultAdminName){
+            user.PrestadorId = _prestadorConfigurations.Value.DefaultPrestadorId;
+        }
         Claim[] authClaims = new[] {
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                         new Claim(JwtRegisteredClaimNames.UniqueName, user.Id!),
                         new Claim("PrestadorId", user.PrestadorId?.ToString() ?? ""),
                         new Claim("UserName", user.UserName?.ToString() ?? ""),
                         new Claim("FuncionarioId", user.FuncionarioId?.ToString() ?? ""),
-                        new Claim("IdUserLogin", user.Id!)
+                        new Claim("IdUserLogin", user.Id!),
+                        new Claim("IsADM", user.UserName == _prestadorConfigurations.Value.DefaultAdminName ? "true" : "false"),
             };
         foreach (var role in roles)
         {

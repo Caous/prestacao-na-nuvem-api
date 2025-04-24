@@ -43,9 +43,6 @@ public class FilialController : MainController
         if (!request.PrestadorId.HasValue)
             request.PrestadorId = PrestadorId;
 
-        if (IsAdminLogged)
-            request.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
-
         request.UsrCadastroDesc = UserName;
         request.UsrCadastro = UserId;
     }

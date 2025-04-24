@@ -45,9 +45,6 @@ public class PrestacaoServicoController : MainController
         if (!prestacao.PrestadorId.HasValue)
             prestacao.PrestadorId = PrestadorId;
 
-        if (IsAdminLogged)
-            prestacao.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
-
         prestacao.UsrCadastroDesc = UserName;
         prestacao.UsrCadastro = UserId;
     }

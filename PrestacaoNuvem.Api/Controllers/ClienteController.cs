@@ -70,9 +70,6 @@ public class ClienteController : MainController
         if (!cliente.PrestadorId.HasValue)
             cliente.PrestadorId = PrestadorId;
 
-        if (IsAdminLogged)
-            cliente.PrestadorId = new Guid("b3e74bc3-c241-4a12-5397-08dd82d6b14c");
-
         cliente.UsrCadastroDesc = UserName;
         cliente.UsrCadastro = UserId;
     }

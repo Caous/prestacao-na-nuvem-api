@@ -25,9 +25,6 @@ public class CategoriaServicoController : MainController
         if (!categoriaServico.PrestadorId.HasValue)
             categoriaServico.PrestadorId = PrestadorId;
 
-        if (IsAdminLogged)
-            categoriaServico.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
-
         categoriaServico.UsrCadastroDesc = UserName;
         categoriaServico.UsrCadastro = UserId;
 

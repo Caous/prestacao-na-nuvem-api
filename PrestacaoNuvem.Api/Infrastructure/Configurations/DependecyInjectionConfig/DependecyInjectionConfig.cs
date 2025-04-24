@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using PrestacaoNuvem.Api.Domain.Interfacesk;
+using PrestacaoNuvem.Api.Infrastructure.Configurations.PrestadorConfiguration;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PrestacaoNuvem.Api.Infrastructure.Configurations.DependecyInjectionConfig;
@@ -63,6 +64,8 @@ public static class DependecyInjectionConfig
         new ConfigureFromConfigurationOptions<TokenConfigurations>(
             configuration.GetSection("TokenConfigurations"))
                 .Configure(tokenConfigurations);
+
+        services.Configure<PrestadorConfigurations>(configuration.GetSection("PrestadorConfigurations"));
 
         services.AddJwtSecurity(tokenConfigurations);
         #endregion

@@ -48,9 +48,6 @@ public class SubServicoController : MainController
         if (!subServico.PrestadorId.HasValue)
             subServico.PrestadorId = PrestadorId;
 
-        if (IsAdminLogged)
-            subServico.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
-
         subServico.UsrCadastroDesc = UserName;
         subServico.UsrCadastro = UserId;
     }
