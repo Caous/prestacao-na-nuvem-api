@@ -14,9 +14,6 @@ public abstract class MainController : ControllerBase
     {
         get
         {
-            if (IsAdminLogged)
-                return Guid.Empty;
-
             var prestadorClaim = User.Claims.FirstOrDefault(c => c.Type == "PrestadorId");
 
             if (prestadorClaim == null || string.IsNullOrWhiteSpace(prestadorClaim.Value))
