@@ -1,9 +1,8 @@
 ﻿using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
-using Azure.Core;
+using Azure.Storage.Blobs;
 using DocumentFormat.OpenXml.Packaging;
-using PrestacaoNuvem.Api.Domain.Model;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
 
@@ -11,19 +10,20 @@ public class DocumentoService : IDocumentoService
 {
     private readonly IPrestacaoServicoRepository _prestacaoServicoRepository;
     private readonly IMapper _mapper;
-    private readonly IWebHostEnvironment _env;
-    private readonly string _caminhoContrato;
+    private readonly BlobServiceClient _blobServiceClient;
+    private readonly string _containerName = "modelos";
+    private readonly string _blobName = "contrato_site.docx";
+    private readonly IContratoService _contratoService;
 
-    public DocumentoService(IPrestacaoServicoRepository prestacaoServicoRepository, IMapper mapper, IWebHostEnvironment env)
+    public DocumentoService(IPrestacaoServicoRepository prestacaoServicoRepository, IMapper mapper, BlobServiceClient blobServiceClient, IContratoService contratoService)
     {
         _prestacaoServicoRepository = prestacaoServicoRepository;
         _mapper = mapper;
-        _env = env;
-
-        _caminhoContrato = Path.Combine(_env.ContentRootPath, "Files", "Contrato_Site.docx");
+        _blobServiceClient = blobServiceClient;
+        _contratoService = contratoService;
     }
 
-    Task<byte[]> IDocumentoService.GerarContrato(ContratoRequestDto request)
+    async Task<byte[]> IDocumentoService.GerarContrato(ContratoRequestDto request)
     {
         string cabecalhoContrato = "";
 
@@ -93,13 +93,16 @@ public class DocumentoService : IDocumentoService
 
         };
 
-        if (!File.Exists(_caminhoContrato))
-            throw new FileNotFoundException("Arquivo de contrato modelo não encontrado", _caminhoContrato);
+        // Fetch the file from Azure Blob Storage
+        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+        var blobClient = containerClient.GetBlobClient(_blobName);
 
-        // Copia o arquivo para um stream de memória para edição
-        byte[] byteArray = File.ReadAllBytes(_caminhoContrato);
+        if (!await blobClient.ExistsAsync())
+            throw new FileNotFoundException("Arquivo de contrato modelo não encontrado no Azure Blob Storage", _blobName);
+
         using var memoryStream = new MemoryStream();
-        memoryStream.Write(byteArray, 0, byteArray.Length);
+        await blobClient.DownloadToAsync(memoryStream);
+        memoryStream.Position = 0;
 
         using (var wordDoc = WordprocessingDocument.Open(memoryStream, true))
         {
@@ -121,8 +124,27 @@ public class DocumentoService : IDocumentoService
                 writer.Write(docText);
             }
         }
-        byte[] result = memoryStream.ToArray();
-        return Task.FromResult(result);
+
+        var contrato = await _contratoService.CreateContrato(new(){
+            ClientId = request.ClienteId,
+        });
+
+        await UploadContratoForCustomer(contrato.Id, memoryStream.ToArray());
+
+        return memoryStream.ToArray();
+    }
+
+    private async Task UploadContratoForCustomer(Guid contratoId, byte[] fileContent)
+    {
+        var contrato = await _contratoService.FindById(contratoId);
+        if (contrato == null)
+            throw new ArgumentException("Contrato não encontrado.");
+
+        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+        var blobClient = containerClient.GetBlobClient($"{contratoId}.docx");
+
+        using var stream = new MemoryStream(fileContent);
+        await blobClient.UploadAsync(stream, overwrite: true);
     }
 
     public static string FormatCpf(string cpf)

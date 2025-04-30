@@ -14,5 +14,6 @@
         public EFormaPagamento FormaPagamento { get; set; }
         public ServicoDto[] Servicos { get; set; }
         public string CondicaoPagamento { get; set; }
+        public Guid ClienteId { get; set; }
     }
 }
