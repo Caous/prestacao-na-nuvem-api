@@ -126,7 +126,7 @@ public class DocumentoService : IDocumentoService
         }
 
         var contrato = await _contratoService.CreateContrato(new(){
-            ClientId = request.ClienteId,
+            ClienteId = request.ClienteId,
         });
 
         await UploadContratoForCustomer(contrato.Id, memoryStream.ToArray());
@@ -136,10 +136,6 @@ public class DocumentoService : IDocumentoService
 
     private async Task UploadContratoForCustomer(Guid contratoId, byte[] fileContent)
     {
-        var contrato = await _contratoService.FindById(contratoId);
-        if (contrato == null)
-            throw new ArgumentException("Contrato não encontrado.");
-
         var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
         var blobClient = containerClient.GetBlobClient($"{contratoId}.docx");
 

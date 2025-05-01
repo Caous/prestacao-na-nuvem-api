@@ -13,7 +13,8 @@ public class ContratoService : IContratoService
 
     public async Task<ContratoDto> CreateContrato(ContratoDto item)
     {
-        var result = await _repository.Create(_mapper.Map<Contrato>(item));
+        var clienteMap = _mapper.Map<Contrato>(item);
+        var result = await _repository.Create(clienteMap);
 
         await _repository.CommitAsync();
         await _repository.DisposeCommitAsync();
