@@ -15,17 +15,20 @@ public class DocumentoService : IDocumentoService
     private readonly string _contratoContainerName = "contratos";
     private readonly string _blobName = "contrato_site.docx";
     private readonly IContratoService _contratoService;
+    private readonly IGptContractGenerator _gpt;
 
-    public DocumentoService(IPrestacaoServicoRepository prestacaoServicoRepository, IMapper mapper, BlobServiceClient blobServiceClient, IContratoService contratoService)
+    public DocumentoService(IPrestacaoServicoRepository prestacaoServicoRepository, IMapper mapper, BlobServiceClient blobServiceClient, IContratoService contratoService, IGptContractGenerator gpt)
     {
         _prestacaoServicoRepository = prestacaoServicoRepository;
         _mapper = mapper;
         _blobServiceClient = blobServiceClient;
         _contratoService = contratoService;
+        _gpt = gpt;
     }
 
     async Task<byte[]> IDocumentoService.GerarContrato(ContratoRequestDto request)
     {
+        
         string cabecalhoContrato = "";
 
         if (request.TipoCliente == 0) // Pessoa Jurídica
@@ -60,7 +63,7 @@ public class DocumentoService : IDocumentoService
 
         if (request.FormaPagamento == EFormaPagamento.CartaoCreditoAvista)
             formapagamento = $"O pagamento será efetuado via cartão de crédito avista pela Contratante. O link de pagamento será gerado de forma on-line para a CONTRATADA 53.522.180/0001-38, Conta C6 Bank, 53.522.180 GUSTAVO SANTOS NASCIMENTO";
-        
+
         if (request.FormaPagamento == EFormaPagamento.CartaoCreditoAvista)
             formapagamento = $"O pagamento será efetuado via cartão de débito avista pela Contratante. O link de pagamento será gerado de forma on-line para a CONTRATADA 53.522.180/0001-38, Conta C6 Bank, 53.522.180 GUSTAVO SANTOS NASCIMENTO";
 
@@ -105,6 +108,10 @@ public class DocumentoService : IDocumentoService
         await blobClient.DownloadToAsync(memoryStream);
         memoryStream.Position = 0;
 
+        string contratoBaseText = ExtrairTextoDoDocx(memoryStream);
+
+        var textoFinal = await _gpt.GerarContratoAsync(request, contratoBaseText);
+
         using (var wordDoc = WordprocessingDocument.Open(memoryStream, true))
         {
             var docText = string.Empty;
@@ -126,7 +133,8 @@ public class DocumentoService : IDocumentoService
             }
         }
 
-        var contrato = await _contratoService.CreateContrato(new(){
+        var contrato = await _contratoService.CreateContrato(new()
+        {
             ClienteId = request.ClienteId,
         });
 
@@ -169,5 +177,19 @@ public class DocumentoService : IDocumentoService
         return rg.Length == 9
             ? Convert.ToUInt64(rg).ToString(@"00\.000\.000\-0")
             : rg;
+    }
+
+    public string ExtrairTextoDoDocx(Stream fileStream)
+    {
+        var stringBuilder = new StringBuilder();
+
+        using (var wordDoc = WordprocessingDocument.Open(fileStream, false)) // false = só leitura
+        {
+            var body = wordDoc.MainDocumentPart?.Document?.Body;
+            if (body != null)
+                stringBuilder.Append(body.InnerText);
+        }
+
+        return stringBuilder.ToString();
     }
 }

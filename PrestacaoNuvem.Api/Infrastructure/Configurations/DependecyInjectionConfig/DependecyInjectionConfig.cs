@@ -43,6 +43,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IDocumentoService, DocumentoService>();
         services.AddScoped<ILeadGoogleService, LeadGoogleService>();
         services.AddScoped<IContratoService, ContratoService>();
+        services.AddScoped<IGptContractGenerator, GptContractGenerator>();
         #endregion
 
         #region Autentication
