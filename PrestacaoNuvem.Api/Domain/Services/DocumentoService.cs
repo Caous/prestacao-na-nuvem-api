@@ -12,6 +12,7 @@ public class DocumentoService : IDocumentoService
     private readonly IMapper _mapper;
     private readonly BlobServiceClient _blobServiceClient;
     private readonly string _containerName = "modelos";
+    private readonly string _contratoContainerName = "contratos";
     private readonly string _blobName = "contrato_site.docx";
     private readonly IContratoService _contratoService;
 
@@ -136,7 +137,7 @@ public class DocumentoService : IDocumentoService
 
     private async Task UploadContratoForCustomer(Guid contratoId, byte[] fileContent)
     {
-        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+        var containerClient = _blobServiceClient.GetBlobContainerClient(_contratoContainerName);
         var blobClient = containerClient.GetBlobClient($"{contratoId}.docx");
 
         using var stream = new MemoryStream(fileContent);
