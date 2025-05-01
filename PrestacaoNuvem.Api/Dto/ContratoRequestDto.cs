@@ -15,5 +15,6 @@
         public ServicoDto[] Servicos { get; set; }
         public string CondicaoPagamento { get; set; }
         public Guid ClienteId { get; set; }
+        public int TipoContrato { get; set; }
     }
 }
