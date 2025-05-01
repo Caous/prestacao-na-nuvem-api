@@ -8,18 +8,14 @@ namespace PrestacaoNuvem.Api.Domain.Services;
 
 public class DocumentoService : IDocumentoService
 {
-    private readonly IPrestacaoServicoRepository _prestacaoServicoRepository;
-    private readonly IMapper _mapper;
     private readonly BlobServiceClient _blobServiceClient;
     private readonly string _containerName = "modelos";
     private readonly string _contratoContainerName = "contratos";
     private readonly string _blobName = "contrato_site.docx";
     private readonly IContratoService _contratoService;
 
-    public DocumentoService(IPrestacaoServicoRepository prestacaoServicoRepository, IMapper mapper, BlobServiceClient blobServiceClient, IContratoService contratoService)
+    public DocumentoService( BlobServiceClient blobServiceClient, IContratoService contratoService)
     {
-        _prestacaoServicoRepository = prestacaoServicoRepository;
-        _mapper = mapper;
         _blobServiceClient = blobServiceClient;
         _contratoService = contratoService;
     }
@@ -127,6 +123,9 @@ public class DocumentoService : IDocumentoService
         }
 
         var contrato = await _contratoService.CreateContrato(new(){
+            Status = 0,
+            TipoContrato = request.TipoContrato,
+            Valor = request.Servicos.Sum(s => s.Valor),
             ClienteId = request.ClienteId,
         });
 
