@@ -24,6 +24,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IFilialRepository, FilialRepository>();
         services.AddScoped<IOrdemVendaRepository, OrdemVendaRepository>();
         services.AddScoped<ILeadRepository, LeadRepository>();
+        services.AddScoped<IContratoRepository, ContratoRepository>();
         #endregion
 
         #region Injection Services
@@ -41,7 +42,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IOrdemVendaService, OrdemVendaService>();
         services.AddScoped<IDocumentoService, DocumentoService>();
         services.AddScoped<ILeadGoogleService, LeadGoogleService>();
-
+        services.AddScoped<IContratoService, ContratoService>();
         #endregion
 
         #region Autentication

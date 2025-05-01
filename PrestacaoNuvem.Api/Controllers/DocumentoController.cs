@@ -1,5 +1,5 @@
-﻿
-using System.Net;
+﻿using System.Net;
+using Azure.Storage.Blobs;
 
 namespace PrestacaoNuvem.Api.Controllers;
 
@@ -9,10 +9,12 @@ namespace PrestacaoNuvem.Api.Controllers;
 public class DocumentoController : MainController
 {
     private readonly IDocumentoService _documentoService;
+    private readonly BlobServiceClient _blobServiceClient;
 
-    public DocumentoController(IDocumentoService documentoService)
+    public DocumentoController(IDocumentoService documentoService, BlobServiceClient blobServiceClient)
     {
         _documentoService = documentoService;
+        _blobServiceClient = blobServiceClient;
     }
 
     /// <summary>
@@ -23,16 +25,14 @@ public class DocumentoController : MainController
     [HttpPost("gerar-proposta")]
     public async Task<IActionResult> GerarProposta([FromBody] ContratoRequestDto request)
     {
-
         var result = await _documentoService.GerarContrato(request);
 
         if (result == null || result.Length == 0)
             return NoContent();
 
         var nameRefactor = request.NomeFantasia?.Replace(" ", "_");
-        
         var fileName = $"Contrato_{nameRefactor}.docx";
-        
+
         return File(result, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
     }
 }

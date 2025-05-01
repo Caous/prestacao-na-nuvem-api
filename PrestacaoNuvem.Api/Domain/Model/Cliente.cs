@@ -26,5 +26,6 @@ public class Cliente : Base
     public Prestador Prestador { get; set; }
     public ICollection<PrestacaoServico>? Servicos { get; set; }
     public ICollection<OrdemVenda>? OrdemVendas { get; set; }
+    public ICollection<Contrato>? Contratos { get; set; }
 
 }
