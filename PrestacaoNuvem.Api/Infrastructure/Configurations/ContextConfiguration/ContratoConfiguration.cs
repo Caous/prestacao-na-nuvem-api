@@ -12,6 +12,20 @@ public class ContratoConfiguration : IEntityTypeConfiguration<Contrato>
 
         builder.Property(c => c.ClienteId).IsRequired();
 
+        builder.Property(c => c.DataCadastro)
+               .IsRequired()
+               .HasColumnType("datetime")
+               .HasDefaultValueSql("GETDATE()");
+
+
+        builder.Property(c => c.Valor)
+               .IsRequired()
+               .HasColumnType("decimal(18,2)");
+
+        builder.Property(c => c.Status)
+               .IsRequired()
+               .HasMaxLength(50);
+
         builder.HasOne(c => c.Cliente)
                .WithMany(c => c.Contratos)
                .HasForeignKey(c => c.ClienteId)
