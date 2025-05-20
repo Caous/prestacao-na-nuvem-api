@@ -1,3 +1,4 @@
+
 namespace PrestacaoNuvem.Api.Domain.Services;
 
 public class ContratoService : IContratoService
@@ -37,5 +38,15 @@ public class ContratoService : IContratoService
         await _repository.DisposeCommitAsync();
 
         return _mapper.Map<ContratoDto>(result);
+    }
+
+    public async Task<ICollection<ContratoDto>> GetAll()
+    {
+        var result = await _repository.GetAll(new Guid(), new Contrato(), true);
+
+        if (result == null || !result.Any())
+            return null;
+
+        return _mapper.Map<ICollection<ContratoDto>>(result);
     }
 }

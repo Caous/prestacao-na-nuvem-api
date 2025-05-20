@@ -57,7 +57,7 @@ public class LeadRepository : ILeadRepository
             .Find(Builders<LeadModel>.Filter.Empty)
             .ToListAsync();
 
-        return group;
+        return group.OrderByDescending(x => x.DataCriacao).ToArray();
     }
 
     public async Task<LeadModel> PostLeadAsync(LeadModel request)
@@ -106,4 +106,86 @@ public class LeadRepository : ILeadRepository
 
         return null;
     }
+
+    public async Task<int> GetLeadsCountByMonthAsync()
+    {
+        var inicioDoMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        return (int)await _dataBase.GetCollection<LeadModel>(CollectionsGroupMessages).CountDocumentsAsync(x => x.DataCriacao >= inicioDoMes);
+    }
+
+    public async Task<int> GetLeadsCountByWeekAsync()
+    {
+        var inicioDaSemana = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
+        return (int)await _dataBase.GetCollection<LeadModel>(CollectionsGroupMessages).CountDocumentsAsync(x => x.DataCriacao >= inicioDaSemana);
+    }
+
+    public async Task<int> GetMeetingsCountAsync()
+    {
+        return (int)await _dataBase.GetCollection<LeadModel>(CollectionsGroupMessages).CountDocumentsAsync(x => x.Status == Domain.Model.ELead.Reuniao);
+    }
+
+    public async Task<(int enviados, int abertos, int respondidos)> GetEmailStatsAsync()
+    {
+        // Simulação, ajuste conforme a lógica real do envio de e-mails
+        var enviados = (int)await _dataBase.GetCollection<LeadModel>(CollectionsGroupMessages).CountDocumentsAsync(x => !string.IsNullOrEmpty(x.Email));
+        var abertos = (int)(enviados * 0.7); // exemplo
+        var respondidos = (int)(abertos * 0.4); // exemplo
+        return (enviados, abertos, respondidos);
+    }
+
+    public async Task<string?> GetTopCategoriaAsync()
+    {
+        var pipeline = new BsonDocument[]
+        {
+        new BsonDocument("$group", new BsonDocument
+        {
+            { "_id", "$Category" },
+            { "count", new BsonDocument("$sum", 1) }
+        }),
+        new BsonDocument("$sort", new BsonDocument("count", -1)),
+        new BsonDocument("$limit", 1)
+        };
+
+        var result = await _dataBase.GetCollection<LeadModel>(CollectionsGroupMessages).Aggregate<BsonDocument>(pipeline).FirstOrDefaultAsync();
+        return result?["_id"]?.AsString;
+    }
+
+    public async Task<TimeSpan?> GetAverageConversionTimeAsync()
+    {
+        var convertidos = await _dataBase.GetCollection<LeadModel>(CollectionsGroupMessages).Find(x => x.Status == Domain.Model.ELead.Convertido && x.Historico != null).ToListAsync();
+
+        if (convertidos.Count == 0) return null;
+
+        var tempos = convertidos
+            .Select(x =>
+            {
+                var dataInicio = x.DataCriacao;
+                var dataFim = x.Historico
+                    .Where(h => h.Assunto?.ToLower().Contains("conversão") == true || h.Descricao?.ToLower().Contains("conversão") == true)
+                    .Select(h => h.DataAtualizacao)
+                    .OrderBy(d => d)
+                    .FirstOrDefault();
+
+                return dataFim.HasValue ? (TimeSpan?)(dataFim.Value - dataInicio) : null;
+            })
+            .Where(x => x.HasValue)
+            .Select(x => x.Value)
+            .ToList();
+
+
+        return tempos.Count > 0 ? TimeSpan.FromTicks((long)tempos.Average(t => t.Ticks)) : null;
+    }
+
+    public async Task<int> GetLeadsCountByStatusAsync(int status)
+    {
+        if (!Enum.IsDefined(typeof(Domain.Model.ELead), status))
+            throw new ArgumentException("Status inválido");
+
+        var enumStatus = (Domain.Model.ELead)status;
+        var collection = _dataBase.GetCollection<LeadModel>(CollectionsGroupMessages);
+
+
+        return (int)await collection.CountDocumentsAsync(x => x.Status == enumStatus);
+    }
+
 }

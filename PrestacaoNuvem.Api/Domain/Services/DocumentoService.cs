@@ -24,7 +24,7 @@ public class DocumentoService : IDocumentoService
 
     async Task<byte[]> IDocumentoService.GerarContrato(ContratoRequestDto request)
     {
-        
+
         string cabecalhoContrato = "";
 
         if (request.TipoCliente == 0) // Pessoa Jurídica
@@ -129,7 +129,8 @@ public class DocumentoService : IDocumentoService
             }
         }
 
-        var contrato = await _contratoService.CreateContrato(new(){
+        var contrato = await _contratoService.CreateContrato(new()
+        {
             Status = 0,
             TipoContrato = request.TipoContrato,
             Valor = request.Servicos.Sum(s => s.Valor),
@@ -189,5 +190,16 @@ public class DocumentoService : IDocumentoService
         }
 
         return stringBuilder.ToString();
+    }
+
+    public async Task<ICollection<ContratoDto>> GetAll()
+    {
+
+        return await _contratoService.GetAll();
+    }
+
+    public async Task<ContratoDto> FindById(Guid id)
+    {
+        return await _contratoService.FindById(id);
     }
 }

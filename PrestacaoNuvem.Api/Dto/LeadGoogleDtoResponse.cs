@@ -26,8 +26,16 @@ public class LeadGoogleDtoResponse
     public string? NameRepresentation { get; set; }
     public string? CNPJ { get; set; }
     public ELead Status { get; set; }
+    public EPlataformaResponse Plataforma { get; set; }
 }
 
+public enum EPlataformaResponse
+{
+    Google,
+    Facebook,
+    Instagram,
+    Linkedin
+}
 public enum ELead
 {
     Novo,

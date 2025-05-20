@@ -60,4 +60,38 @@ public class LeadGoogleService : ILeadGoogleService
         var result = await _leadGoogleRepository.PutLeadAsync(new ObjectId(request.Id), mapperRequest);
         return _mapper.Map<LeadGoogleDtoResponse>(result);
     }
+
+    public async Task<int> GetLeadsCountByMonthAsync()
+    {
+        return await _leadGoogleRepository.GetLeadsCountByMonthAsync();
+    }
+
+    public async Task<int> GetLeadsCountByWeekAsync()
+    {
+        return await _leadGoogleRepository.GetLeadsCountByWeekAsync();
+    }
+
+    public async Task<int> GetMeetingsCountAsync()
+    {
+        return await _leadGoogleRepository.GetMeetingsCountAsync();
+    }
+
+    public async Task<(int enviados, int abertos, int respondidos)> GetEmailStatsAsync()
+    {
+        return await _leadGoogleRepository.GetEmailStatsAsync();
+    }
+
+    public async Task<string?> GetTopCategoriaAsync()
+    {
+        return await _leadGoogleRepository.GetTopCategoriaAsync();
+    }
+
+    public async Task<TimeSpan?> GetAverageConversionTimeAsync()
+    {
+        return await _leadGoogleRepository.GetAverageConversionTimeAsync();
+    }
+    public async Task<int> GetLeadsCountByStatusAsync(int status)
+    {
+        return await _leadGoogleRepository.GetLeadsCountByStatusAsync(status);
+    }
 }

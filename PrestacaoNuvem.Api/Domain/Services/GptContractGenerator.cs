@@ -1,4 +1,8 @@
 ﻿using System.Net.Http.Headers;
+using DocumentFormat.OpenXml.Bibliography;
+using PrestacaoNuvem.Api.Domain.Model;
+using System.Runtime.ConstrainedExecution;
+using System.Diagnostics.Contracts;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
 
@@ -10,27 +14,18 @@ public class GptContractGenerator : IGptContractGenerator
     public GptContractGenerator(HttpClient httpClient, IConfiguration config)
     {
         _httpClient = httpClient;
+        _httpClient.Timeout = TimeSpan.FromSeconds(300);
         _apiKey = config["OpenAI:ApiKey"];
     }
 
     public async Task<string> GerarContratoAsync(ContratoRequestDto request, string contratoModelo)
     {
-        var prompt = MontarPromptComBaseNoContrato(request, contratoModelo);
+        var mensagens = MontarMensagensEmEtapas(request, contratoModelo);
 
         var body = new
         {
             model = "gpt-4",
-            messages = new[]
-            {
-                new {
-                    role = "system",
-                    content = "Você é um advogado especialista em contratos de prestação de serviços. Responda sempre com formalidade e clareza."
-                },
-                new {
-                    role = "user",
-                    content = prompt
-                }
-            }
+            messages = mensagens
         };
 
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
@@ -56,83 +51,70 @@ public class GptContractGenerator : IGptContractGenerator
                   .GetString()!;
     }
 
-    private string MontarPromptComBaseNoContrato(ContratoRequestDto req, string contratoModelo)
+    private List<object> MontarMensagensEmEtapas(ContratoRequestDto req, string contratoModelo)
     {
-        var promptBase = """
-                            Aja como um especialista jurídico com experiência avançada em direito contratual, especialmente na elaboração de contratos de prestação de serviços personalizados nas áreas de:
-
-                            • Desenvolvimento de sistemas;
-                            • Criação de sites;
-                            • Social media;
-                            • Consultoria;
-                            • Hospedagem;
-                            • Infraestrutura de TI.
-
-                            Seu papel é analisar um modelo de contrato fornecido e adaptá-lo automaticamente conforme os dados do cliente e do serviço informado, garantindo:
-
-                            1. Clareza nas obrigações e escopo do serviço;
-                            2. Inclusão de cláusulas de proteção jurídica para a contratada;
-                            3. Definição explícita de forma de pagamento, prazos, responsabilidade e suporte;
-                            4. Ajuste de linguagem para Pessoa Jurídica ou Física;
-                            5. Correção gramatical, formalidade e coerência legal;
-                            6. Adição automática de cláusulas essenciais como:
-                               - Propriedade intelectual
-                               - Rescisão
-                               - Sigilo e confidencialidade
-                               - Suporte e manutenção (se aplicável)
-                               - Responsabilidades das partes
-                               - Penalidades por descumprimento
-                            7. Adaptação do conteúdo com base na forma de pagamento.
-
-                            O contrato deve ser gerado no formato de texto corrido e estruturado com clareza, pronto para substituir variáveis de um modelo `.docx`.
-                                                        
-                            Além disso, atue como um consultor jurídico especialista em contratos de prestação de serviço digital. Avalie se o conteúdo atual do contrato cobre adequadamente:
-
-                            - Limitações de responsabilidade
-                            - Prazos e escopo
-                            - Propriedade intelectual do código/fontes entregues
-                            - LGPD (Lei Geral de Proteção de Dados)
-                            - Acordos de nível de serviço (SLA)
-                            - Penalidades em caso de inadimplemento ou cancelamento
-                            - Cláusulas sobre interrupção de serviço por força maior ou fatores externos
-
-                            Se perceber ausência ou fragilidade em algum dos pontos acima, adicione cláusulas que atendam às boas práticas do direito brasileiro atual, com citação das leis se possível.
-
-                            O objetivo é proteger a contratada juridicamente, evitar litígios e deixar obrigações e responsabilidades claras, sem ambiguidade.
-                            
-                            Seguem os dados do cliente:
-
-                            """;
-
         var sb = new StringBuilder();
-        sb.AppendLine(promptBase);
+
+        sb.AppendLine("Você é um advogado especialista em direito contratual, com profundo conhecimento em prestação de serviços digitais e tecnologia. Analise o contrato abaixo, sem simplificá-lo, e apenas adapte os dados do cliente e serviços contratados conforme necessário.");
         sb.AppendLine();
-        sb.AppendLine("Abaixo está o modelo atual de contrato que deve ser adaptado:");
-        sb.AppendLine("----- INÍCIO DO MODELO -----");
+        sb.AppendLine("Este contrato já contém cláusulas importantes e bem estruturadas que devem ser mantidas. Seu papel é:");
+        sb.AppendLine("1. Adaptar com base nos dados fornecidos (cliente, serviços, valores, forma de pagamento);");
+        sb.AppendLine("2. Reforçar a linguagem jurídica apenas onde necessário;");
+        sb.AppendLine("3. Incluir cláusulas adicionais apenas se houver ausência de pontos críticos legais como:");
+        sb.AppendLine("   - LGPD;");
+        sb.AppendLine("   - Propriedade intelectual;");
+        sb.AppendLine("   - SLA e suporte;");
+        sb.AppendLine("   - Penalidades contratuais;");
+        sb.AppendLine("   - Rescisão e confidencialidade.");
+        sb.AppendLine();
+        sb.AppendLine("Evite remover cláusulas existentes. Mantenha a estrutura geral. Melhore o que for necessário, sem perder o conteúdo original do modelo.");
+        sb.AppendLine();
+        sb.AppendLine("### Dados do cliente:");
+        sb.AppendLine(MontarDadosCliente(req));
+        sb.AppendLine();
+        sb.AppendLine("### Modelo de contrato a ser adaptado:");
+        sb.AppendLine("----- INÍCIO DO CONTRATO MODELO -----");
         sb.AppendLine(contratoModelo);
-        sb.AppendLine("----- FIM DO MODELO -----");
+        sb.AppendLine("----- FIM DO CONTRATO MODELO -----");
         sb.AppendLine();
-        sb.AppendLine("Adapte este contrato com os dados acima, melhore a proteção jurídica e reescreva com linguagem mais forte, completa e juridicamente sólida.");
+        sb.AppendLine("Adapte esse contrato com base nos dados fornecidos. O contrato final deve ter linguagem jurídica, clara, e formal. Não inclua observações ou instruções, apenas o contrato final completo.");
 
+        var mensagens = new List<object>
+        {
+            new {
+                role = "system",
+                content = "Você é um advogado especialista em contratos de prestação de serviços. Responda sempre com formalidade e clareza."
+            },
+            new {
+                role = "user",
+                content = sb.ToString()
+            }
+        };
 
-        sb.AppendLine($"Contrato entre a empresa: {req.NomeFantasia} - CNPJ {req.Cnpj}");
-        sb.AppendLine($"Endereço da empresa: {req.EnderecoEmpresa}");
-        sb.AppendLine($"Representada por: {req.RepresentanteLegal} - CPF {req.CpfRepresentante}, RG {req.RgRepresentante}, residente em {req.EnderecoRepresentante}");
+        return mensagens;
+    }
 
+    private string MontarDadosCliente(ContratoRequestDto req)
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("Dados do Cliente:");
+        sb.AppendLine($"- Empresa: {req.NomeFantasia} - CNPJ: {req.Cnpj}");
+        sb.AppendLine($"- Endereço: {req.EnderecoEmpresa}");
+        sb.AppendLine($"- Representante: {req.RepresentanteLegal} - CPF: {req.CpfRepresentante} - RG: {req.RgRepresentante}");
+        sb.AppendLine($"- Endereço do representante: {req.EnderecoRepresentante}");
         sb.AppendLine();
+
         sb.AppendLine("Serviços contratados:");
         foreach (var servico in req.Servicos)
         {
-            sb.AppendLine($"- {servico.Descricao}, valor: R$ {servico.Valor:N2}");
+            sb.AppendLine($"• {servico.Descricao} - R$ {servico.Valor:N2}");
         }
 
         sb.AppendLine();
         sb.AppendLine($"Forma de pagamento: {req.FormaPagamento}");
         sb.AppendLine($"Condição de pagamento: {req.CondicaoPagamento}");
-        sb.AppendLine();
         sb.AppendLine($"Data de criação: {DateTime.Now:dd/MM/yyyy}");
-        sb.AppendLine();
-        sb.AppendLine("Gere um contrato com cláusulas claras de responsabilidade, escopo do serviço, valores, prazo e multa por descumprimento. O contrato deve ter linguagem formal, mas compreensível.");
 
         return sb.ToString();
     }

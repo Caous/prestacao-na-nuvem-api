@@ -20,6 +20,7 @@ public class OficinaContext : IdentityDbContext<UserModel>
     public DbSet<Produto> Produto { get; set; }
     public DbSet<Filial> Filial { get; set; }
     public DbSet<OrdemVenda> OrdemVenda { get; set; }
+    public DbSet<Contrato> Contrato{ get; set; }
 
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

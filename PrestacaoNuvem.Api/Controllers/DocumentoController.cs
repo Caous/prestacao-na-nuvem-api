@@ -35,4 +35,45 @@ public class DocumentoController : MainController
 
         return File(result, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
     }
+
+    /// <summary>
+    /// Recupera todos os contratos do prestador
+    /// </summary>
+    /// <param name="cpf"></param>
+    /// <param name="nome"></param>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+        var result = await _documentoService.GetAll();
+
+        if (result == null || !result.Any())
+            return NoContent();
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Recupera o contrato por ID
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetId(Guid id)
+    {
+        if (!ModelState.IsValid)
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
+
+        var result = await _documentoService.FindById(id);
+
+        if (result == null)
+            return NoContent();
+
+        return Ok(result);
+    }
 }

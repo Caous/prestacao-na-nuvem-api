@@ -10,4 +10,12 @@ public interface ILeadGoogleService
     Task<bool> DeleteLeadGoogle(ObjectId Id);
     Task<bool> PostLeadEmailAsync(EmailRequestDto request);
     Task<LeadGoogleDtoResponse> PutLeadAsync(LeadGoogleDtoRequest request);
+    Task<int> GetLeadsCountByMonthAsync();
+    Task<int> GetLeadsCountByWeekAsync();
+    Task<int> GetMeetingsCountAsync();
+    Task<(int enviados, int abertos, int respondidos)> GetEmailStatsAsync();
+    Task<string?> GetTopCategoriaAsync();
+    Task<TimeSpan?> GetAverageConversionTimeAsync();
+    Task<int> GetLeadsCountByStatusAsync(int status);
+
 }

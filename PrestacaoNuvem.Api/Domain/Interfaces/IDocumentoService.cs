@@ -9,4 +9,6 @@ public interface IDocumentoService
     /// <param name="prestadorId">ID do prestador logado</param>
     /// <returns>Arquivo em byte array</returns>
     Task<byte[]> GerarContrato(ContratoRequestDto request);
+    Task<ICollection<ContratoDto>> GetAll();
+    Task<ContratoDto> FindById(Guid id);
 }

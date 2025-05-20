@@ -96,4 +96,104 @@ public class LeadGoogleInnovaController : MainController
         else
             return BadRequest("Usuário já existente");
     }
+
+    [HttpGet("indicator/leads-in-month")]
+    public async Task<IActionResult> GetLeadsNoMesAsync()
+    {
+        try
+        {
+            int count = await _service.GetLeadsCountByMonthAsync();
+            return Ok(count);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("indicator/new-this-week")]
+    public async Task<IActionResult> GetLeadsNaSemanaAsync()
+    {
+        try
+        {
+            int count = await _service.GetLeadsCountByWeekAsync();
+            return Ok(count);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("indicator/meetings-scheduled")]
+    public async Task<IActionResult> GetReunioesMarcadasAsync()
+    {
+        try
+        {
+            int count = await _service.GetMeetingsCountAsync();
+            return Ok(count);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("indicator/email-stats")]
+    public async Task<IActionResult> GetEmailEstatisticasAsync()
+    {
+        try
+        {
+            var (enviados, abertos, respondidos) = await _service.GetEmailStatsAsync();
+            return Ok(new { enviados, abertos, respondidos });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("indicator/top-category")]
+    public async Task<IActionResult> GetTopCategoriaAsync()
+    {
+        try
+        {
+            var categoria = await _service.GetTopCategoriaAsync();
+            return Ok(categoria ?? "Not identified");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("indicator/avg-conversion-time")]
+    public async Task<IActionResult> GetTempoMedioConversaoAsync()
+    {
+        try
+        {
+            var tempo = await _service.GetAverageConversionTimeAsync();
+            return Ok(tempo.HasValue ? tempo.Value.ToString(@"dd\.hh\:mm") : "No data available");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("indicator/status/{status}")]
+    public async Task<IActionResult> GetLeadsByStatusAsync(int status)
+    {
+        try
+        {
+            int count = await _service.GetLeadsCountByStatusAsync(status);
+            return Ok(count);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+
 }

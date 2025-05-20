@@ -25,6 +25,7 @@ public class LeadGoogleDtoRequest
     public string? NameRepresentation { get; set; }
     public string? CNPJ { get; set; }
     public ELeadRequest Status { get; set; }
+    public EPlataformaRequest Plataforma { get; set; }
 }
 
 public enum ELeadRequest
@@ -39,6 +40,14 @@ public enum ELeadRequest
     Requalificacao,
     Qualificado,
     Convertido
+}
+
+public enum EPlataformaRequest
+{
+    Google,
+    Facebook,
+    Instagram,
+    Linkedin
 }
 
 public class HistoricoLeadDto
