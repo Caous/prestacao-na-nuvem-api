@@ -10,22 +10,23 @@ public class LeadModel
     [JsonProperty("_id")]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Category { get; set; }
-    public string Address { get; set; }
-    public string TimeOpen { get; set; }
-    public string Star { get; set; }
-    public string WebSite { get; internal set; }
-    public string Email { get; internal set; }
-    public string RedeSocial { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    public string Address { get; set; } = string.Empty;
+    public string TimeOpen { get; set; } = string.Empty;
+    public string Star { get; set; } = string.Empty;
+    public string WebSite { get; internal set; } = string.Empty;
+    public string Email { get; internal set; } = string.Empty;
+    public string RedeSocial { get; set; } = string.Empty;
     public ICollection<HistoricoLead>? Historico { get; set; }
     public string? Observacao { get; set; }
     public DateTime DataCriacao { get; set; }
     public string? NameRepresentation { get; set; }
     public string? CNPJ { get; set; }
-    public ELead Status { get; set; }
+    public ELead? Status { get; set; }
+    public EPlataformaRequest? Plataforma { get; set; }
 }
 
 public enum ELead

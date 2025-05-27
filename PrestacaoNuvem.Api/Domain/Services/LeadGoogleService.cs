@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Azure.Core;
+using MongoDB.Bson;
 using PrestacaoNuvem.Api.Domain.Interfacesk;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
@@ -21,9 +22,9 @@ public class LeadGoogleService : ILeadGoogleService
         return await _leadGoogleRepository.DeleteLeadAsync(Id);
     }
 
-    public async Task<ICollection<LeadGoogleDtoResponse>> GetAllAsync()
+    public async Task<ICollection<LeadGoogleDtoResponse>> GetAllAsync(LeadGoogleDtoRequest filter)
     {
-        var result = await _leadGoogleRepository.GetLeadsAsync();
+        var result = await _leadGoogleRepository.GetLeadsAsync(_mapper.Map<LeadModel>(filter));
         return _mapper.Map<ICollection<LeadGoogleDtoResponse>>(result);
     }
 

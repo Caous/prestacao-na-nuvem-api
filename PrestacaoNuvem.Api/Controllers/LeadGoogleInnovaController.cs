@@ -22,23 +22,42 @@ public class LeadGoogleInnovaController : MainController
     }
 
     [HttpGet("GetAllLeadGoogle")]
-    public async Task<IActionResult> GetAllLeadGoogleAsync()
+    public async Task<IActionResult> GetAllLeadGoogleAsync(
+        [FromQuery] string? category,
+        [FromQuery] string? status,
+        [FromQuery] string? plataforma)
     {
         try
         {
-            ICollection<LeadGoogleDtoResponse> classes = await _service.GetAllAsync();
+            // Parse do status
+            ELeadRequest? statusEnum = null;
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (Enum.TryParse<ELeadRequest>(status, true, out var parsedStatus))
+                    statusEnum = parsedStatus;
+            }
 
-            if (classes == null)
-                return NoContent();
+            // Parse da plataforma
+            EPlataformaRequest? plataformaEnum = null;
+            if (!string.IsNullOrEmpty(plataforma))
+            {
+                if (Enum.TryParse<EPlataformaRequest>(plataforma, true, out var parsedPlataforma))
+                    plataformaEnum = parsedPlataforma;
+            }
 
-            return Ok(classes);
+            var result = await _service.GetAllAsync(new LeadGoogleDtoRequest()
+            {
+                Category = category ?? string.Empty,
+                Status = statusEnum,
+                Plataforma = plataformaEnum
+            });
+
+            return Ok(result);
         }
         catch (Exception ex)
         {
-
-            return StatusCode(500, ex);
+            return StatusCode(500, ex.Message);
         }
-
     }
 
     [HttpPost("PostLeadGoogleEmail")]
@@ -76,7 +95,7 @@ public class LeadGoogleInnovaController : MainController
     }
 
     [HttpGet("GetLeadByFilter/{nameEntreprise}/{category}/{phoneNumber}")]
-    public async Task<IActionResult> GetAllLeadGoogleAsync(string nameEntreprise, string category, string phoneNumber)
+    public async Task<IActionResult> GetLeadByFilter(string nameEntreprise, string category, string phoneNumber)
     {
         LeadGoogleDtoResponse classes = await _service.GetAllLeadGoogleAsync(new LeadGoogleDtoRequest() { Name = nameEntreprise, Category = category, PhoneNumber = phoneNumber });
 

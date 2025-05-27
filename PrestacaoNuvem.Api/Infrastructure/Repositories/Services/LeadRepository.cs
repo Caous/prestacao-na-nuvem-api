@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace PrestacaoNuvem.Api.Infrastructure.Repositories.Services;
@@ -49,15 +50,37 @@ public class LeadRepository : ILeadRepository
         return lead;
     }
 
-    public async Task<ICollection<LeadModel>> GetLeadsAsync()
+    public async Task<ICollection<LeadModel>> GetLeadsAsync(LeadModel filter)
     {
         var collection = _dataBase.GetCollection<LeadModel>(CollectionsGroupMessages);
 
+        var filterBuilder = Builders<LeadModel>.Filter;
+        var filters = new List<FilterDefinition<LeadModel>>();
+
+        // Filtros opcionais
+        if (!string.IsNullOrEmpty(filter.Status.ToString()))
+        {
+            filters.Add(filterBuilder.Eq(x => x.Status, filter.Status));
+        }
+
+        if (!string.IsNullOrEmpty(filter.Category))
+        {
+            filters.Add(filterBuilder.Eq(x => x.Category, filter.Category));
+        }
+
+        if (!string.IsNullOrEmpty(filter.Plataforma.ToString()))
+        {
+            filters.Add(filterBuilder.Eq(x => x.Plataforma, filter.Plataforma));
+        }
+
+        var combinedFilter = filters.Count > 0 ? filterBuilder.And(filters) : filterBuilder.Empty;
+
         var group = await collection
-            .Find(Builders<LeadModel>.Filter.Empty)
+            .Find(combinedFilter)
+            .SortByDescending(x => x.DataCriacao)
             .ToListAsync();
 
-        return group.OrderByDescending(x => x.DataCriacao).ToArray();
+        return group;
     }
 
     public async Task<LeadModel> PostLeadAsync(LeadModel request)

@@ -24,8 +24,8 @@ public class LeadGoogleDtoRequest
     public string? Observacao { get; set; }
     public string? NameRepresentation { get; set; }
     public string? CNPJ { get; set; }
-    public ELeadRequest Status { get; set; }
-    public EPlataformaRequest Plataforma { get; set; }
+    public ELeadRequest? Status { get; set; }
+    public EPlataformaRequest? Plataforma { get; set; }
 }
 
 public enum ELeadRequest
