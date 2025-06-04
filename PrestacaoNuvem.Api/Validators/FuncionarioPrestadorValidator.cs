@@ -1,6 +1,4 @@
-﻿using PrestacaoNuvem.Api.Util;
-
-namespace PrestacaoNuvem.Api.Validators;
+﻿namespace PrestacaoNuvem.Api.Validators;
 
 public class FuncionarioPrestadorValidator : AbstractValidator<FuncionarioPrestadorDto>
 {
@@ -24,38 +22,15 @@ public class FuncionarioPrestadorValidator : AbstractValidator<FuncionarioPresta
             .NotNull()
             .WithMessage(FuncionarioPrestadorConst.EmailValidation);
 
-        //RuleFor(x => x.RG)
-        //    .Custom((rg, context) =>
-        //    {
-        //        if (!RgValidations.ValidarRG(rg))
-        //            context.AddFailure(FuncionarioPrestadorConst.RgValitation);
-        //    })
-        //   .NotEmpty()
-        //   .WithMessage(FuncionarioPrestadorConst.RGValidation)
-        //   .NotNull()
-        //   .WithMessage(FuncionarioPrestadorConst.RGValidation);
-
         RuleFor(x => x.CPF)
             .Custom((cpf, context) =>
             {
-            if (!CpfValidations.FormartValidation(cpf))
-                context.AddFailure(ClienteConst.CpfNaoValidado);
+                if (!CpfValidations.FormartValidation(cpf))
+                    context.AddFailure(ClienteConst.CpfNaoValidado);
             })
            .NotEmpty()
            .WithMessage(FuncionarioPrestadorConst.CPFValidation)
            .NotNull()
            .WithMessage(FuncionarioPrestadorConst.CPFValidation);
-
-        RuleFor(x => x.Endereco)
-           .NotEmpty()
-           .WithMessage(FuncionarioPrestadorConst.EnderecoValidation)
-           .NotNull()
-           .WithMessage(FuncionarioPrestadorConst.EnderecoValidation);
-
-        RuleFor(x => x.Cargo)
-          .NotEmpty()
-          .WithMessage(FuncionarioPrestadorConst.CargoValidation)
-          .NotNull()
-          .WithMessage(FuncionarioPrestadorConst.CargoValidation);
     }
 }

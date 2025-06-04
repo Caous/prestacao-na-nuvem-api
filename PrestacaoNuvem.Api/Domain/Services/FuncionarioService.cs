@@ -1,4 +1,5 @@
-﻿using NuGet.Protocol.Core.Types;
+﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
+using NuGet.Protocol.Core.Types;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
 
@@ -15,7 +16,9 @@ public class FuncionarioService : IFuncionarioService
 
     public async Task<FuncionarioPrestadorDto> CreateFuncionario(FuncionarioPrestadorDto item)
     {
-        var result = await _repository.Create(_mapper.Map<FuncionarioPrestador>(item));
+        RemoveMaskRequest(item);
+        var employee = _mapper.Map<FuncionarioPrestador>(item);
+        var result = await _repository.Create(employee);
 
         await _repository.CommitAsync();
         await _repository.DisposeCommitAsync();
@@ -59,18 +62,31 @@ public class FuncionarioService : IFuncionarioService
         await _repository.DisposeCommitAsync();
 
         result = result.Where(x => x.PrestadorId == item.PrestadorId && x.DataDesativacao == null).ToList();
-        
+
 
         return _mapper.Map<ICollection<FuncionarioPrestadorDto>>(result);
     }
 
     public async Task<FuncionarioPrestadorDto> UpdateFuncionario(FuncionarioPrestadorDto item)
     {
-        var result = await _repository.Update(_mapper.Map<FuncionarioPrestador>(item));
+        RemoveMaskRequest(item);
+        var employee = _mapper.Map<FuncionarioPrestador>(item);
+        var result = await _repository.Update(employee);
 
         await _repository.CommitAsync();
         await _repository.DisposeCommitAsync();
 
         return _mapper.Map<FuncionarioPrestadorDto>(result);
+    }
+
+    private static void RemoveMaskRequest(FuncionarioPrestadorDto mapperRequest)
+    {
+        mapperRequest.CPF = FormatHelper.RemoveMask(mapperRequest.CPF);
+        mapperRequest.RG = FormatHelper.RemoveMask(mapperRequest.RG);
+        mapperRequest.Telefone = string.IsNullOrWhiteSpace(mapperRequest.Telefone)
+        ? string.Empty
+            : FormatHelper.RemoveMask(mapperRequest.Telefone);
+
+
     }
 }

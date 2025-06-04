@@ -1,8 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using DocumentFormat.OpenXml.Bibliography;
-using PrestacaoNuvem.Api.Domain.Model;
-using System.Runtime.ConstrainedExecution;
-using System.Diagnostics.Contracts;
 
 namespace PrestacaoNuvem.Api.Domain.Services;
 
