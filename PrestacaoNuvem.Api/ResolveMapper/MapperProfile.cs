@@ -47,6 +47,9 @@ public class MapperProfile : Profile
         CreateMap<HistoricoLeadDto, HistoricoLead>().ReverseMap();
         CreateMap<HistoricoLeadDto, HistoricoLeadResponse>().ReverseMap();
         CreateMap<HistoricoLeadResponse, HistoricoLead>().ReverseMap();
+        CreateMap<MessagesResponseDto, GroupMongo>()
+    .ForMember(p => p.Messages, opt => opt.MapFrom(src => src.Messages)).ReverseMap();
+        CreateMap<GroupMessageResponseDto, GroupMongoMessage>().ReverseMap();
 
     }
 }

@@ -8,9 +8,9 @@ public class LeadRepository : ILeadRepository
 {
     private const string CollectionsGroupMessages = "leadsinnova";
     private readonly IMongoDatabase _dataBase;
-    public LeadRepository(IMongoDatabase database)
+    public LeadRepository(LeadsMongoContext database)
     {
-        _dataBase = database;
+        _dataBase = database.Database;
     }
 
     public async Task<bool> DeleteLeadAsync(ObjectId id)

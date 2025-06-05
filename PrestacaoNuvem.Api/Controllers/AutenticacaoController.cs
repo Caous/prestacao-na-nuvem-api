@@ -17,7 +17,7 @@ public class AutenticacaoController : MainController
     [HttpGet("BuscarPrestador")]
     public async Task<IActionResult> GetPrestadorUser(string? email, Guid? id)
     {
-        if (!email.IsNullOrEmpty())
+        if (!string.IsNullOrEmpty(email))
         {
             UserModel? user = await _acessoManager.GetUserPorEmail(email);
             if (user != null)
@@ -38,7 +38,7 @@ public class AutenticacaoController : MainController
     [HttpPost("RegistrarPrestador")]
     public async Task<IActionResult> Post(PrestadorCadastroDto prestadorDto)
     {
-        if (prestadorDto.UsrCadastro == Guid.Empty || prestadorDto.UsrCadastroDesc.IsNullOrEmpty())
+        if (prestadorDto.UsrCadastro == Guid.Empty || string.IsNullOrEmpty(prestadorDto.UsrCadastroDesc))
         {
             UserModel? user = await _acessoManager.GetUserPorEmail(prestadorDto.Email);
 
@@ -59,7 +59,7 @@ public class AutenticacaoController : MainController
     [HttpPost("LoginPrestador")]
     public async Task<IActionResult> LoginPrestador(PrestadorLoginDto prestador)
     {
-        if (prestador.Email.IsNullOrEmpty() && prestador.UserName.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(prestador.Email) && string.IsNullOrEmpty(prestador.UserName))
             return BadRequest($"{PrestadorConst.PrestadorEmailVazio} ou {PrestadorConst.PrestadorNomeUsarioVazio}");
 
         var token = await _acessoManager.ValidarCredenciais(_mapper.Map<UserModelDto>(prestador));

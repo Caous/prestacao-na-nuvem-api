@@ -1,118 +1,125 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿namespace PrestacaoNuvem.Api.Controllers;
 
-namespace PrestacaoNuvem.Api.Controllers
+/// <summary>
+/// Controller dominio Whatsapp
+/// </summary>
+[Route("api/[controller]")]
+[ApiController, Authorize]
+[Produces("application/json")]
+[ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+public class WhatsappController : MainController
 {
-    public class WhatsappController : MainController
+    private readonly IWhatsappService _serviceWhatsapp;
+
+    public WhatsappController(IWhatsappService serviceWhatsapp)
     {
-        private readonly IWhatsappService _serviceWhatsapp;
+        _serviceWhatsapp = serviceWhatsapp;
+    }
 
-        public WhatsappController(IWhatsappService serviceWhatsapp)
+    [HttpPost("AddMessagens")]
+    public async Task<IActionResult> AddMessages(string request)
+    {
+        ICollection<Message> messages = await _serviceWhatsapp.ValitadorMessageAsync(request);
+
+        if (messages != null && messages.Any())
         {
-            _serviceWhatsapp = serviceWhatsapp;
+            await _serviceWhatsapp.RegisterMessages(messages);
         }
 
-        [HttpPost("AddMessagens")]
-        public async Task<IActionResult> AddMessages(string request)
-        {
-            ICollection<Message> messages = await _serviceWhatsapp.ValitadorMessageAsync(request);
+        return Ok("Register Sucess");
+    }
 
-            if (messages != null && messages.Any())
-            {
-                await _serviceWhatsapp.RegisterMessages(messages);
-            }
+    [HttpGet("CountMessagesPending")]
+    public async Task<IActionResult> CountMessagesPending()
+    {
 
-            return Ok("Register Sucess");
-        }
+        int? result = await _serviceWhatsapp.CountMessagesPending(null);
 
-        [HttpGet("CountMessagesPending")]
-        public async Task<IActionResult> CountMessagesPending()
-        {
+        if (result == null)
+            return NoContent();
 
-            int? result = await _serviceWhatsapp.CountMessagesPending(null);
+        return Ok(result);
 
-            if (result == null)
-                return NoContent();
+    }
 
-            return Ok(result);
+    [HttpGet("CountNewTicketsSupport")]
+    public async Task<IActionResult> CountNewTickets()
+    {
 
-        }
+        int? result = await _serviceWhatsapp.CountNewTicketsSupport(null);
 
-        [HttpGet("CountNewTicketsSupport")]
-        public async Task<IActionResult> CountNewTickets()
-        {
+        if (result == null)
+            return NoContent();
 
-            int? result = await _serviceWhatsapp.CountNewTicketsSupport(null);
+        return Ok(result);
 
-            if (result == null)
-                return NoContent();
+    }
 
-            return Ok(result);
+    [HttpGet("CountRecurrenceCustomerMonth")]
+    public async Task<IActionResult> CountRecurrenceCustomerMonth()
+    {
 
-        }
+        int? result = await _serviceWhatsapp.RecurrenceCustomer(null);
 
-        [HttpGet("CountRecurrenceCustomerMonth")]
-        public async Task<IActionResult> CountRecurrenceCustomerMonth()
-        {
+        if (result == null)
+            return NoContent();
 
-            int? result = await _serviceWhatsapp.RecurrenceCustomer(null);
+        return Ok(result);
 
-            if (result == null)
-                return NoContent();
+    }
 
-            return Ok(result);
+    [HttpGet("CountNewCustomer")]
+    public async Task<IActionResult> CountNewCustomerMonth()
+    {
 
-        }
+        int? result = await _serviceWhatsapp.CountNewCustomerMonth(null);
 
-        [HttpGet("CountNewCustomer")]
-        public async Task<IActionResult> CountNewCustomerMonth()
-        {
+        if (result == null)
+            return NoContent();
 
-            int? result = await _serviceWhatsapp.CountNewCustomerMonth(null);
+        return Ok(result);
 
-            if (result == null)
-                return NoContent();
+    }
 
-            return Ok(result);
+    [HttpGet("GetLastMessagens")]
+    public async Task<IActionResult> GetLastMessagens()
+    {
 
-        }
+        var result = await _serviceWhatsapp.GetLastMessagens(null);
 
-        [HttpGet("GetLastMessagens")]
-        public async Task<IActionResult> GetLastMessagens()
-        {
+        if (result == null)
+            return NoContent();
 
-            var result = await _serviceWhatsapp.GetLastMessagens(null);
+        return Ok(result);
 
-            if (result == null)
-                return NoContent();
+    }
 
-            return Ok(result);
+    [HttpGet("GetAllMessagens")]
+    public async Task<IActionResult> GetAllMessage()
+    {
 
-        }
+        BrokerLastMessagesResult result = await _serviceWhatsapp.GetMessages(null);
 
-        [HttpGet("GetAllMessagens")]
-        public async Task<IActionResult> GetAllMessage()
-        {
+        if (result == null)
+            return NoContent();
 
-            BrokerLastMessagesResult result = await _serviceWhatsapp.GetMessages(null);
+        return Ok(result);
 
-            if (result == null)
-                return NoContent();
+    }
 
-            return Ok(result);
+    [HttpGet("GetAllMessagensMongo")]
+    public async Task<IActionResult> GetAllMessageMongo()
+    {
 
-        }
+        var result = await _serviceWhatsapp.GetAllAsync();
 
-        [HttpGet("GetAllMessagensMongo")]
-        public async Task<IActionResult> GetAllMessageMongo()
-        {
+        if (result == null)
+            return NoContent();
 
-            var result = await _serviceWhatsapp.GetAllAsync();
+        return Ok(result);
 
-            if (result == null)
-                return NoContent();
-
-            return Ok(result);
-
-        }
     }
 }

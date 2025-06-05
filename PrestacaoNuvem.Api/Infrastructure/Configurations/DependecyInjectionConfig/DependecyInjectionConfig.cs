@@ -25,6 +25,10 @@ public static class DependecyInjectionConfig
         services.AddScoped<IOrdemVendaRepository, OrdemVendaRepository>();
         services.AddScoped<ILeadRepository, LeadRepository>();
         services.AddScoped<IContratoRepository, ContratoRepository>();
+        services.AddScoped<ITwilioRepository, TwilioRepository>();
+        services.AddScoped<IMongoRepository, MongoRepository>();
+        
+            
         #endregion
 
         #region Injection Services
@@ -48,6 +52,8 @@ public static class DependecyInjectionConfig
         services.AddScoped<IOpenIAService, OpenIAService>();
         services.AddScoped<IGeminiService, GeminiService>();
         services.AddScoped<ILlama3Service, Llama3Service>();
+        services.AddScoped<IWhatsappService, WhatsappService>();
+
 
         #endregion
 
@@ -110,12 +116,8 @@ public static class DependecyInjectionConfig
             return new MongoClient(connectionString);
         });
 
-        services.AddScoped(sp =>
-        {
-            var client = sp.GetRequiredService<IMongoClient>();
-            var database = "leads";
-            return client.GetDatabase(database);
-        });
+        services.AddScoped<LeadsMongoContext>();
+        services.AddScoped<WhatsappMongoContext>();
         #endregion
     }
 }
