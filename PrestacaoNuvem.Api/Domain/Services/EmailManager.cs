@@ -72,8 +72,8 @@ namespace PrestacaoNuvem.Api.Domain.Services
                                     <tr style=""border-bottom: 1px solid #ccc;"">
                                         <td style=""padding: 10px; white-space: nowrap;"">{contador}</td>
                                         <td style=""padding: 10px; white-space: nowrap;"">{servico.Descricao}</td>
-                                        <td style=""padding: 10px; white-space: nowrap;"">{valorFormatado}</td>
-                                        <td style=""padding: 10px; white-space: nowrap;"">{valorFormatado}</td>
+                                        <td style=""padding: 10px; white-space: nowrap;"">-</td>
+                                        <td style=""padding: 10px; white-space: nowrap;"">-</td>
                                     </tr>";
                 contador++;
             }
@@ -147,7 +147,6 @@ namespace PrestacaoNuvem.Api.Domain.Services
                                                 Estamos super animados em realizar este projeto!
                                             </div>
                                             <div style=""width: 100%; max-width: 45%; text-align: right;"">
-                                                <p>Subtotal: {precoFormatado}</p>
                                                 <p>Desconto: {request.OrdemServico.DescontoPercentual}%</p>
                                                 <p style=""font-weight: bold;"">Total: {precoFormatado}</p>
                                             </div>

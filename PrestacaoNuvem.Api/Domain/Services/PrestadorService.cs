@@ -2,20 +2,27 @@
 
 public class PrestadorService : IPrestadorService
 {
+    private readonly IAcessoManager _repositoryUserManager;
     private readonly IPrestadorRepository _repository;
     private readonly IMapper _mapper;
 
-    public PrestadorService(IPrestadorRepository repository, IMapper mapper)
+    public PrestadorService(IPrestadorRepository repository, IAcessoManager repositoryUserManager, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
+        _repositoryUserManager = repositoryUserManager;
     }
     public async Task<PrestadorDto> CreatePrestador(PrestadorDto item)
     {
         var result = await _repository.Create(_mapper.Map<Prestador>(item));
 
+        if (item.CreateUser)
+        {
+            var userLogin = new PrestadorCadastroDto() { PrestadorId = result.Id, DataCadastro = DateTime.Now, UserName = item.UserName, Password = item.Password, Email = item.EmailUser, UsrCadastro = item.UsrCadastro, UsrCadastroDesc = item.UsrCadastroDesc };
+            await _repositoryUserManager.CriarPrestador(userLogin);
+        }
+
         await _repository.CommitAsync();
-        await _repository.DisposeCommitAsync();
 
         return _mapper.Map<PrestadorDto>(result);
     }

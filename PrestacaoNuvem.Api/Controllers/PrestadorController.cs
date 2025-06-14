@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Twilio.Http;
 
 namespace PrestacaoNuvem.Api.Controllers;
 
@@ -190,9 +191,6 @@ public class PrestadorController : MainController
     {
         if (!func.PrestadorId.HasValue)
             func.PrestadorId = PrestadorId;
-
-        if (IsAdminLogged)
-            func.PrestadorId = new Guid("3c9ef419-b8a8-419a-b996-3f357422dae2");
 
         func.UsrCadastroDesc = UserName;
         func.UsrCadastro = UserId;

@@ -19,5 +19,10 @@ public class PrestadorDto : Base
     public int SituacaoCadastral { get; set; }
     public DateTime? DataAbertura { get; set; }
     public DateTime? DataSituacaoCadastral { get; set; }
+    public string? UserName { get; set; }
+    public string? Password { get; set; }
+    public string? EmailUser { get; set; }
+    public string? Role { get; set; }
+    public bool CreateUser { get; set; } = false;
 
 }

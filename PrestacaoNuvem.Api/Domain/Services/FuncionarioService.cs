@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
-using NuGet.Protocol.Core.Types;
-
-namespace PrestacaoNuvem.Api.Domain.Services;
+﻿namespace PrestacaoNuvem.Api.Domain.Services;
 
 public class FuncionarioService : IFuncionarioService
 {
     private readonly IFuncionarioPrestadorRepository _repository;
+    private readonly IAcessoManager _repositoryUserManager;
     private readonly IMapper _mapper;
 
-    public FuncionarioService(IFuncionarioPrestadorRepository repositoryFuncionario, IMapper mapper)
+    public FuncionarioService(IFuncionarioPrestadorRepository repositoryFuncionario, IAcessoManager repositoryUserManager, IMapper mapper)
     {
         _repository = repositoryFuncionario;
         _mapper = mapper;
+        _repositoryUserManager = repositoryUserManager;
     }
 
     public async Task<FuncionarioPrestadorDto> CreateFuncionario(FuncionarioPrestadorDto item)
@@ -20,9 +19,13 @@ public class FuncionarioService : IFuncionarioService
         var employee = _mapper.Map<FuncionarioPrestador>(item);
         var result = await _repository.Create(employee);
 
-        await _repository.CommitAsync();
-        await _repository.DisposeCommitAsync();
+        if (item.CreateUser)
+        {
+            var userLogin = new PrestadorCadastroDto() { FuncionarioId = result.Id, DataCadastro = DateTime.Now, UserName = item.UserName, Password = item.Password, Email = item.Email, UsrCadastro = item.UsrCadastro, UsrCadastroDesc = item.UsrCadastroDesc };
+            await _repositoryUserManager.CriarPrestador(userLogin);
+        }
 
+        await _repository.CommitAsync();
 
         return _mapper.Map<FuncionarioPrestadorDto>(result);
     }
