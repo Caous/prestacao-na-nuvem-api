@@ -38,7 +38,20 @@ public class AcessoManager : IAcessoManager
 
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(userModel, Roles.Fornecedor);
+            var allowedRoles = new List<string>
+            {
+                Roles.Cliente,
+                Roles.Fornecedor,
+                Roles.Funcionario,
+                Roles.Administrador
+            };
+
+            var roleToAssign = !string.IsNullOrEmpty(user.Role) && allowedRoles.Contains(user.Role)
+                ? user.Role
+                : Roles.Fornecedor;
+
+            await _userManager.AddToRoleAsync(userModel, roleToAssign);
+
             return true;
         }
         else return false;
@@ -92,7 +105,8 @@ public class AcessoManager : IAcessoManager
 
     private Token GenerateToken(UserModel user, string[] roles)
     {
-        if (user != null && user.UserName == _prestadorConfigurations.Value.DefaultAdminName){
+        if (user != null && user.UserName == _prestadorConfigurations.Value.DefaultAdminName)
+        {
             user.PrestadorId = _prestadorConfigurations.Value.DefaultPrestadorId;
         }
         Claim[] authClaims = new[] {

@@ -18,7 +18,7 @@ public class PrestadorService : IPrestadorService
 
         if (item.CreateUser)
         {
-            var userLogin = new PrestadorCadastroDto() { PrestadorId = result.Id, DataCadastro = DateTime.Now, UserName = item.UserName, Password = item.Password, Email = item.EmailUser, UsrCadastro = item.UsrCadastro, UsrCadastroDesc = item.UsrCadastroDesc };
+            var userLogin = new PrestadorCadastroDto() { PrestadorId = result.Id, DataCadastro = DateTime.Now, UserName = item.UserName, Password = item.Password, Email = item.EmailUser, UsrCadastro = item.UsrCadastro, UsrCadastroDesc = item.UsrCadastroDesc, Role = item.Role };
             await _repositoryUserManager.CriarPrestador(userLogin);
         }
 

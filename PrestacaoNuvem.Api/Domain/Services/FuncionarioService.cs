@@ -21,7 +21,7 @@ public class FuncionarioService : IFuncionarioService
 
         if (item.CreateUser)
         {
-            var userLogin = new PrestadorCadastroDto() { FuncionarioId = result.Id, DataCadastro = DateTime.Now, UserName = item.UserName, Password = item.Password, Email = item.Email, UsrCadastro = item.UsrCadastro, UsrCadastroDesc = item.UsrCadastroDesc };
+            var userLogin = new PrestadorCadastroDto() { FuncionarioId = result.Id, DataCadastro = DateTime.Now, UserName = item.UserName, Password = item.Password, Email = item.Email, UsrCadastro = item.UsrCadastro, UsrCadastroDesc = item.UsrCadastroDesc, Role = item.Role };
             await _repositoryUserManager.CriarPrestador(userLogin);
         }
 
