@@ -20,6 +20,8 @@ public class OficinaContext : IdentityDbContext<UserModel>
     public DbSet<Produto> Produto { get; set; }
     public DbSet<Filial> Filial { get; set; }
     public DbSet<OrdemVenda> OrdemVenda { get; set; }
+    public DbSet<AgendaEvento> AgendaEventos { get; set; }
+    public DbSet<AgendaEventoFuncionario> AgendaEventoFuncionarios { get; set; }
 
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -38,6 +40,23 @@ public class OficinaContext : IdentityDbContext<UserModel>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<AgendaEvento>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Descricao).IsRequired();
+            entity.Property(e => e.DataHoraInicio).IsRequired();
+            entity.Property(e => e.DataHoraFim).IsRequired();
+            entity.Property(e => e.Status).IsRequired();
+        });
+        modelBuilder.Entity<AgendaEventoFuncionario>(entity =>
+        {
+            entity.HasKey(e => new { e.AgendaEventoId, e.FuncionarioId });
+            entity.Property(e => e.CorIndicativa).IsRequired();
+            entity.HasOne(e => e.AgendaEvento)
+                .WithMany(e => e.Funcionarios)
+                .HasForeignKey(e => e.AgendaEventoId);
+        });
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficinaContext).Assembly);
 
         modelBuilder.HasSequence<int>("PrestacaoOrdem").StartsAt(1000).IncrementsBy(1);

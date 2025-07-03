@@ -2,6 +2,9 @@
 using PrestacaoNuvem.Api.Domain.Interfacesk;
 using PrestacaoNuvem.Api.Infrastructure.Configurations.PrestadorConfiguration;
 using System.Diagnostics.CodeAnalysis;
+using PrestacaoNuvem.Api.Domain.Interfaces;
+using PrestacaoNuvem.Api.Domain.Services;
+using PrestacaoNuvem.Api.Infrastructure.Repositories;
 
 namespace PrestacaoNuvem.Api.Infrastructure.Configurations.DependecyInjectionConfig;
 [ExcludeFromCodeCoverage]
@@ -24,6 +27,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IFilialRepository, FilialRepository>();
         services.AddScoped<IOrdemVendaRepository, OrdemVendaRepository>();
         services.AddScoped<ILeadRepository, LeadRepository>();
+        services.AddScoped<IAgendaEventoRepository, AgendaEventoRepository>();
         #endregion
 
         #region Injection Services
@@ -41,7 +45,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IOrdemVendaService, OrdemVendaService>();
         services.AddScoped<IDocumentoService, DocumentoService>();
         services.AddScoped<ILeadGoogleService, LeadGoogleService>();
-
+        services.AddScoped<IAgendaEventoService, AgendaEventoService>();
         #endregion
 
         #region Autentication
